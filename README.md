@@ -1,2 +1,2 @@
-# Groupomania
-A Vue.js / Express.js / Mysql student project
+# groupomania
+A vue.js / express.js / mysql app
