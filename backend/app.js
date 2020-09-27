@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const userRoutes = require('./routes/user');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
@@ -18,7 +19,7 @@ app.use((req, res, next) => {
   );
   next();
 });
-
+app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

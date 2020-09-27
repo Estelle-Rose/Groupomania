@@ -1,14 +1,13 @@
-import Api from '../services/Api';
+import axios from 'axios';
 
 export default {
   signup(info) {
-    return Api().post('signup', info);
+    return axios.post('http://localhost:3000/api/signup', info);
   },
 };
 
 /* Auth.register({
-    nom: 'Doe',
-    prenom: 'John',
+    pseudo: 'john'
     email: 'test@mail.com',
     password: '123456'
 }) */
