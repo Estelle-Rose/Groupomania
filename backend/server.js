@@ -1,7 +1,10 @@
 const http = require('http');
 const app = require('./app');
-const { sequelize } = require('./models');
+const debug = require('debug')('e-template:server');
+const models = require('./models/index');
+
 const normalizePort = (val) => {
+  // la fonction normalizeport renvoie un port valide, qu'il soit fourni sous la forme d'un number ou d'un string
   const port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -16,6 +19,7 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 const errorHandler = (error) => {
+  // la fonction errorHandler  recherche les différentes erreurs et les gère de manière appropriée. Elle est ensuite enregistrée dans le serveur ;
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -38,7 +42,18 @@ const errorHandler = (error) => {
 
 const server = http.createServer(app);
 
-sequelize.sync({ force: false }).then(() => {
-  server.listen(port);
-  console.log(`Server started on port ${port}`);
-});
+models.sequelize.sync().then(function () {
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+  server.listen(port, function () {
+    debug('Express server listening on port ' + server.address().port);
+  });
+  server.on('error', errorHandler);
+  server.on('listening', () => {
+    const address = server.address();
+    const bind =
+      typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
+    console.log('Listening on ' + bind);
+  });
+}); // un écouteur d'évènements est également enregistré, consignant le port ou le canal nommé sur lequel le serveur s'exécute dans la console.

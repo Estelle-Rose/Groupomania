@@ -4,7 +4,9 @@ const morgan = require('morgan');
 const userRoutes = require('./routes/user');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
-const { sequelize } = require('./models');
+const { sequelize } = require('./models/index');
+const models = require('./models/');
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -27,14 +29,14 @@ app.use('/api', userRoutes);
 app.use('/api', postsRoutes);
 app.use('/api', commentsRoutes);
 
-// const dbTest = async function () {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Connection has been established successfully.');
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-//   }
-// };
-// dbTest();
+const dbTest = async function () {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+};
+dbTest();
 
 module.exports = app;

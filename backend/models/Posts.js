@@ -16,14 +16,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    link: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    video: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
     date_create: {
       type: DataTypes.DATE,
       allowNull: true
