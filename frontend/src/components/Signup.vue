@@ -1,18 +1,22 @@
 <template>
-  <v-container>
+  <v-container fluid class="signup-container">
+    <v-img
+      :src="require('../assets/teamjump.jpg')"
+      class="my-3 team-img hidden-sm-and-down"
+    />
     <v-layout row class="signup-box">
       <v-col lg="5" md="6" sm="6" ml-5>
-        <v-card elevation="2" outlined shaped tile xs6>
+        <v-card class="signup-card" elevation="4" xs6>
           <v-card-title flat dense dark>Inscription</v-card-title>
           <v-card-text class="font-weight-light">
-            <v-form v-model="isValid">
+            <v-form v-model="isValid" autocomplete="off">
               <v-text-field
                 label="pseudo"
                 v-model="pseudo"
                 type="text"
                 :rules="[(v) => !!v || 'Pseudo is required']"
                 required
-                placeholder=" pseudo"
+                class="input-group--focused"
               >
               </v-text-field>
               <v-text-field
@@ -21,16 +25,17 @@
                 type="email"
                 :rules="[(v) => !!v || 'Email is required']"
                 required
-                placeholder=" email"
+                class="input-group--focused"
+                autocomplete="off"
               >
               </v-text-field>
               <v-text-field
-                label="inputPassword"
+                label="mot de passe"
                 v-model="password"
                 type="password"
                 :rules="[(v) => !!v || 'Password is required']"
                 required
-                placeholder="mot de passe"
+                class="input-group--focused"
               >
               </v-text-field>
 
@@ -40,12 +45,13 @@
               <input />
               <br />
               <div class="danger-alert" v-html="errorMessage" />
+              <div class="danger-alert" v-html="message" />
               <br />
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-btn
-              class="indigo"
+              class="dark"
               elevation="2"
               :disabled="!isValid"
               v-on:click.prevent="signup"
@@ -69,6 +75,7 @@
         email: '',
         password: '',
         errorMessage: null,
+        message: null,
         isValid: true,
       };
     },
@@ -80,7 +87,14 @@
             email: this.email,
             password: this.password,
           });
+          this.message = response.data.message;
           console.log(response.data);
+          this.$store.dispatch('setToken', response.data.token);
+          this.$store.dispatch('setUser', response.data.user);
+          let router = this.$router;
+          setTimeout(function() {
+            router.push('/');
+          }, 1500);
         } catch (error) {
           this.errorMessage = error.response.data.error;
         }
@@ -91,7 +105,35 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .signup-container {
+    //
+    height: 100vh;
+    margin-top: 5px;
+  }
   .signup-box {
+    position: relative;
     justify-content: center;
+    margin-top: 100px;
+    margin-left: 200px;
+  }
+  .signup-card {
+    border: 3px solid #676c75 !important;
+    background-color: #ffebee !important;
+  }
+  .team-img {
+    clip-path: polygon(
+      0 30%,
+      60% 30%,
+      60% 0%,
+      100% 50%,
+      60% 100%,
+      60% 71%,
+      0 72%
+    );
+    width: 600px;
+    height: 500px;
+    position: absolute;
+    top: 70px;
+    left: 0;
   }
 </style>

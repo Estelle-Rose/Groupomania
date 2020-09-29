@@ -4,6 +4,9 @@ export default {
   signup(credentials) {
     return axios.post('http://localhost:3000/api/signup', credentials);
   },
+  login(credentials) {
+    return axios.post('http://localhost:3000/api/login', credentials);
+  },
 };
 
 /* Auth.register({

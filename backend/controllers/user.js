@@ -3,46 +3,51 @@ const models = require('../models'); // modele user
 const jwt = require('jsonwebtoken'); // token generator package
 const emailValidator = require('email-validator'); // email validator package
 const passwordValidator = require('password-validator'); // password validator package
+const config = require('../config/config');
 
-exports.signup = (req, res) => {
-  models.Users.findOne({
-    where: { email: req.body.email } && { pseudo: req.body.pseudo },
-  })
-    .then((user) => {
-      if (!user) {
-        bcrypt
-          .hash(req.body.password, 10)
-          .then((hash) => {
-            models.Users.create({
-              pseudo: req.body.pseudo,
-              email: req.body.email,
-              password: hash,
-            });
-          })
-          .then((newUser) =>
-            res.status(201).json({
-              message: 'Utilisateur créé : ',
-            })
-          )
-          .catch(() => res.status(500).json({ message: 'erreur !' }));
-      } else {
-        res.status(400).json({
-          message: 'Cette adresse mail ou ce pseudo sont déjà utilisés !',
-        });
-      }
-    })
-    .catch((error) => res.status(500).json({ error }));
+exports.signup = async (req, res) => {
+  try {
+    const user = await models.Users.findOne({
+      where: { email: req.body.email } && { pseudo: req.body.pseudo },
+    });
+    if (user) {
+      res.status(400).json({
+        message: 'Cette adresse mail ou ce pseudo sont déjà utilisés !',
+      });
+    } else {
+      const hash = await bcrypt.hash(req.body.password, 10);
+      const newUser = await models.Users.create({
+        pseudo: req.body.pseudo,
+        email: req.body.email,
+        password: hash,
+      });
+      const userJson = await newUser.toJSON();
+
+      res.status(201).json({
+        user: userJson,
+        token: jwt.sign(
+          // on génère un token de session pour le user maintenant connecté
+          { userId: userJson.id },
+          'JWT_SECRET',
+          { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 }
+        ),
+        message: 'Votre compte est bien créé',
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+  }
 };
 
 exports.login = async (req, res, next) => {
   // connexion du user
   try {
     const user = await models.Users.findOne({
-      where: { pseudo: req.body.pseudo },
+      where: { email: req.body.email },
     }) // on vérifie que l'adresse mail figure bien dan la bdd
       .then((user) => {
         if (user === null) {
-          return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+          return res.status(403).send({ error: 'Connexion échouée' });
         } else {
           bcrypt
             .compare(req.body.password, user.password) // on compare les mots de passes
@@ -50,16 +55,18 @@ exports.login = async (req, res, next) => {
               if (!valid) {
                 return res
                   .status(401)
-                  .json({ error: 'Mot de passe incorrect !' });
+                  .send({ error: 'Mot de passe incorrect !' });
               }
-              res.status(200).json({
-                userId: user.id,
+              user = user.toJSON();
+              res.status(200).send({
+                user: user,
                 token: jwt.sign(
                   // on génère un token de session pour le user maintenant connecté
                   { userId: user.id },
-                  'RANDOM_TOKEN_SECRET',
-                  { expiresIn: '24h' }
+                  'JWT_SECRET',
+                  { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 }
                 ),
+                message: 'Bonjour ' + user.pseudo + ' !',
               });
             })
             .catch((error) => res.status(500).json({ error }));
@@ -67,6 +74,6 @@ exports.login = async (req, res, next) => {
       })
       .catch((error) => res.status(500).json({ error }));
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).send({ error: 'Erreur serveur' });
   }
 };
