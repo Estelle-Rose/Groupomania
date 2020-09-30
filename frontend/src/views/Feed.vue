@@ -19,7 +19,7 @@
         </v-card>
       </v-col>
       <posts
-        v-for="(item, i) in postsContent"
+        v-for="(item, i) in postsList"
         :key="i"
         :title="item.title"
         :message="item.message"
@@ -31,43 +31,43 @@
 </template>
 
 <script>
-  // @ is an alias to /src
-  import Posts from '../components/Posts.vue';
-  export default {
-    name: 'Feed',
-    components: {
-      Posts,
-    },
-    data() {
-      return {
-        postsContent: [
-          {
-            title: 'Ce soir il fair froid',
-            message: '',
-            image: {
-              source: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-            },
-            author: 'Estelle66',
+// @ is an alias to /src
+import Posts from "../components/Posts.vue";
+export default {
+  name: "Feed",
+  components: {
+    Posts
+  },
+  data() {
+    return {
+      postsList: [
+        {
+          title: "Ce soir il fair froid",
+          message: "",
+          image: {
+            source: "https://cdn.vuetifyjs.com/images/cards/halcyon.png"
           },
-          {
-            title: 'Trop de la balle',
-            message: '',
-            image: {
-              source: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-            },
-            author: 'Paul66',
+          author: "Estelle66"
+        },
+        {
+          title: "Trop de la balle",
+          message: "",
+          image: {
+            source: "https://cdn.vuetifyjs.com/images/cards/halcyon.png"
           },
-          {
-            title: 'Je suis la plus belle',
-            message: 'hkjhkjhkjhkjhkjhkhkjhkjh',
-            image: {
-              source: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
-            },
-            author: 'Estelle66',
+          author: "Paul66"
+        },
+        {
+          title: "Je suis la plus belle",
+          message: "hkjhkjhkjhkjhkjhkhkjhkjh",
+          image: {
+            source: "https://cdn.vuetifyjs.com/images/cards/halcyon.png"
           },
-        ],
-      };
-    },
-  };
+          author: "Estelle66"
+        }
+      ]
+    };
+  }
+};
 </script>
 <style></style>
