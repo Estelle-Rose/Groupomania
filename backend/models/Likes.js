@@ -4,12 +4,12 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('Likes', {
     id: {
       autoIncrement: true,
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       primaryKey: true
     },
-    Posts_id: {
-      type: DataTypes.INTEGER(11),
+    post_id: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       references: {
         model: {
@@ -17,29 +17,18 @@ module.exports = function(sequelize, DataTypes) {
         },
         key: 'id'
       },
-      unique: "fk_Likes_Posts"
+      unique: "fk_like_post_id"
     },
-    Posts_Users_id: {
-      type: DataTypes.INTEGER(11),
+    user_id: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       references: {
         model: {
           tableName: 'Posts',
         },
-        key: 'User_id'
+        key: 'user_id'
       },
-      unique: "fk_Likes_post_user"
-    },
-    Comments_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false,
-      references: {
-        model: {
-          tableName: 'Comments',
-        },
-        key: 'id'
-      },
-      unique: "fk_Likes_comments"
+      unique: "fk_like_user_id"
     }
   }, {
     sequelize,

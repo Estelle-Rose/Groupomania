@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-// const postsCtrl = require('../controllers/posts');
+const postsCtrl = require('../controllers/posts');
 
-//router.get('/posts', postCtrl.getAllPosts);
-// router.post('/posts', postsCtrl.createPost);
+router.get('/posts', postsCtrl.getAllPosts);
+router.post('/posts', postsCtrl.createPost);
 // router.get('/posts', postsCtrl.getAllPosts);
 // router.get('/posts/:id', postsCtrl.getOnePost);
 // router.put('/posts/:id', postsCtrl.updatePost);

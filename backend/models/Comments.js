@@ -8,20 +8,21 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    comment: {
-      type: "LONGTEXT",
+    message: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
-    date_created: {
+    created: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
-    date_update: {
+    updated: {
       type: DataTypes.DATE,
       allowNull: true
     },
     post_id: {
-      type: DataTypes.INTEGER(11),
+      type: DataTypes.INTEGER(10).UNSIGNED,
       allowNull: false,
       references: {
         model: {
@@ -29,22 +30,18 @@ module.exports = function(sequelize, DataTypes) {
         },
         key: 'id'
       },
-      unique: "fk_Comments_Posts"
+      unique: "fk_comment_post_id"
     },
-    com_user_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: false
-    },
-    Posts_Users_id: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true,
+    user_id: {
+      type: DataTypes.INTEGER(10).UNSIGNED,
+      allowNull: false,
       references: {
         model: {
           tableName: 'Posts',
         },
-        key: 'User_id'
+        key: 'user_id'
       },
-      unique: "fk_Comment_post_user"
+      unique: "fk_comment_user_id"
     }
   }, {
     sequelize,

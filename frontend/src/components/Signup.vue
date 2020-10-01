@@ -45,7 +45,28 @@
               <input />
               <br />
               <div class="danger-alert" v-html="errorMessage" />
-              <div class="danger-alert" v-html="message" />
+              <div class="danger-alert" v-html="message">
+                <v-card v-show="hasSignedUp" class="mx-auto" max-width="500">
+                  <v-window>
+                    <v-window-item>
+                      <div class="pa-4 text-center">
+                        <v-img
+                          class="mb-4"
+                          contain
+                          height="128"
+                          src="https://cdn.vuetifyjs.com/images/logos/v.svg"
+                        ></v-img>
+                        <h3 class="title font-weight-light mb-2">
+                          Welcome to Vuetify
+                        </h3>
+                        <span class="caption grey--text"
+                          >Thanks for signing up!</span
+                        >
+                      </div>
+                    </v-window-item>
+                  </v-window>
+                </v-card>
+              </div>
               <br />
             </v-form>
           </v-card-text>
@@ -77,6 +98,7 @@
         errorMessage: null,
         message: null,
         isValid: true,
+        hasSignedUp: false,
       };
     },
     methods: {
@@ -89,12 +111,14 @@
           });
           this.message = response.data.message;
           console.log(response.data);
+
           this.$store.dispatch('setToken', response.data.token);
           this.$store.dispatch('setUser', response.data.user);
-          let router = this.$router;
-          setTimeout(function() {
+
+          /*let router = this.$router;
+            setTimeout(function() {
             router.push('/posts');
-          }, 1500);
+          }, 1500); */
         } catch (error) {
           this.errorMessage = error.response.data.error;
         }

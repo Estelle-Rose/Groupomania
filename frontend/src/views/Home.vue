@@ -28,27 +28,15 @@
         <h2 class="headline font-weight-bold mb-3">
           What's next?
         </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-  // @ is an alias to /src
+// @ is an alias to /src
 
-  export default {
-    name: 'Home',
-  };
+export default {
+  name: "Home"
+};
 </script>
