@@ -77,3 +77,39 @@ exports.login = async (req, res, next) => {
     return res.status(500).send({ error: 'Erreur serveur' });
   }
 };
+exports.getAccount = async (req, res) => {
+  try {
+    const user = await models.Users.findOne({
+      attributes: ['pseudo', 'email', 'photo'],
+      where: { id: req.params.id }
+    })
+    res.status(201).send(user);
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
+  }
+}
+
+
+
+exports.updateAccount = async (req, res) => {
+  try {
+    const id = req.params.id;
+    /* const user = await models.Users.findOne({ where: { id: id } });
+    console.log(user) */
+    const userObject = req.file ? // on vérifie si la modification concerne le body ou un nouveau fichier image
+      {
+        ...JSON.parse(req.body),
+        photo: `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`
+      } : { ...req.body };
+    console.log(userObject);
+    const response = await models.Users.update(userObject, { where: { id: id } }
+    );
+    res.status(200).json({ message: "profil modifié" });
+
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+  }
+} 

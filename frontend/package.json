@@ -19,6 +19,7 @@
     "vue-router": "^3.2.0",
     "vuetify": "^2.3.10",
     "vuex": "^3.5.1",
+    "vuex-persistedstate": "^3.1.0",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
@@ -58,18 +59,7 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {},
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "mocha": true
-        }
-      }
-    ]
+    "rules": {}
   },
   "browserslist": [
     "> 1%",

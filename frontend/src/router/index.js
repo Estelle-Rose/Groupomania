@@ -5,6 +5,7 @@ import Signup from '../components/Signup.vue';
 import Login from '../components/Login.vue';
 import Feed from '../views/Feed.vue';
 import NewPost from '../components/NewPost.vue';
+import Account from '../components/Account.vue';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: Account,
   },
   {
     path: '/posts',

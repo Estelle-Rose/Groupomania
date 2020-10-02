@@ -22,6 +22,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    photo: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    bio: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     admin: {
       type: DataTypes.INTEGER(1),
       allowNull: true,

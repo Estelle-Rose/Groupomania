@@ -33,6 +33,6 @@ exports.createPost = async (req, res) => {
       postJson.user_id
     ); */
   } catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });
+    return res.status(500).send({ error: 'Une erreur est survenue lors de la création du post' });
   }
 };
