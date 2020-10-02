@@ -8,15 +8,15 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    title: {
-      type: DataTypes.STRING(255),
+    message: {
+      type: DataTypes.TEXT,
       allowNull: false
     },
-    message: {
+    imageUrl: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    url: {
+    link: {
       type: DataTypes.TEXT,
       allowNull: true
     },

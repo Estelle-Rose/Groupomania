@@ -19,7 +19,7 @@ exports.createPost = async (req, res) => {
     const post = await Posts.create({
       title: req.body.title,
       message: req.body.message,
-      url: req.body.url,
+      imageUrl: req.body.imageUrl,
       user_id: req.body.user_id,
     });
     res.send(JSON.stringify(post));
