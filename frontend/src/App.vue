@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <!-- header -->
     <page-header></page-header>
     <v-main>
       <v-container fluid>
@@ -12,29 +13,29 @@
 </template>
 
 <script>
-  import PageHeader from './components/Header.vue';
-  import PageFooter from './components/Footer.vue';
-  export default {
-    name: 'app',
-    components: {
-      PageHeader,
-      PageFooter,
-    },
+import PageHeader from "./components/Header.vue";
+import PageFooter from "./components/Footer.vue";
+export default {
+  name: "app",
+  components: {
+    PageHeader,
+    PageFooter
+  },
 
-    data: () => {
-      return {
-        drawer: false,
-      };
-    },
-  };
+  data: () => {
+    return {
+      drawer: false
+    };
+  }
+};
 </script>
 <style lang="scss">
-  .v-btn {
-    color: #003032 !important;
-    &:hover {
-      color: #ff4081 !important; /*accent color*/
-    }
+.v-btn {
+  color: #003032 !important;
+  &:hover {
+    color: #ff4081 !important; /*accent color*/
   }
+}
 </style>
 <!--   <v-app-bar app color="red lighten-4" dark>
       <div class="d-flex align-center">
