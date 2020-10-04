@@ -29,10 +29,9 @@
             <posts
               v-for="(item, i) in posts"
               :key="i"
-              :title="item.title"
               :message="item.message"
               :pseudo="item.User.pseudo"
-              :url="item.url"
+              :link="item.link"
             ></posts>
           </v-card-text>
         </v-card>
@@ -86,41 +85,42 @@
 </template>
 
 <script>
-  // @ is an alias to /src
-  import PostService from '../services/PostService';
-  import Posts from '../components/Posts.vue';
-  import { mdiPencilOutline } from '@mdi/js';
-  export default {
-    name: 'Feed',
-    components: {
-      Posts,
-    },
-    data() {
-      return {
-        posts: [],
-        errorMessage: null,
-        mdiPencilOutline,
-      };
-    },
-    async mounted() {
-      try {
-        const response = await PostService.getPosts();
-        for (const post of response.data.posts) {
-          console.log(post);
-          this.posts.push(post);
-        }
+// @ is an alias to /src
+import PostService from "../services/PostService";
+import Posts from "../components/Posts.vue";
+import { mdiPencilOutline } from "@mdi/js";
+export default {
+  name: "Feed",
+  components: {
+    Posts
+  },
+  data() {
+    return {
+      posts: [],
+      errorMessage: null,
+      mdiPencilOutline
+    };
+  },
+  async mounted() {
+    try {
+      const response = await PostService.getPosts();
+      console.log(response);
+      for (const post of response.data) {
+        console.log(post);
+        this.posts.push(post);
+      }
 
-        /* this.$store.dispatch('setToken', response.data.token);
+      /* this.$store.dispatch('setToken', response.data.token);
           this.$store.dispatch('setUser', response.data.user);
           let router = this.$router;
           setTimeout(function() {
             router.push('/posts');
           }, 1500); */
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
-  };
+    } catch (error) {
+      this.errorMessage = error.response.data.error;
+    }
+  }
+};
 </script>
 
 <style></style>

@@ -3,7 +3,7 @@
     <v-card class="posts-card mx-auto mt-4 mb-4" elevation="2">
       <div>
         <div class="d-flex justify-space-between pr-2 blue-grey lighten-2">
-          <v-card-title class="h6">{{ title }}</v-card-title>
+          <v-card-title class="h6">Post</v-card-title>
           <p class="mt-5">publié par {{ pseudo }}</p>
         </div>
         <div class="pl-3 pr-2-3">
@@ -12,7 +12,7 @@
             {{ message }}</v-card-text
           >
         </div>
-        <v-img :src="url" height="250" width="350" class="mx-auto"></v-img>
+        <v-img :src="link" height="250" width="350" class="mx-auto"></v-img>
         <v-card-actions>
           <v-btn @click="show = !show" color="red lighten-2" text>
             Commentaires
@@ -35,7 +35,7 @@
           <v-spacer></v-spacer>
 
           <v-btn icon @click="show = !show">
-            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            <v-icon>{{ show ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
           </v-btn>
         </v-card-actions>
         <v-expand-transition>
@@ -56,51 +56,51 @@
   </div>
 </template>
 <script>
-  import { mdiEmoticonOutline } from '@mdi/js';
-  import { mdiEmoticonSadOutline } from '@mdi/js';
-  import { mdiTrashCanOutline } from '@mdi/js';
-  import { mdiUpdate } from '@mdi/js';
-  export default {
-    name: 'Posts',
-    props: {
-      url: {
-        type: String,
-      },
-
-      title: {
-        type: String,
-        required: true,
-      },
-      message: {
-        type: String,
-      },
-      user_id: {
-        type: Number,
-      },
-
-      pseudo: {
-        type: String,
-      },
+import { mdiEmoticonOutline } from "@mdi/js";
+import { mdiEmoticonSadOutline } from "@mdi/js";
+import { mdiTrashCanOutline } from "@mdi/js";
+import { mdiUpdate } from "@mdi/js";
+export default {
+  name: "Posts",
+  props: {
+    link: {
+      type: String
     },
-    data() {
-      return {
-        show: false,
-        mdiEmoticonOutline,
-        mdiEmoticonSadOutline,
-        mdiTrashCanOutline,
-        mdiUpdate,
-      };
+
+    title: {
+      type: String,
+      required: true
     },
-  };
+    message: {
+      type: String
+    },
+    user_id: {
+      type: Number
+    },
+
+    pseudo: {
+      type: String
+    }
+  },
+  data() {
+    return {
+      show: false,
+      mdiEmoticonOutline,
+      mdiEmoticonSadOutline,
+      mdiTrashCanOutline,
+      mdiUpdate
+    };
+  }
+};
 </script>
 <style lang="scss" scoped>
-  .posts-card {
-    width: 40em;
-  }
-  .posts-row {
-    justify-content: center;
-  }
-  .materials-icons {
-    color: brown;
-  }
+.posts-card {
+  width: 40em;
+}
+.posts-row {
+  justify-content: center;
+}
+.materials-icons {
+  color: brown;
+}
 </style>

@@ -5,9 +5,13 @@ const db = require('../models'); // accès tables
 exports.getAllPosts = async (req, res) => {
   try {
 
-    const posts = await db.Post.findAll({ include: db.User });
+    const posts = await db.Post.findAll({
+      include: [
+        db.User
+      ]
+    });
     console.log(posts)
-    res.status(200).json({ posts: posts });
+    res.status(200).json(posts);
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
