@@ -1,6 +1,9 @@
 <template>
   <v-container fluid class="signup-container">
-    <v-img :src="require('../assets/teamjump.jpg')" class="my-3 team-img hidden-sm-and-down" />
+    <v-img
+      :src="require('../assets/teamjump.jpg')"
+      class="my-3 team-img hidden-sm-and-down"
+    />
     <v-layout row class="signup-box">
       <v-col lg="5" md="8" ml-5>
         <v-card class="signup-card" elevation="4" xs6>
@@ -11,7 +14,7 @@
                 label="pseudo"
                 v-model="pseudo"
                 type="text"
-                :rules="[(v) => !!v || 'Pseudo is required']"
+                :rules="[v => !!v || 'Pseudo is required']"
                 required
                 class="input-group--focused"
               ></v-text-field>
@@ -19,7 +22,7 @@
                 label="email"
                 v-model="email"
                 type="email"
-                :rules="[(v) => !!v || 'Email is required']"
+                :rules="[v => !!v || 'Email is required']"
                 required
                 class="input-group--focused"
                 autocomplete="off"
@@ -28,7 +31,7 @@
                 label="mot de passe"
                 v-model="password"
                 type="password"
-                :rules="[(v) => !!v || 'Password is required']"
+                :rules="[v => !!v || 'Password is required']"
                 required
                 class="input-group--focused"
               ></v-text-field>
@@ -50,8 +53,12 @@
                           height="128"
                           src="https://cdn.vuetifyjs.com/images/logos/v.svg"
                         ></v-img>
-                        <h3 class="title font-weight-light mb-2">Welcome to Vuetify</h3>
-                        <span class="caption grey--text">Thanks for signing up!</span>
+                        <h3 class="title font-weight-light mb-2">
+                          Welcome to Vuetify
+                        </h3>
+                        <span class="caption grey--text"
+                          >Thanks for signing up!</span
+                        >
                       </div>
                     </v-window-item>
                   </v-window>
@@ -66,7 +73,8 @@
               elevation="2"
               :disabled="!isValid"
               v-on:click.prevent="signup"
-            >Envoyer</v-btn>
+              >Envoyer</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-col>
@@ -103,11 +111,10 @@ export default {
 
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);
-
-        /*let router = this.$router;
-            setTimeout(function() {
-            router.push('/posts');
-          }, 1500); */
+        let router = this.$router;
+        setTimeout(function() {
+          router.push("/posts");
+        }, 1500);
       } catch (error) {
         this.errorMessage = error.response.data.error;
       }

@@ -24,7 +24,10 @@
                 </v-avatar></v-card-title
               >
             </div>
-            <v-card-text class="font-weight-light d-flex flex-column">
+            <v-card-text
+              v-if="bio"
+              class="font-weight-light d-flex flex-column"
+            >
               <body-1>Ta bio:</body-1>
               <body-1>{{ bio }}</body-1>
               <br />

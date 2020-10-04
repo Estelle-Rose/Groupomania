@@ -1,28 +1,43 @@
-const { Posts } = require('../models'); // accès tables
-const { Users } = require('../models');
-Users.hasMany(Posts, { foreignKey: 'user_id' });
-Posts.belongsTo(Users, { foreignKey: 'user_id' });
-exports.getAllPosts = async (req, res, next) => {
-  try {
-    const posts = await Posts.findAll({
-      include: Users,
-    });
+const db = require('../models'); // accès tables
 
-    console.log('All posts:', JSON.stringify(posts, null, 2));
-    res.status(200).send({ posts });
-  } catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });
+
+
+exports.getAllPosts = async (req, res) => {
+  try {
+
+    const posts = await db.Post.findAll({ include: db.User });
+    console.log(posts)
+    res.status(200).json({ posts: posts });
   }
-};
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
+  }
+}
+exports.getOnePost = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const post = await db.Post.findOne({
+      attributes: ['id', 'message', 'link', 'userId'],
+      where: { id: req.params.id }
+    })
+    res.status(200).json(post);
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
+  }
+}
 exports.createPost = async (req, res) => {
   try {
-    const post = await Posts.create({
-      title: req.body.title,
+
+    const post = await db.Post.create({
       message: req.body.message,
+      link: req.body.link,
       imageUrl: req.body.imageUrl,
-      user_id: req.body.user_id,
-    });
-    res.send(JSON.stringify(post));
+      UserId: req.body.userId
+    })
+    res.status(201).json(post);
     console.log('post:', JSON.stringify(post));
     //const postJson = await post.toJSON();
     // res.status(200).json({ postJson });
