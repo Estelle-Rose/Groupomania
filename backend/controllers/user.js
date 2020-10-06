@@ -1,40 +1,52 @@
 const bcrypt = require('bcrypt'); // chiffrement
 const db = require('../models'); // modele user
-const jwt = require('jsonwebtoken'); // token generator package
 const emailValidator = require('email-validator'); // email validator package
 const passwordValidator = require('password-validator'); // password validator package
-const config = require('../config');
+const token = require('../middleware/token');
 
 exports.signup = async (req, res) => {
   try {
     const user = await db.User.findOne({
       where: { email: req.body.email } && { pseudo: req.body.pseudo },
-    });
-    if (user) {
-      res.status(400).json({
-        message: 'Cette adresse mail ou ce pseudo sont déjà utilisés !',
-      });
-    } else {
-      const hash = await bcrypt.hash(req.body.password, 10);
-      const newUser = await db.User.create({
-        pseudo: req.body.pseudo,
-        email: req.body.email,
-        password: hash,
-      });
-      const userJson = await newUser.toJSON();
+    })
+      .then((user) => {
+        if (user) {
+          res.status(400).json({ message: 'Cette adresse mail ou ce pseudo sont déjà utilisés !' });
+        }
+        else {
+          bcrypt.hash(req.body.password, 10)
+            .then(hash => {
+              const newUser = db.User.create({
+                pseudo: req.body.pseudo,
+                email: req.body.email,
+                password: hash,
+              })
 
-      res.status(201).json({
-        user: userJson,
-        token: jwt.sign(
-          // on génère un token de session pour le user maintenant connecté
-          { userId: userJson.id },
-          'JWT_SECRET',
-          { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 }
-        ),
-        message: 'Votre compte est bien créé',
-      });
-    }
-  } catch (error) {
+                .then((newUser) => {
+
+                  newUser = newUser.toJSON();
+                  const tokenObject = token.issueJWT(newUser)
+                  res.status(200).send({
+                    user: newUser,
+                    token: tokenObject.token,
+                    expires: tokenObject.expiresIn,
+                    message: `Votre compte est bien créé ${newUser.pseudo} !`,
+                  });
+                })
+                .catch((error) => {
+                  res.status(500).send({ error: 'Erreur serveur' });
+                })
+            })
+            .catch((error) => {
+              res.status(500).send({ error: 'Erreur serveur' });
+            })
+        }
+      })
+      .catch((error) => {
+        return res.status(500).send({ error: 'Erreur serveur' });
+      })
+  }
+  catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
   }
 };
@@ -58,14 +70,12 @@ exports.login = async (req, res, next) => {
                   .send({ error: 'Mot de passe incorrect !' });
               }
               user = user.toJSON();
+              const tokenObject = token.issueJWT(user)
               res.status(200).send({
                 user: user,
-                token: jwt.sign(
-                  // on génère un token de session pour le user maintenant connecté
-                  { userId: user.id },
-                  'JWT_SECRET',
-                  { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 }
-                ),
+                token: tokenObject.token,
+                sub: tokenObject.sub,
+                expires: tokenObject.expiresIn,
                 message: 'Bonjour ' + user.pseudo + ' !',
               });
             })
@@ -123,4 +133,10 @@ exports.updateAccount = async (req, res) => {
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
   }
-} 
+}
+  /* jwt.sign(
+// on génère un token de session pour le user maintenant connecté
+{ userId: user.id },
+'JWT_SECRET',
+{ expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 }
+), */

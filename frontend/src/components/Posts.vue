@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card class="posts-card mx-auto mt-4 mb-4" elevation="2">
+    <v-card class="posts-card mx-auto mt-4 mb-4 pb-5" round elevation="2">
       <div>
         <div class="d-flex justify-space-between pr-2 blue-grey lighten-2">
           <v-card-title class="h6">Post</v-card-title>
@@ -12,18 +12,32 @@
             {{ message }}</v-card-text
           >
         </div>
-        <v-img :src="link" height="250" width="350" class="mx-auto"></v-img>
-        <v-card-actions>
-          <v-btn @click="show = !show" color="red lighten-2" text>
+        <v-img
+        
+          :src="link"
+          :aspect-ratio="16 / 9"
+          :width="width"
+          class="mx-auto pb-5"
+        ></v-img>
+        <v-img
+          v-if="imageUrl"
+          :src="imageUrl"
+          :aspect-ratio="16 / 9"
+          :width="width"
+          class="mx-auto pb-5"
+        ></v-img>
+        <v-divider></v-divider>
+        <v-card-actions class="pt-5">
+          <v-btn @click="show = !show" color="red lighten-2 " text>
             Commentaires
           </v-btn>
           <v-btn
-            ><v-icon class=" material-icons ">{{
-              mdiEmoticonOutline
-            }}</v-icon></v-btn
+            ><v-icon class=" material-icons ">{{ mdiEmoticonOutline }}</v-icon
+            >{{ dislikes }}</v-btn
           >
           <v-btn
-            ><v-icon>{{ mdiEmoticonSadOutline }}</v-icon></v-btn
+            ><v-icon>{{ mdiEmoticonSadOutline }}</v-icon
+            >{{ dislikes }}</v-btn
           >
           <v-btn
             ><v-icon>{{ mdiUpdate }}</v-icon></v-btn
@@ -66,19 +80,16 @@ export default {
     link: {
       type: String
     },
-
-    title: {
-      type: String,
-      required: true
-    },
     message: {
       type: String
     },
     user_id: {
       type: Number
     },
-
     pseudo: {
+      type: String
+    },
+    imageUrl: {
       type: String
     }
   },
@@ -88,7 +99,10 @@ export default {
       mdiEmoticonOutline,
       mdiEmoticonSadOutline,
       mdiTrashCanOutline,
-      mdiUpdate
+      mdiUpdate,
+      width: 500,
+      likes: "",
+      dislikes: ""
     };
   }
 };

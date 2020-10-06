@@ -7,6 +7,7 @@ import vuetify from './plugins/vuetify';
 import store from './store/store';
 import { sync } from 'vuex-router-sync';
 
+
 Vue.config.productionTip = false;
 
 Vue.use(Vuetify);

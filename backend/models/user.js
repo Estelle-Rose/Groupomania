@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      /* models.User.hasMany(models.Post)
+      models.User.hasMany(models.Post)
       models.User.hasMany(models.Comment)
-      models.User.hasMany(models.Like) */
+      models.User.hasMany(models.Like)
     }
   };
   User.init({
-    pseudo: { type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex' },
-    email: { type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex' },
+    pseudo: { type: DataTypes.STRING, allowNull: false, unique: true },
+    email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
     photo: DataTypes.STRING,
     bio: DataTypes.TEXT,
