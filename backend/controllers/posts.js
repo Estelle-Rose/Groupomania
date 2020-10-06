@@ -1,6 +1,6 @@
 const token = require('../middleware/token');
 const models = require('../models'); // accès tables
-
+const fs = require('fs');
 
 
 exports.getAllPosts = async (req, res) => {
@@ -69,7 +69,28 @@ exports.createPost = (req, res) => {
       res.status(500).send({ error: 'Erreur serveur' });
     })
 };
-exports.deletePost = (req, res, next) => { }
+exports.deletePost = (req, res, next) => {
+  models.Post.findOne({ where: { id: req.params.id } })
+    .then(post => {
+      if (post.imageUrl) {
+        const filename = post.imageUrl.split('/upload')[1];
+        console.log(post.imageUrl);
+        fs.unlink(`upload/${filename}`, () => {
+          models.Post.destroy({ where: { id: post.id } });
+          res.status(200).json({ message: 'Post supprimé' })
+        })
+
+
+      } else {
+        models.Post.destroy({ where: { id: post.id } });
+        res.status(200).json({ message: 'Post supprimé' })
+      }
+    })
+    .catch(err => {
+      res.status(500).send({ error: 'Erreur ' });
+    })
+
+}
 
 /* exports.createPost = async (req, res) => {
   try {
