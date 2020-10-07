@@ -10,7 +10,8 @@ router.get('/protected', auth, (req, res, next) => {
 });
 
 router.get('/posts', auth, postsCtrl.getAllPosts);
-router.post('/posts/add', multer, postsCtrl.createPost);
+router.get('/posts', auth, postsCtrl.getHotPosts);
+router.post('/posts/add', auth, multer, postsCtrl.createPost);
 
 router.get('/posts/:id', auth, postsCtrl.getOnePost);
 // router.put('/posts/:id', postsCtrl.updatePost);

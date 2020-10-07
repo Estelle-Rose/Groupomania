@@ -7,6 +7,7 @@ import Feed from '../views/Feed.vue';
 import NewPost from '../components/NewPost.vue';
 import Account from '../components/Account.vue';
 
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -35,6 +36,8 @@ const routes = [
     name: 'feed',
     component: Feed,
   },
+
+
   {
     path: '/posts/add',
     name: 'NewPost',

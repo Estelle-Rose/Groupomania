@@ -44,7 +44,10 @@
           />
         </div>
         <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-        <div class="message">{{ messageRetour }}</div>
+        <br />
+        <br />
+        <div class="danger-alert" v-html="errorMessage" />
+        <div class="danger-alert" v-html="messageRetour" />
       </v-form>
     </v-card>
   </v-container>
@@ -53,6 +56,7 @@
 import { mdiMessageSettingsOutline } from "@mdi/js";
 //import PostService from "../services/PostService";
 import axios from "axios";
+
 export default {
   name: "NewPost",
 
@@ -68,7 +72,8 @@ export default {
       link: null,
       //userId: this.$store.state.user.id,
       file: "",
-      messageRetour: ""
+      messageRetour: null,
+      errorMessage: null
     };
   },
   methods: {
@@ -94,12 +99,15 @@ export default {
             }
           }
         );
+        this.messageRetour = response.data.messageRetour;
 
         console.log(response);
-
-        //this.messageRetour = response.data.message;
+        let router = this.$router;
+        setTimeout(function() {
+          router.push("/posts");
+        }, 2000);
       } catch (error) {
-        //this.errorMessage = error.response.data.error;
+        this.errorMessage = error.response.data.error;
       }
     }
   }

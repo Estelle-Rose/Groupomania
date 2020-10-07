@@ -10,7 +10,7 @@ export default {
     return Api().get('posts/' + id);
   },
   createPost() {
-    return Api().post('posts');
+    return Api().post('posts/add');
   },
   updatePost(id) {
     return Api().put('posts/' + id);

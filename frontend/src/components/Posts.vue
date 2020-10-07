@@ -4,7 +4,10 @@
       <div>
         <div class="d-flex justify-space-between pr-2 blue-grey lighten-2">
           <v-card-title class="h6">Post</v-card-title>
-          <p class="mt-5">publié par {{ pseudo }}</p>
+          <p class="mt-5">
+            publié par {{ pseudo }} <span>{{ userId }}</span>
+          </p>
+          <span>Post n° {{ id }}</span>
         </div>
         <div class="pl-3 pr-2-3">
           <v-card-text class="text-left">
@@ -13,7 +16,6 @@
           >
         </div>
         <v-img
-        
           :src="link"
           :aspect-ratio="16 / 9"
           :width="width"
@@ -28,6 +30,7 @@
         ></v-img>
         <v-divider></v-divider>
         <v-card-actions class="pt-5">
+          <span>{{ userId }}</span>
           <v-btn @click="show = !show" color="red lighten-2 " text>
             Commentaires
           </v-btn>
@@ -39,12 +42,18 @@
             ><v-icon>{{ mdiEmoticonSadOutline }}</v-icon
             >{{ dislikes }}</v-btn
           >
-          <v-btn
-            ><v-icon>{{ mdiUpdate }}</v-icon></v-btn
-          >
-          <v-btn
-            ><v-icon>{{ mdiTrashCanOutline }}</v-icon></v-btn
-          >
+          <v-btn to=""> </v-btn>
+          <div v-if="user">
+            <v-btn
+              ><v-icon>{{ mdiUpdate }}</v-icon></v-btn
+            >
+            <v-btn @click="deletePost()"
+              ><v-icon>{{ mdiTrashCanOutline }}</v-icon></v-btn
+            >
+            <!-- <delete-button @click="deletePost()">
+              <v-icon>{{ mdiTrashCanOutline }}</v-icon></delete-button
+            > -->
+          </div>
 
           <v-spacer></v-spacer>
 
@@ -70,12 +79,17 @@
   </div>
 </template>
 <script>
+//import DeleteButton from "../components/DeleteButton";
 import { mdiEmoticonOutline } from "@mdi/js";
 import { mdiEmoticonSadOutline } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
 import { mdiUpdate } from "@mdi/js";
+//import PostService from "../services/PostService";
 export default {
   name: "Posts",
+  /* components: {
+    DeleteButton
+  } */
   props: {
     link: {
       type: String
@@ -83,7 +97,7 @@ export default {
     message: {
       type: String
     },
-    user_id: {
+    userId: {
       type: Number
     },
     pseudo: {
@@ -91,6 +105,9 @@ export default {
     },
     imageUrl: {
       type: String
+    },
+    id: {
+      type: Number
     }
   },
   data() {
@@ -102,8 +119,14 @@ export default {
       mdiUpdate,
       width: 500,
       likes: "",
-      dislikes: ""
+      dislikes: "",
+      user: true
     };
+  },
+  methods: {
+    deletePost() {
+      this.$emit("deletePost", "id");
+    }
   }
 };
 </script>

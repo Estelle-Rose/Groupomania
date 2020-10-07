@@ -18,8 +18,10 @@
             dark
           >
             <div>
-              <v-btn to="/signup">Les + récents</v-btn>
-              <v-btn class="ml-4" to="/about">Les + likés</v-btn>
+              <v-btn to="/posts" class="recents">Les + récents</v-btn>
+              <v-btn class="ml-4 hot-posts" @click="getHotPosts()"
+                >Les + likés</v-btn
+              >
             </div>
             <v-btn to="/posts/add"
               ><v-icon>{{ mdiPencilOutline }}</v-icon></v-btn
@@ -33,52 +35,12 @@
               :pseudo="item.User.pseudo"
               :link="item.link"
               :imageUrl="item.imageUrl"
+              :id="item.id"
+              :userId="item.UserId"
+              @deletePost="deletePost($event)"
             ></posts>
           </v-card-text>
         </v-card>
-        <!-- <v-card class="mx-auto" max-width="344">
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-            height="200px"
-          ></v-img>
-
-          <v-card-title>
-            Top western road trips
-          </v-card-title>
-
-          <v-card-subtitle>
-            1,000 miles of wonder
-          </v-card-subtitle>
-
-          <v-card-actions>
-            <v-btn color="orange lighten-2" text>
-              Explore
-            </v-btn>
-
-            <v-spacer></v-spacer>
-
-            <v-btn icon @click="show = !show">
-              <v-icon>{{
-                show ? "mdi-chevron-up" : "mdi-chevron-down"
-              }}</v-icon>
-            </v-btn>
-          </v-card-actions>
-
-          <v-expand-transition>
-            <div v-show="show">
-              <v-divider></v-divider>
-
-              <v-card-text>
-                I'm a thing. But, like most politicians, he promised more than
-                he could deliver. You won't have time for sleeping, soldier, not
-                with all the bed making you'll be doing. Then we'll go with that
-                data file! Hey, you add a one and two zeros to that or we walk!
-                You're going to do his laundry? I've got to find a way to
-                escape.
-              </v-card-text>
-            </div>
-          </v-expand-transition>
-        </v-card> -->
       </v-col>
       <div class="danger-alert" v-html="errorMessage" />
     </v-row>
@@ -112,6 +74,33 @@ export default {
       }
     } catch (error) {
       this.errorMessage = error.response.data.error;
+    }
+  },
+  methods: {
+    async getHotPosts() {
+      try {
+        console.log(this.posts);
+        const response = await PostService.getPosts();
+        console.log(response);
+        for (const post of response.data) {
+          console.log(post);
+          this.posts.push(post);
+        }
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
+    },
+    async deletePost() {
+      try {
+        const id = this.posts[0].id;
+        console.log(id);
+        const response = await PostService.deletePost(id);
+        console.log(response);
+        const postIndex = this.posts.findIndex(p => p.id === id);
+        this.posts.splice(postIndex, 1);
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
     }
   }
 };

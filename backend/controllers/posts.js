@@ -7,11 +7,28 @@ exports.getAllPosts = async (req, res) => {
   try {
 
     const posts = await models.Post.findAll({
+      order: [['createdAt', 'DESC']],
       include: [
         models.User
       ]
     });
+    res.status(200).send(posts);
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
 
+  }
+}
+// afficher le sposts les plus likés
+exports.getHotPosts = async (req, res) => {
+  try {
+
+    const posts = await models.Post.findAll({
+      order: [['createdAt', 'DESC']],
+      include: [
+        models.User
+      ]
+    });
     res.status(200).send(posts);
   }
   catch (error) {
@@ -58,7 +75,8 @@ exports.createPost = (req, res) => {
       })
         .then(newPost => {
           console.log(newPost)
-          res.status(201).send(newPost)
+          res.status(201).json({ post: newPost, messageRetour: 'Votre post est ajouté' })
+
 
         })
         .catch(err => {
@@ -79,8 +97,6 @@ exports.deletePost = (req, res, next) => {
           models.Post.destroy({ where: { id: post.id } });
           res.status(200).json({ message: 'Post supprimé' })
         })
-
-
       } else {
         models.Post.destroy({ where: { id: post.id } });
         res.status(200).json({ message: 'Post supprimé' })
