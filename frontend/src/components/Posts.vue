@@ -7,7 +7,19 @@
           <p class="mt-5">
             publié par {{ pseudo }} <span>{{ userId }}</span>
           </p>
-          <span>Post n° {{ id }}</span>
+          <span class="mt-5">Post n° {{ id }}</span>
+          <div v-if="userId === this.$store.state.user.id" class="post-options">
+            <v-btn class="mx-2" fab dark small color="white">
+              <v-icon class=" rounded-circle">{{
+                mdiUpdate
+              }}</v-icon></v-btn
+            >
+            <v-btn class="mx-2" fab dark small color="white">
+              <v-icon @click="deletePost({ id })" class=" rounded-circle">{{
+                mdiTrashCanOutline
+              }}</v-icon></v-btn
+            >
+          </div>
         </div>
         <div class="pl-3 pr-2-3">
           <v-card-text class="text-left">
@@ -30,30 +42,17 @@
         ></v-img>
         <v-divider></v-divider>
         <v-card-actions class="pt-5">
-          <span>{{ userId }}</span>
           <v-btn @click="show = !show" color="red lighten-2 " text>
             Commentaires
           </v-btn>
           <v-btn
             ><v-icon class=" material-icons ">{{ mdiEmoticonOutline }}</v-icon
-            >{{ dislikes }}</v-btn
+            >{{ likes }}</v-btn
           >
           <v-btn
             ><v-icon>{{ mdiEmoticonSadOutline }}</v-icon
             >{{ dislikes }}</v-btn
           >
-          <v-btn to=""> </v-btn>
-          <div v-if="user">
-            <v-btn
-              ><v-icon>{{ mdiUpdate }}</v-icon></v-btn
-            >
-            <v-btn @click="deletePost()"
-              ><v-icon>{{ mdiTrashCanOutline }}</v-icon></v-btn
-            >
-            <!-- <delete-button @click="deletePost()">
-              <v-icon>{{ mdiTrashCanOutline }}</v-icon></delete-button
-            > -->
-          </div>
 
           <v-spacer></v-spacer>
 
@@ -120,12 +119,13 @@ export default {
       width: 500,
       likes: "",
       dislikes: "",
-      user: true
+      user: false
     };
   },
+
   methods: {
     deletePost() {
-      this.$emit("deletePost", "id");
+      this.$emit("deletePost", this.id);
     }
   }
 };
@@ -139,5 +139,9 @@ export default {
 }
 .materials-icons {
   color: brown;
+}
+.post-options {
+  margin-top: 1rem;
+  display: flex;
 }
 </style>

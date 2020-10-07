@@ -37,7 +37,7 @@
               :imageUrl="item.imageUrl"
               :id="item.id"
               :userId="item.UserId"
-              @deletePost="deletePost($event)"
+              @deletePost="deletePost(item.id)"
             ></posts>
           </v-card-text>
         </v-card>
@@ -90,13 +90,15 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
-    async deletePost() {
+    async deletePost(id) {
       try {
-        const id = this.posts[0].id;
+        const userId = this.$store.state.user.id;
+        console.log(userId);
         console.log(id);
         const response = await PostService.deletePost(id);
         console.log(response);
-        const postIndex = this.posts.findIndex(p => p.id === id);
+        const postIndex = this.posts.findIndex(post => post.id === id);
+        console.log(postIndex);
         this.posts.splice(postIndex, 1);
       } catch (error) {
         this.errorMessage = error.response.data.error;
