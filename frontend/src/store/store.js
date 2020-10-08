@@ -11,11 +11,18 @@ export default new Vuex.Store({
     token: null,
     user: null,
     isLoggedIn: false,
+    posts: [],
+    post: {}
 
   },
   plugins: [
     createPersistedState()
   ],
+  getters: {
+    getById: (state) =>(id) => {
+      return state.posts.find(post => post.id === id)
+    }
+  },
   mutations: {
     setToken(state, token) {
       state.token = token;
@@ -28,6 +35,12 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user;
     },
+    setPosts(state,posts) {
+      state.posts = posts
+    },
+    setPost(state,post) {
+      state.post = post
+    }
 
   },
   actions: {
@@ -36,6 +49,12 @@ export default new Vuex.Store({
     },
     setUser({ commit }, user) {
       commit('setUser', user);
+    },
+    setPosts({ commit }, posts) {
+      commit('setPosts', posts);
+    },
+    setPost({ commit }, post) {
+      commit('setPost', post);
     },
 
   },

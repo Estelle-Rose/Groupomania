@@ -20,10 +20,9 @@ exports.signup = async (req, res) => {
                 pseudo: req.body.pseudo,
                 email: req.body.email,
                 password: hash,
+                admin: false
               })
-
                 .then((newUser) => {
-
                   newUser = newUser.toJSON();
                   const tokenObject = token.issueJWT(newUser)
                   res.status(200).send({
@@ -58,6 +57,9 @@ exports.login = async (req, res, next) => {
       where: { email: req.body.email },
     }) // on vérifie que l'adresse mail figure bien dan la bdd
       .then((user) => {
+        if (user.admin = 1) {
+
+        }
         if (user === null) {
           return res.status(403).send({ error: 'Connexion échouée' });
         } else {
@@ -111,7 +113,6 @@ exports.getAllUsers = async (req, res) => {
 
   }
 }
-
 
 
 exports.updateAccount = async (req, res) => {

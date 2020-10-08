@@ -67,7 +67,6 @@ export default {
       rules: {
         required: value => !!value || "Required."
       },
-
       message: "",
       link: null,
       //userId: this.$store.state.user.id,
@@ -84,7 +83,9 @@ export default {
     async onSubmit() {
       const formData = new FormData();
       formData.append("message", this.message);
-      formData.append("link", this.link);
+      if (this.link !== null) {
+        formData.append("link", this.link);
+      }
 
       formData.append("imageUrl", this.file);
       //formData.append("userId", this.userId);

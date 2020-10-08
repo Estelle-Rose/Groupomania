@@ -21,8 +21,7 @@
       </v-toolbar-title>
       <v-btn v-if="$store.state.isLoggedIn" text to="/posts">Fil d'actu</v-btn>
       <v-spacer></v-spacer>
-
-      <!-- <v-btn v-if="!$store.state.isLoggedIn" text to="/" exact>Accueil</v-btn> -->
+      
       <account-preview v-if="$store.state.isLoggedIn"></account-preview>
       <v-btn v-if="!$store.state.isLoggedIn" text to="/login">Connexion</v-btn>
       <v-btn v-if="!$store.state.isLoggedIn" text to="/signup"
@@ -97,7 +96,6 @@ export default {
   computed: {},
   methods: {
     logOut: function() {
-      console.log(this.$store.state.user.photo);
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUser", null);
     }

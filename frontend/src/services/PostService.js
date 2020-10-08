@@ -6,7 +6,7 @@ export default {
   getPosts() {
     return Api().get('posts');
   },
-  getPostbyId(id) {
+  getPostById(id) {
     return Api().get('posts/' + id);
   },
   createPost() {

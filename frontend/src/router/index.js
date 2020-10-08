@@ -6,6 +6,8 @@ import Login from '../components/Login.vue';
 import Feed from '../views/Feed.vue';
 import NewPost from '../components/NewPost.vue';
 import Account from '../components/Account.vue';
+import SinglePost from '../components/SinglePost.vue';
+
 
 
 Vue.use(VueRouter);
@@ -36,6 +38,11 @@ const routes = [
     name: 'feed',
     component: Feed,
   },
+  {
+    path: '/posts/:id',
+    name: 'singlePost',
+    component: SinglePost,
+  },
 
 
   {
@@ -43,6 +50,7 @@ const routes = [
     name: 'NewPost',
     component: NewPost,
   },
+  
   {
     path: '/about',
     name: 'About',

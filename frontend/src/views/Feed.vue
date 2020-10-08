@@ -1,15 +1,13 @@
 <template>
   <v-container fluid>
     <v-row class="text-center d-flex flex-column justify-center align-center">
-      <v-col cols="8">
-        <v-img
-          :src="require('../assets/logo_transparent.png')"
-          class="my-2"
-          contain
-          height="50"
-        />
-      </v-col>
-      <v-col cols="6">
+      <v-img
+        :src="require('../assets/logo_transparent.png')"
+        class="my-2"
+        contain
+        height="50"
+      />
+      <v-col sm="12" md="6">
         <v-card class="posts-card mx-auto" elevation="2">
           <v-card-title
             class="d-flex justify-space-between red lighten-4"
@@ -37,6 +35,7 @@
               :imageUrl="item.imageUrl"
               :id="item.id"
               :userId="item.UserId"
+              :postUrl="'posts/' + item.id"
               @deletePost="deletePost(item.id)"
             ></posts>
           </v-card-text>
@@ -51,6 +50,8 @@
 // @ is an alias to /src
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
+
+//import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
   name: "Feed",
@@ -60,6 +61,7 @@ export default {
   data() {
     return {
       posts: [],
+      post: {},
       errorMessage: null,
       mdiPencilOutline
     };
@@ -71,11 +73,14 @@ export default {
       for (const post of response.data) {
         console.log(post);
         this.posts.push(post);
+        this.$store.dispatch("setPosts", post);
+        console.log(this.$store.state.posts);
       }
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
   },
+
   methods: {
     async getHotPosts() {
       try {
@@ -90,6 +95,7 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
+
     async deletePost(id) {
       try {
         const userId = this.$store.state.user.id;
@@ -102,6 +108,20 @@ export default {
         this.posts.splice(postIndex, 1);
       } catch (error) {
         this.errorMessage = error.response.data.error;
+      }
+    },
+
+    async updatePost() {
+      try {
+        const userId = this.$store.state.user.id;
+        console.log(userId);
+
+        const postId = this.$store.state.post;
+        console.log(postId);
+        /* const response = await PostService.updatePost(id);
+        console.log(response); */
+      } catch (error) {
+        this.errorMessage = error.response.error;
       }
     }
   }
