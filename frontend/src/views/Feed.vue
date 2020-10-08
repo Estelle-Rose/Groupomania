@@ -21,7 +21,7 @@
                 >Les + likés</v-btn
               >
             </div>
-            <v-btn to="/posts/add"
+            <v-btn to="/add"
               ><v-icon>{{ mdiPencilOutline }}</v-icon></v-btn
             >
           </v-card-title>
@@ -109,21 +109,8 @@ export default {
       } catch (error) {
         this.errorMessage = error.response.data.error;
       }
-    },
-
-    async updatePost() {
-      try {
-        const userId = this.$store.state.user.id;
-        console.log(userId);
-
-        const postId = this.$store.state.post;
-        console.log(postId);
-        /* const response = await PostService.updatePost(id);
-        console.log(response); */
-      } catch (error) {
-        this.errorMessage = error.response.error;
-      }
     }
+        
   }
 };
 </script>

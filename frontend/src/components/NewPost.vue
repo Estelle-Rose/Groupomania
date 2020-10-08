@@ -69,7 +69,7 @@ export default {
       },
       message: "",
       link: null,
-      //userId: this.$store.state.user.id,
+      
       file: "",
       messageRetour: null,
       errorMessage: null
@@ -86,10 +86,8 @@ export default {
       if (this.link !== null) {
         formData.append("link", this.link);
       }
-
       formData.append("imageUrl", this.file);
       //formData.append("userId", this.userId);
-
       try {
         const response = await axios.post(
           "http://localhost:3000/api/posts/add",
@@ -101,7 +99,6 @@ export default {
           }
         );
         this.messageRetour = response.data.messageRetour;
-
         console.log(response);
         let router = this.$router;
         setTimeout(function() {

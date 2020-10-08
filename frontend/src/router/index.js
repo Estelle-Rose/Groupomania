@@ -46,7 +46,7 @@ const routes = [
 
 
   {
-    path: '/posts/add',
+    path: '/add',
     name: 'NewPost',
     component: NewPost,
   },

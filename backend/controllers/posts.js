@@ -64,7 +64,7 @@ exports.createPost = (req, res) => {
       } else {
         imageUrl = null;
       }
-      
+
       models.Post.create({
         message: req.body.message,
         link: req.body.link,
@@ -72,7 +72,7 @@ exports.createPost = (req, res) => {
         UserId: user.id
       })
         .then(newPost => {
-          console.log(newPost, user)
+          console.log(newPost,)
           res.status(201).json({ post: newPost, messageRetour: 'Votre post est ajouté' })
         })
         .catch(err => {

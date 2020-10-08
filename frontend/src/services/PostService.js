@@ -9,12 +9,8 @@ export default {
   getPostById(id) {
     return Api().get('posts/' + id);
   },
-  createPost() {
-    return Api().post('posts/add');
-  },
-  updatePost(id) {
-    return Api().put('posts/' + id);
-  },
+  
+  
   deletePost(id) {
     return Api().delete('posts/' + id);
   },

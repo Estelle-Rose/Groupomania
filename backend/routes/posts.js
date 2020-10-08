@@ -14,7 +14,7 @@ router.get('/posts', auth, postsCtrl.getHotPosts);
 router.post('/posts/add', auth, multer, postsCtrl.createPost);
 
 router.get('/posts/:id', auth, postsCtrl.getOnePost);
-router.put('/posts/:id', postsCtrl.updatePost);
+router.put('/posts/:id', auth, multer, postsCtrl.updatePost);
 router.delete('/posts/:id', auth, postsCtrl.deletePost);
 //router.get('/posts/category/:id', postsCtrl.getPostsByCategory);
 // router.post('/posts/:id', postsCtrl.commentPost);

@@ -27,30 +27,33 @@
         >
           <div class="text-box">
             <v-textarea
+              v-if="textInput"
               name="input-1-2"
               filled
               label="Message"
-              v-model="post.data.message"
+              v-model="message"
               :rules="[rules.required]"
               auto-grow
-              clearable: true
               class="mr-5 ml-3"
             ></v-textarea>
-            <v-icon @click="clearField" class=" rounded-circle cancel-update">{{
+            <span v-else>{{ post.data.message }}</span>
+            <v-icon @click="newText" class=" rounded-circle cancel-update">{{
               mdiCloseThick
             }}</v-icon>
           </div>
 
           <div class="link-box">
             <v-text-field
+              v-if="linkInput"
               name="input-1-3"
               filled
               label="link"
-              v-model="post.data.link"
+              v-model="link"
               auto-grow
               class="mr-5 ml-3"
             ></v-text-field>
-            <v-icon @click="clearField" class=" rounded-circle cancel-update">{{
+            <span v-else>{{ post.data.link }}</span>
+            <v-icon @click="newLink" class=" rounded-circle cancel-update">{{
               mdiCloseThick
             }}</v-icon>
           </div>
@@ -93,13 +96,13 @@ export default {
       rules: {
         required: value => !!value || "Required."
       },
-
-      newMessage: "",
-      newLink: null,
-      //userId: this.$store.state.user.id,
+      message: "",
+      link: null,
       file: "",
       messageRetour: null,
-      errorMessage: null
+      errorMessage: null,
+      linkInput: false,
+      textInput: false
     };
   },
   async mounted() {
@@ -128,8 +131,8 @@ export default {
       //formData.append("userId", this.userId);
 
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/posts/add",
+        const response = await axios.put(
+          `http://localhost:3000/api/posts/ ${this.$route.params.id}`,
           formData,
           { headers: { Authorization: this.$store.state.token } }
         );
@@ -146,11 +149,11 @@ export default {
     getBackToFeed() {
       this.$router.push("/posts");
     },
-    clearLink() {
-      this.post.data.link = null;
+    newLink() {
+      this.linkInput = true;
     },
-    clearMessage() {
-      this.post.data.message = null;
+    newText() {
+      this.textInput = true;
     }
   }
 };
