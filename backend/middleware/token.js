@@ -4,7 +4,7 @@ const config = require('../config/config');
 
 function issueJWT(user) {
     const id = user.id;
-    const expiresIn = '5h';
+    const expiresIn = '4d';
     const payload = {
         sub: id,
         iat: Date.now()

@@ -35,6 +35,7 @@
               :imageUrl="item.imageUrl"
               :id="item.id"
               :userId="item.UserId"
+              :allLikes="item.allLikes"
               :postUrl="'posts/' + item.id"
               @deletePost="deletePost(item.id)"
             ></posts>
@@ -61,6 +62,7 @@ export default {
   data() {
     return {
       posts: [],
+     
       post: {},
       errorMessage: null,
       mdiPencilOutline
@@ -71,10 +73,12 @@ export default {
       const response = await PostService.getPosts();
       console.log(response);
       for (const post of response.data) {
-        console.log(post);
+    
         this.posts.push(post);
+        console.log(post)
+       
         this.$store.dispatch("setPosts", post);
-        console.log(this.$store.state.posts);
+   
       }
     } catch (error) {
       this.errorMessage = error.response.data.error;
@@ -110,7 +114,6 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     }
-        
   }
 };
 </script>

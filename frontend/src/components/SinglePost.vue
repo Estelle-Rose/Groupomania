@@ -8,8 +8,8 @@
             {{ mdiMessageSettingsOutline }}
           </v-icon>
 
-          <div class="update-title">
-            <span class="title font-weight-light post-title"
+          <div class="update-title pl-3 pb-5">
+            <span class="title font-weight-light post-title "
               >Modifiez votre post</span
             >
             <v-icon
@@ -36,13 +36,13 @@
               auto-grow
               class="mr-5 ml-3"
             ></v-textarea>
-            <span v-else>{{ post.data.message }}</span>
+            <span v-else class="pl-5" >{{ post.data.message }} </span>
             <v-icon @click="newText" class=" rounded-circle cancel-update">{{
               mdiCloseThick
             }}</v-icon>
           </div>
 
-          <div class="link-box">
+          <div class="link-box pb-5 pt-5">
             <v-text-field
               v-if="linkInput"
               name="input-1-3"
@@ -52,13 +52,13 @@
               auto-grow
               class="mr-5 ml-3"
             ></v-text-field>
-            <span v-else>{{ post.data.link }}</span>
+            <span v-else class="pl-5">{{ post.data.link }}</span>
             <v-icon @click="newLink" class=" rounded-circle cancel-update">{{
               mdiCloseThick
             }}</v-icon>
           </div>
-          <div>
-            <label for="image">Image</label>
+          <div class="pb-5 pt-5">
+            <label for="image" class="pl-5">Image</label>
             <input
               @change="uploadImage"
               type="file"
@@ -68,8 +68,11 @@
               name="image"
             />
           </div>
-          <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-          <br />
+          <div class="pl-5 pt-5">
+          <v-btn @click="onSubmit" :disabled="!isValid" >Poster</v-btn>
+
+          </div>
+     
           <br />
           <div class="danger-alert" v-html="errorMessage" />
           <div class="danger-alert" v-html="messageRetour" />

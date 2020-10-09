@@ -8,8 +8,26 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      like: {
+      type: {
         type: Sequelize.BOOLEAN
+      },
+      postId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Post',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
+      },
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'User',
+          key: 'id'
+        },
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,

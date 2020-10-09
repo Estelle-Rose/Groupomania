@@ -3,12 +3,20 @@ const models = require('../models'); // accès tables
 const fs = require('fs');
 
 
+
+
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await models.Post.findAll({
       order: [['createdAt', 'DESC']],
-      include: [
-        models.User
+      include: [{
+        model: models.User,
+        attributes: ['pseudo', 'id']
+      },
+      {
+        model: models.Like,
+        attributes: ['type', 'UserId']
+      }
       ]
     });
     res.status(200).send(posts);
@@ -21,9 +29,15 @@ exports.getAllPosts = async (req, res) => {
 exports.getHotPosts = async (req, res) => {
   try {
     const posts = await models.Post.findAll({
-
-      include: [
-        models.User
+      order: [['createdAt', 'DESC']],
+      include: [{
+        model: models.User,
+        attributes: ['pseudo', 'id']
+      },
+      {
+        model: models.Like,
+        attributes: ['type', 'UserId']
+      }
       ]
     });
     res.status(200).send(posts);
@@ -37,8 +51,18 @@ exports.getOnePost = async (req, res) => {
   try {
     const id = req.params.id;
     const post = await models.Post.findOne({
-      attributes: ['id', 'message', 'link', 'userId'],
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      include: [
+        {
+          model: models.User,
+          attributes: ['pseudo', 'photo', 'id']
+        },
+        {
+          model: models.Like,
+          attributes: ['like', 'UserId']
+        }
+      ]
+
     })
     res.status(200).json(post);
   }
@@ -104,7 +128,42 @@ exports.deletePost = (req, res) => {
     })
 
 }
-exports.updatePost = (req, res) => {
+exports.updatePost = async (req, res) => {
+  try {
+    let link;
+    let newImageUrl;
+    if (req.file) {
+      newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
+      link = null;
+    } else {
+      imageUrl = null;
+    }
+    let post = await models.Post.findOne({ where: { id: req.params.id } });
+    if (post.imageUrl) {
+      const filename = post.imageUrl.split('/upload')[1];
+      console.log(post.imageUrl);
+      fs.unlink(`upload/${filename}`,(err => { 
+        if (err) console.log(err);        
+        else { 
+          console.log(`Deleted file: upload/${filename}`); 
+        }
+    }))
+  }
+    post.message = req.body.message;
+    post.link = req.body.link || link;
+    post.imageUrl = newImageUrl;
+    const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });
+    console.log(newPost)
+    res.status(200).json({ newPost: newPost, message: 'post modifié' })
+
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
+  }
+
+}
+/* exports.updatePost = (req, res) => {
 
   let newImageUrl;
   models.Post.findOne({ where: { id: req.params.id } })
@@ -117,11 +176,10 @@ exports.updatePost = (req, res) => {
           console.log(post.imageUrl);
           fs.unlink(`upload/${filename}`, () => {
             newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-            models.Post.update({
+            models.Post.create({
               message: req.body.message,
-              link: req.body.link,
+                  link: null,    
               imageUrl: newImageUrl,
-
             }, { where: { id: req.params.id } }
             )
               .then(newPost => {
@@ -137,7 +195,7 @@ exports.updatePost = (req, res) => {
         } // s'il n'y avait pas d'image on enregistre celle de la requête
         else {
           newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-          models.Post.update({
+          models.Post.save({
             message: req.body.message,
             link: req.body.link,
             imageUrl: newImageUrl,
@@ -152,7 +210,7 @@ exports.updatePost = (req, res) => {
             })
         }
       } else {
-        models.Post.update({
+        models.Post.create({
           message: req.body.message,
           link: req.body.link
         }, { where: { id: req.params.id } })
@@ -169,7 +227,7 @@ exports.updatePost = (req, res) => {
     .catch(err => {
       res.status(500).send({ error: 'Erreur ' });
     })
-}
+} */
 
 /* exports.createPost = async (req, res) => {
   try {
@@ -200,3 +258,41 @@ exports.updatePost = (req, res) => {
 
   }
 }   */
+exports.likePost =  async (req, res, next) => {
+  const userId = token.getUserId(req)
+  console.log(userId)
+  const like = req.body.like;
+  const postId = req.params.id;
+  console.log(postId);
+  try {
+    await models.Like.findOne({ where: { postId: postId, userId: userId } });
+
+    if (like === 1) {
+     await models.Like.create({
+        type: true,
+        PostId: postId,
+        UserId: userId
+      })
+          console.log('post liké');
+          
+          res.send({ message: 'vous aimez ce post' });
+        
+        
+    }
+    else if (like === -1) {
+     await models.Like.create({
+        type: false,
+        PostId: postId,
+        UserId: userId
+      })
+     
+          console.log('post disliké')
+          res.send({ message: 'vous n\aimez pas ce post' });
+        
+    }
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
+  }
+}

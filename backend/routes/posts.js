@@ -18,6 +18,6 @@ router.put('/posts/:id', auth, multer, postsCtrl.updatePost);
 router.delete('/posts/:id', auth, postsCtrl.deletePost);
 //router.get('/posts/category/:id', postsCtrl.getPostsByCategory);
 // router.post('/posts/:id', postsCtrl.commentPost);
-//router.post('/posts/:id/like', postsCtrl.likePost);
+router.post('/posts/:id/like', auth, postsCtrl.likePost);
 //router.delete('/posts/:id/like', postsCtrl.dislikePost);
 module.exports = router;

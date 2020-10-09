@@ -39,16 +39,16 @@
           <v-img
             v-if="link"
             :src="link"
-            :aspect-ratio="16 / 9"
-            :width="width"
+            :max-height="600"
+            :max-width="400"
             class="mx-auto pb-5"
           ></v-img>
 
           <v-img
             v-if="imageUrl"
             :src="imageUrl"
-            :aspect-ratio="16 / 9"
-            :width="width"
+            :max-height="600"
+            :max-width="400"
             class="mx-auto pb-5"
           ></v-img>
         </div>
@@ -125,20 +125,21 @@ export default {
     },
     postUrl: {
       type: String
+    },
+    allLikes: {
+      type: Array
     }
   },
   data() {
     return {
       show: false,
-
       mdiEmoticonOutline,
       mdiEmoticonSadOutline,
       mdiTrashCanOutline,
-
       mdiUpdate,
       width: 500,
-      likes: "",
-      dislikes: "",
+      likes:"",
+      dislikes:"",
       user: false,
       showFeed: true,
       update: false,
