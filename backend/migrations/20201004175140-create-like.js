@@ -11,7 +11,7 @@ module.exports = {
       type: {
         type: Sequelize.BOOLEAN
       },
-      postId: {
+      PostId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -20,7 +20,7 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
-      userId: {
+      UserId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

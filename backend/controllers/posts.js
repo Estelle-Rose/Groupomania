@@ -259,36 +259,33 @@ exports.updatePost = async (req, res) => {
   }
 }   */
 exports.likePost =  async (req, res, next) => {
-  const userId = token.getUserId(req)
-  console.log(userId)
-  const like = req.body.like;
-  const postId = req.params.id;
-  console.log(postId);
   try {
-    await models.Like.findOne({ where: { postId: postId, userId: userId } });
+    const userId = token.getUserId(req)
+    console.log(userId)
+    const like = req.body.type;
+    const postId = req.params.id;
+    console.log(postId);  
 
     if (like === 1) {
-     await models.Like.create({
-        type: true,
-        PostId: postId,
-        UserId: userId
-      })
-          console.log('post liké');
-          
-          res.send({ message: 'vous aimez ce post' });
-        
-        
+      console.log(like)
+     const newLike =  await models.Like.create({
+      type: true,
+       UserId: userId,
+       PostId: postId       
+      });
+        console.log(newLike);          
+        res.status(201).json({ message: 'vous aimez ce post', newLike });       
     }
-    else if (like === -1) {
-     await models.Like.create({
+    if (like === -1) {
+      const newDislike =  await models.Like.create({
         type: false,
+        UserId: userId,
         PostId: postId,
-        UserId: userId
-      })
-     
-          console.log('post disliké')
-          res.send({ message: 'vous n\aimez pas ce post' });
         
+       }); 
+         console.log(newDislike);          
+         res.status(400).json({ message: 'vous aimez pas ce post', newDislike });       
+       
     }
   }
   catch (error) {
