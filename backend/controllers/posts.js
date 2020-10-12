@@ -2,9 +2,6 @@ const token = require('../middleware/token');
 const models = require('../models'); // accès tables
 const fs = require('fs');
 
-
-
-
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await models.Post.findAll({
@@ -60,7 +57,7 @@ exports.getOnePost = async (req, res) => {
         {
           model: models.Like,
           attributes: ['type', 'UserId']
-        } 
+        }
       ]
 
     })
@@ -107,9 +104,14 @@ exports.createPost = (req, res) => {
       res.status(500).send({ error: 'Erreur serveur' });
     })
 };
-exports.deletePost = (req, res) => {
-  models.Post.findOne({ where: { id: req.params.id } })
-    .then(post => {
+exports.deletePost = async (req, res) => {
+  try {
+    const userId = token.getUserId(req);    
+    const postId = parseInt(req.params.id);  
+    const checkAdmin = await models.User.findOne({ where: {id: userId}})
+    console.log(checkAdmin.admin)
+    const post = await models.Post.findOne({ where: { id: postId } });
+    if ((userId === post.userId) || (checkAdmin.admin === true)) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
@@ -118,19 +120,28 @@ exports.deletePost = (req, res) => {
           res.status(200).json({ message: 'Post supprimé' })
         })
       } else {
-        models.Post.destroy({ where: { id: post.id } },{ truncate: true});
+        models.Post.destroy({ where: { id: post.id } }, { truncate: true });
         res.status(200).json({ message: 'Post supprimé' })
       }
-    })
-    .catch(err => {
-      res.status(500).send({ error: 'Erreur ' });
-    })
-
+    } else {
+      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+    }
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+  }
 }
+
+
 exports.updatePost = async (req, res) => {
   try {
     let link;
     let newImageUrl;
+    const userId = token.getUserId(req);  
+    console.log(userId)  
+    const postId = parseInt(req.params.id);  
+    console.log(postId)
+    const checkAdmin = await models.User.findOne({ where: { id: userId }})
     if (req.file) {
       newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       link = null;
@@ -138,160 +149,68 @@ exports.updatePost = async (req, res) => {
       imageUrl = null;
     }
     let post = await models.Post.findOne({ where: { id: req.params.id } });
-    if (post.imageUrl) {
-      const filename = post.imageUrl.split('/upload')[1];
-      console.log(post.imageUrl);
-      fs.unlink(`upload/${filename}`,(err => { 
-        if (err) console.log(err);        
-        else { 
-          console.log(`Deleted file: upload/${filename}`); 
-        }
-    }))
-  }
-    post.message = req.body.message;
-    post.link = req.body.link || link;
-    post.imageUrl = newImageUrl;
-    const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });
-    console.log(newPost)
-    res.status(200).json({ newPost: newPost, message: 'post modifié' })
-
+      if ((userId === post.userId) || (checkAdmin.admin === true)) {
+      if (post.imageUrl) {
+        const filename = post.imageUrl.split('/upload')[1];
+        console.log(post.imageUrl);
+        fs.unlink(`upload/${filename}`, (err => {
+          if (err) console.log(err);
+          else {
+            console.log(`Deleted file: upload/${filename}`);
+          }
+        }))
+      }
+      post.message = req.body.message;
+      post.link = req.body.link || link;
+      post.imageUrl = newImageUrl;
+      const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });
+      console.log(newPost)
+      res.status(200).json({ newPost: newPost, message: 'post modifié' })
+    } else {
+      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+    }
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
-
   }
 
 }
-/* exports.updatePost = (req, res) => {
 
-  let newImageUrl;
-  models.Post.findOne({ where: { id: req.params.id } })
-    .then(post => {
-      // si il y a une image dans la requête
-      if (req.file) {
-        // s'il ya déjà une image stockée on l'enlève
-        if (post.imageUrl) {
-          const filename = post.imageUrl.split('/upload')[1];
-          console.log(post.imageUrl);
-          fs.unlink(`upload/${filename}`, () => {
-            newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-            models.Post.create({
-              message: req.body.message,
-                  link: null,    
-              imageUrl: newImageUrl,
-            }, { where: { id: req.params.id } }
-            )
-              .then(newPost => {
-                console.log(newPost)
-                res.status(201).json({ post: newPost, messageRetour: 'Votre post est modifié' })
-
-              })
-              .catch(err => {
-                res.status(500).send({ error: 'Erreur ' });
-              })
-
-          })
-        } // s'il n'y avait pas d'image on enregistre celle de la requête
-        else {
-          newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-          models.Post.save({
-            message: req.body.message,
-            link: req.body.link,
-            imageUrl: newImageUrl,
-          }, { where: { id: req.params.id } })
-            .then(newPostnewImage => {
-              console.log(newPostnewImage)
-              res.status(201).json({ post: newPostnewImage, messageRetour: 'Votre post est modifié' })
-
-            })
-            .catch(err => {
-              res.status(500).send({ error: 'Erreur ' });
-            })
-        }
-      } else {
-        models.Post.create({
-          message: req.body.message,
-          link: req.body.link
-        }, { where: { id: req.params.id } })
-          .then(updatedPost => {
-            console.log(updatedPost.id)
-            res.status(201).json({ post: updatedPost.id, messageRetour: 'Votre post est modifié' })
-
-          })
-          .catch(err => {
-            res.status(500).send({ error: 'Erreur ' });
-          })
-      }
-    })
-    .catch(err => {
-      res.status(500).send({ error: 'Erreur ' });
-    })
-} */
-
-/* exports.createPost = async (req, res) => {
-  try {
-    const userId = await token.getUserId(req)
-    console.log(userId)
-    let imageUrl;
-    if (req.file) {
-      imageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`
-
-    } else {
-      imageUrl = null;
-    }
-    console.log(message)
-    const post = await models.Post.create({
-      include: [
-        { model: models.User },
-        { attributes: ["pseudo", "id"] }
-      ],
-      message: req.body.message,
-      link: req.body.link,
-      imageUrl: imageUrl,
-      UserId: userId
-    })
-    res.status(200).send({ message: 'post créé' })
-  }
-  catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });
-
-  }
-}   */
-exports.likePost =  async (req, res, next) => {
+exports.likePost = async (req, res, next) => {
   try {
     const userId = token.getUserId(req)
     console.log(userId)
     const like = req.body.type;
     const postId = req.params.id;
-    console.log(postId);  
-    const userLike = await models.Like.findOne({ where: { UserId: userId, PostId: postId }}); 
+    console.log(postId);
+    const userLike = await models.Like.findOne({ where: { UserId: userId, PostId: postId } });
     console.log(userLike instanceof models.Like);
     if (userLike === null) {
       if (like === 1) {
         console.log(like)
-       const newLike =  await models.Like.create({
-        type: true,
-         UserId: userId,
-         PostId: postId       
+        const newLike = await models.Like.create({
+          type: true,
+          UserId: userId,
+          PostId: postId
         });
-          console.log(newLike);          
-          res.status(201).json({ message: 'vous aimez ce post', newLike });       
+        console.log(newLike);
+        res.status(201).json({ message: 'vous aimez ce post', newLike });
       }
       if (like === -1) {
-        const newDislike =  await models.Like.create({
+        const newDislike = await models.Like.create({
           type: false,
           UserId: userId,
-          PostId: postId,        
-         });
-           console.log(newDislike);          
-           res.status(400).json({ message: 'vous aimez pas ce post', newDislike });     
+          PostId: postId,
+        });
+        console.log(newDislike);
+        res.status(400).json({ message: 'vous aimez pas ce post', newDislike });
       }
     }
-    else  {      
-       await models.Like.destroy({ where: { UserId: userId, PostId: postId }}, { truncate: true, restartIdentity: true});
+    else {
+      await models.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
       console.log('le like est annulé')
       res.status(400).json({ message: 'le like est annulé' });
-    } 
+    }
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });

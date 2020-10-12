@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     pseudo: { type: DataTypes.STRING, allowNull: false, unique: true },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
-    photo: DataTypes.STRING,
+    photo: { type: DataTypes.STRING, allowNull: true },
     bio: DataTypes.TEXT,
     admin: { type: DataTypes.BOOLEAN, allowNull: false, default: false },
   }, {

@@ -3,6 +3,7 @@ const db = require('../models'); // modele user
 const emailValidator = require('email-validator'); // email validator package
 const passwordValidator = require('password-validator'); // password validator package
 const token = require('../middleware/token');
+const user = require('../models/user');
 
 exports.signup = async (req, res) => {
   try {
@@ -129,6 +130,36 @@ exports.updateAccount = async (req, res) => {
     const response = await db.User.update(userObject, { where: { id: id } }
     );
     res.status(200).json({ message: "profil modifié" });
+
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+  }
+}
+exports.deleteAccount = async (req, res) => {
+  try {
+    const userId = token.getUserId(req);
+    console.log(userId)
+    const id = parseInt(req.params.id);
+    console.log(id)
+    const checkAdmin = await db.User.findOne({ where: {id: userId}})
+    const user = await db.User.findOne({ where: { id: id } });
+    if ((userId === id) || (checkAdmin.admin === true)) {
+      
+      if (user.photo) {
+        const filename = user.photo.split('/upload')[1];
+        console.log(user.photo);
+        fs.unlink(`upload/${filename}`, () => {
+          db.User.destroy({ where: { id: id } });
+          res.status(200).json({ message: 'user supprimé' })
+        })
+      } else {
+        db.User.destroy({ where: { id: id } });
+        res.status(200).json({ message: 'user supprimé' })
+      }
+    } else {
+      console.log('user not allowed')
+    }
 
   }
   catch (error) {
