@@ -1,18 +1,22 @@
 const token = require('../middleware/token');
-const models = require('../models'); // accès tables
+const db = require('../models'); // accès tables
 const fs = require('fs');
 
 exports.getAllPosts = async (req, res) => {
   try {
-    const posts = await models.Post.findAll({
+    const posts = await db.Post.findAll({
       order: [['createdAt', 'DESC']],
       include: [{
-        model: models.User,
+        model: db.User,
         attributes: ['pseudo', 'id']
       },
       {
-        model: models.Like,
+        model: db.Like,
         attributes: ['type', 'UserId']
+      },
+      {
+        model: db.Comment,
+        attributes: ['message', 'UserId','id']
       }
       ]
     });
@@ -25,15 +29,18 @@ exports.getAllPosts = async (req, res) => {
 // afficher le sposts les plus likés
 exports.getHotPosts = async (req, res) => {
   try {
-    const posts = await models.Post.findAll({
+    const posts = await db.Post.findAll({
       order: [['createdAt', 'DESC']],
       include: [{
-        model: models.User,
+        model: db.User,
         attributes: ['pseudo', 'id']
       },
       {
-        model: models.Like,
+        model: db.Like,
         attributes: ['type', 'UserId']
+      }, {
+        model: db.Comment,
+        attributes: ['message', 'UserId','id']
       }
       ]
     });
@@ -47,16 +54,20 @@ exports.getHotPosts = async (req, res) => {
 exports.getOnePost = async (req, res) => {
   try {
     const id = req.params.id;
-    const post = await models.Post.findOne({
+    const post = await db.Post.findOne({
       where: { id: id },
       include: [
         {
-          model: models.User,
+          model: db.User,
           attributes: ['pseudo', 'photo', 'id']
         },
         {
-          model: models.Like,
+          model: db.Like,
           attributes: ['type', 'UserId']
+        },
+        {
+          model: db.Comment,
+          attributes: ['message', 'UserId','id']
         }
       ]
 
@@ -74,7 +85,7 @@ exports.createPost = (req, res) => {
   console.log(userId)
 
   let imageUrl
-  models.User.findOne({
+  db.User.findOne({
     attributes: ['pseudo', 'id', 'photo'],
     where: { id: userId }
   })
@@ -86,7 +97,7 @@ exports.createPost = (req, res) => {
         imageUrl = null;
       }
 
-      models.Post.create({
+      db.Post.create({
         message: req.body.message,
         link: req.body.link,
         imageUrl: imageUrl,
@@ -108,19 +119,19 @@ exports.deletePost = async (req, res) => {
   try {
     const userId = token.getUserId(req);    
     const postId = parseInt(req.params.id);  
-    const checkAdmin = await models.User.findOne({ where: {id: userId}})
+    const checkAdmin = await db.User.findOne({ where: {id: userId}})
     console.log(checkAdmin.admin)
-    const post = await models.Post.findOne({ where: { id: postId } });
+    const post = await db.Post.findOne({ where: { id: postId } });
     if ((userId === post.userId) || (checkAdmin.admin === true)) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
         fs.unlink(`upload/${filename}`, () => {
-          models.Post.destroy({ where: { id: post.id } });
+          db.Post.destroy({ where: { id: post.id } });
           res.status(200).json({ message: 'Post supprimé' })
         })
       } else {
-        models.Post.destroy({ where: { id: post.id } }, { truncate: true });
+        db.Post.destroy({ where: { id: post.id } }, { truncate: true });
         res.status(200).json({ message: 'Post supprimé' })
       }
     } else {
@@ -141,14 +152,14 @@ exports.updatePost = async (req, res) => {
     console.log(userId)  
     const postId = parseInt(req.params.id);  
     console.log(postId)
-    const checkAdmin = await models.User.findOne({ where: { id: userId }})
+    const checkAdmin = await db.User.findOne({ where: { id: userId }})
     if (req.file) {
       newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       link = null;
     } else {
       imageUrl = null;
     }
-    let post = await models.Post.findOne({ where: { id: req.params.id } });
+    let post = await db.Post.findOne({ where: { id: req.params.id } });
       if ((userId === post.userId) || (checkAdmin.admin === true)) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
@@ -183,12 +194,12 @@ exports.likePost = async (req, res, next) => {
     const like = req.body.type;
     const postId = req.params.id;
     console.log(postId);
-    const userLike = await models.Like.findOne({ where: { UserId: userId, PostId: postId } });
-    console.log(userLike instanceof models.Like);
+    const userLike = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
+    console.log(userLike instanceof db.Like);
     if (userLike === null) {
       if (like === 1) {
         console.log(like)
-        const newLike = await models.Like.create({
+        const newLike = await db.Like.create({
           type: true,
           UserId: userId,
           PostId: postId
@@ -197,7 +208,7 @@ exports.likePost = async (req, res, next) => {
         res.status(201).json({ message: 'vous aimez ce post', newLike });
       }
       if (like === -1) {
-        const newDislike = await models.Like.create({
+        const newDislike = await db.Like.create({
           type: false,
           UserId: userId,
           PostId: postId,
@@ -207,7 +218,7 @@ exports.likePost = async (req, res, next) => {
       }
     }
     else {
-      await models.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
+      await db.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
       console.log('le like est annulé')
       res.status(400).json({ message: 'le like est annulé' });
     }
@@ -215,5 +226,69 @@ exports.likePost = async (req, res, next) => {
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
 
+  }
+}
+exports.addComment =  async (req,res)=> {
+  try {
+    const userId = token.getUserId(req)
+    console.log(userId)
+    const comment = req.body.message;
+    const postId = req.params.id;
+    console.log(postId);
+    const newComment = await db.Comment.create({
+      message: comment,
+      UserId: userId,
+      PostId: postId
+    });
+    console.log('post commenté');
+    res.status(201).send({ message: 'vous avez commenté le post'})
+  }
+    catch (error) {
+      return res.status(500).send({ error: 'Erreur serveur' }); 
+    
+  }
+}
+exports.deleteComment =  async (req,res)=> {
+  try {
+    const userId = token.getUserId(req)
+    console.log(userId)
+    const commentId = req.params.comId;
+    console.log(commentId)
+    const postId = req.params.id;
+    const checkAdmin = await db.User.findOne({ where: {id: userId}})
+    const comment = await db.Comment.findOne({ where: { id: commentId } });
+    console.log(postId);
+    if ((userId === comment.UserId) || (checkAdmin.admin === true)) {
+     
+      db.Comment.destroy({ where: { id: comment.id } }, { truncate: true });
+      res.status(200).json({ message: 'commentaire supprimé' })
+    
+  } else {
+    res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+  }
+
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });   
+}
+}
+exports.deletePost = async (req, res) => {
+  try {
+    const userId = token.getUserId(req);    
+    const postId = parseInt(req.params.id);  
+    const checkAdmin = await db.User.findOne({ where: {id: userId}})
+    console.log(checkAdmin.admin)
+    const post = await db.Post.findOne({ where: { id: postId } });
+    if ((userId === post.userId) || (checkAdmin.admin === true)) {
+     
+        db.Post.destroy({ where: { id: post.id } }, { truncate: true });
+        res.status(200).json({ message: 'Post supprimé' })
+      
+    } else {
+      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+    }
+  }
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
   }
 }

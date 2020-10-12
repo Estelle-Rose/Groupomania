@@ -8,7 +8,6 @@ require('dotenv').config();
 //routes
 const userRoutes = require('./routes/user');
 const postsRoutes = require('./routes/posts');
-const commentsRoutes = require('./routes/comments');
 
 //db
 const { sequelize } = require('./models/index');
@@ -30,7 +29,7 @@ app.use(cors());
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postsRoutes);
-app.use('/api/posts', commentsRoutes);
+
 
 const dbTest = async function () {
   try {
