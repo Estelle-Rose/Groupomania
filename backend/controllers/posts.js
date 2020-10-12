@@ -51,7 +51,7 @@ exports.getOnePost = async (req, res) => {
   try {
     const id = req.params.id;
     const post = await models.Post.findOne({
-      where: { id: req.params.id },
+      where: { id: id },
       include: [
         {
           model: models.User,
@@ -59,8 +59,8 @@ exports.getOnePost = async (req, res) => {
         },
         {
           model: models.Like,
-          attributes: ['like', 'UserId']
-        }
+          attributes: ['type', 'UserId']
+        } 
       ]
 
     })
@@ -108,7 +108,6 @@ exports.createPost = (req, res) => {
     })
 };
 exports.deletePost = (req, res) => {
-
   models.Post.findOne({ where: { id: req.params.id } })
     .then(post => {
       if (post.imageUrl) {
@@ -119,7 +118,7 @@ exports.deletePost = (req, res) => {
           res.status(200).json({ message: 'Post supprimé' })
         })
       } else {
-        models.Post.destroy({ where: { id: post.id } });
+        models.Post.destroy({ where: { id: post.id } },{ truncate: true});
         res.status(200).json({ message: 'Post supprimé' })
       }
     })
@@ -265,28 +264,34 @@ exports.likePost =  async (req, res, next) => {
     const like = req.body.type;
     const postId = req.params.id;
     console.log(postId);  
-
-    if (like === 1) {
-      console.log(like)
-     const newLike =  await models.Like.create({
-      type: true,
-       UserId: userId,
-       PostId: postId       
-      });
-        console.log(newLike);          
-        res.status(201).json({ message: 'vous aimez ce post', newLike });       
+    const userLike = await models.Like.findOne({ where: { UserId: userId, PostId: postId }}); 
+    console.log(userLike instanceof models.Like);
+    if (userLike === null) {
+      if (like === 1) {
+        console.log(like)
+       const newLike =  await models.Like.create({
+        type: true,
+         UserId: userId,
+         PostId: postId       
+        });
+          console.log(newLike);          
+          res.status(201).json({ message: 'vous aimez ce post', newLike });       
+      }
+      if (like === -1) {
+        const newDislike =  await models.Like.create({
+          type: false,
+          UserId: userId,
+          PostId: postId,        
+         });
+           console.log(newDislike);          
+           res.status(400).json({ message: 'vous aimez pas ce post', newDislike });     
+      }
     }
-    if (like === -1) {
-      const newDislike =  await models.Like.create({
-        type: false,
-        UserId: userId,
-        PostId: postId,
-        
-       }); 
-         console.log(newDislike);          
-         res.status(400).json({ message: 'vous aimez pas ce post', newDislike });       
-       
-    }
+    else  {      
+       await models.Like.destroy({ where: { UserId: userId, PostId: postId }}, { truncate: true, restartIdentity: true});
+      console.log('le like est annulé')
+      res.status(400).json({ message: 'le like est annulé' });
+    } 
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });

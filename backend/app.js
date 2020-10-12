@@ -28,9 +28,9 @@ app.use(cors());
 
 
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
-app.use('/api', userRoutes);
-app.use('/api', postsRoutes);
-app.use('/api', commentsRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/posts', commentsRoutes);
 
 const dbTest = async function () {
   try {
