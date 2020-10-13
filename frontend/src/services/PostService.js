@@ -9,17 +9,15 @@ export default {
   getPostById(id) {
     return Api().get('posts/' + id);
   },
-  
-  
+
+
   deletePost(id) {
     return Api().delete('posts/' + id);
   },
   likePost(id) {
     return Api().post('posts/' + id) + '/like';
   },
-  dislikePost(id) {
-    return Api().post('posts/' + id + '/like');
-  },
+
   commentPost(id) {
     return Api().post('posts/' + id + '/comment');
   },

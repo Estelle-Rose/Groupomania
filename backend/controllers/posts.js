@@ -60,17 +60,8 @@ exports.getOnePost = async (req, res) => {
         {
           model: db.User,
           attributes: ['pseudo', 'photo', 'id']
-        },
-        {
-          model: db.Like,
-          attributes: ['type', 'UserId']
-        },
-        {
-          model: db.Comment,
-          attributes: ['message', 'UserId','id']
-        }
+        }        
       ]
-
     })
     res.status(200).json(post);
   }
@@ -118,11 +109,14 @@ exports.createPost = (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const userId = token.getUserId(req);    
+    console.log(userId)
     const postId = parseInt(req.params.id);  
+    console.log(postId)
     const checkAdmin = await db.User.findOne({ where: {id: userId}})
-    console.log(checkAdmin.admin)
-    const post = await db.Post.findOne({ where: { id: postId } });
-    if ((userId === post.userId) || (checkAdmin.admin === true)) {
+    
+    const post = await db.Post.findOne({ where: { id: req.params.id } });
+    console.log(post.userId)
+    if ((userId === post.UserId) || (checkAdmin.admin === true)) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
@@ -152,7 +146,7 @@ exports.updatePost = async (req, res) => {
     console.log(userId)  
     const postId = parseInt(req.params.id);  
     console.log(postId)
-    const checkAdmin = await db.User.findOne({ where: { id: userId }})
+    
     if (req.file) {
       newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       link = null;
@@ -160,7 +154,7 @@ exports.updatePost = async (req, res) => {
       imageUrl = null;
     }
     let post = await db.Post.findOne({ where: { id: req.params.id } });
-      if ((userId === post.userId) || (checkAdmin.admin === true)) {
+      if (userId === post.userId)  {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
@@ -176,7 +170,7 @@ exports.updatePost = async (req, res) => {
       post.imageUrl = newImageUrl;
       const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });
       console.log(newPost)
-      res.status(200).json({ newPost: newPost, message: 'post modifié' })
+      res.status(200).json({ newPost: newPost, messageRetour: 'post modifié' })
     } else {
       res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
     }
@@ -271,24 +265,4 @@ exports.deleteComment =  async (req,res)=> {
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });   
 }
-}
-exports.deletePost = async (req, res) => {
-  try {
-    const userId = token.getUserId(req);    
-    const postId = parseInt(req.params.id);  
-    const checkAdmin = await db.User.findOne({ where: {id: userId}})
-    console.log(checkAdmin.admin)
-    const post = await db.Post.findOne({ where: { id: postId } });
-    if ((userId === post.userId) || (checkAdmin.admin === true)) {
-     
-        db.Post.destroy({ where: { id: post.id } }, { truncate: true });
-        res.status(200).json({ message: 'Post supprimé' })
-      
-    } else {
-      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
-    }
-  }
-  catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });
-  }
 }

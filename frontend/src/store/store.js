@@ -11,9 +11,7 @@ export default new Vuex.Store({
     token: null,
     user: null,
     isLoggedIn: false,
-    posts: [],
-    
-
+    posts: [], 
   },
   plugins: [
     createPersistedState()

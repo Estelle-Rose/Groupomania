@@ -33,12 +33,16 @@
               :pseudo="item.User.pseudo"
               :link="item.link"
               :imageUrl="item.imageUrl"
+              :createdAt="item.createdAt"
+              :Likes="item.Likes"
               :id="item.id"
-              :userId="item.UserId"
-              :allLikes="item.allLikes"
+              :userId="item.UserId"              
+              :comments="item.Comments"
               :postUrl="'posts/' + item.id"
               @deletePost="deletePost(item.id)"
-            ></posts>
+              
+            >
+            </posts>
           </v-card-text>
         </v-card>
       </v-col>
@@ -52,6 +56,7 @@
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
 
+
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
@@ -61,25 +66,28 @@ export default {
   },
   data() {
     return {
-      posts: [],
-     
-      post: {},
+      posts: [],  
+      Likes: [],   
+      post: {},      
       errorMessage: null,
-      mdiPencilOutline
+      mdiPencilOutline,
+     
     };
   },
   async mounted() {
     try {
       const response = await PostService.getPosts();
       console.log(response);
-      for (const post of response.data) {
+      for (const post of response.data) {    
+        this.posts.push(post);          
+         this.Likes.push(post.Likes)
+      
+     
+     /* this.likes =  post.Likes.filter(obj => obj.type === true).length;
+
+     this.dislikes =  post.Likes.filter(obj => obj.type === false).length; */
     
-        this.posts.push(post);
-        console.log(post)
-       
-        this.$store.dispatch("setPosts", post);
-   
-      }
+      };
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }

@@ -25,7 +25,3 @@ function getUserId(req) {
 module.exports.issueJWT = issueJWT;
 module.exports.getUserId = getUserId;
 
-/* { userId: userJson.id },
-          'JWT_SECRET',
-          { expiresIn: Math.floor(Date.now() / 1000) + 60 * 60 } */
- //         Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW…DE3fQ.80sqaWWClW7Psb68w5S9sqk9hK4ABOpnackRTvdMkNQ

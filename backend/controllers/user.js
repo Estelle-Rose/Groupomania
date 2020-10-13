@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt'); // chiffrement
 const db = require('../models'); // modele user
 const token = require('../middleware/token');
+const fs = require('fs');
 
 
 exports.signup = async (req, res) => {
@@ -92,19 +93,39 @@ exports.getAllUsers = async (req, res) => {
 
 exports.updateAccount = async (req, res) => {
   try {
-    const id = req.params.id;
-    /* const user = await models.Users.findOne({ where: { id: id } });
-    console.log(user) */
-    const userObject = req.file ? // on vérifie si la modification concerne le body ou un nouveau fichier image
-      {
-        ...JSON.parse(req.body),
-        photo: `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`
-      } : { ...req.body };
-    console.log(userObject);
-    const response = await db.User.update(userObject, { where: { id: id } }
-    );
-    res.status(200).json({ message: "profil modifié" });
-
+    const accountId = req.params.id;
+    console.log(accountId)
+    const userId = token.getUserId(req);  
+    console.log(userId) ;
+    let photo;   
+    
+    if (req.file) {
+      photo = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
+      
+    } else {
+      photo = null;
+    }
+    let user = await db.User.findOne({ where: { id: req.params.id } });
+      if (userId === user.id) {
+      if (user.photo) {
+        const filename = user.photo.split('/upload')[1];
+        console.log(user.photo);
+        fs.unlink(`upload/${filename}`, (err => {
+          if (err) console.log(err);
+          else {
+            console.log(`Deleted file: upload/${filename}`);
+          }
+        }))
+      }
+      user.pseudo = req.body.pseudo;
+      user.bio = req.body.bio || link;
+      user.photo = photo;
+      const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
+      console.log(newuser)
+      res.status(200).json({ newuser: newuser, message: 'user modifié' })
+    } else {
+      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+    }
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
