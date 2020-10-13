@@ -3,7 +3,7 @@ const userCtrl = require('../controllers/user');
 const authUser = require('../middleware/authUser');
 const auth = require('../middleware/auth');
 
-router.post('/signup', authUser.signup, userCtrl.signup);
+router.post('/signup', authUser.checkPseudo, authUser.signup, userCtrl.signup);
 router.post('/login', authUser.signup, userCtrl.login);
 router.get('/accounts', auth, userCtrl.getAllUsers);
 router.put('/accounts/:id', auth, userCtrl.updateAccount);

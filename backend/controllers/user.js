@@ -1,91 +1,66 @@
 const bcrypt = require('bcrypt'); // chiffrement
 const db = require('../models'); // modele user
-const emailValidator = require('email-validator'); // email validator package
-const passwordValidator = require('password-validator'); // password validator package
 const token = require('../middleware/token');
-const user = require('../models/user');
+
 
 exports.signup = async (req, res) => {
   try {
     const user = await db.User.findOne({
       where: { email: req.body.email } && { pseudo: req.body.pseudo },
-    })
-      .then((user) => {
-        if (user) {
+    });     
+        if (user !== null) {
           res.status(400).json({ message: 'Cette adresse mail ou ce pseudo sont déjà utilisés !' });
         }
         else {
-          bcrypt.hash(req.body.password, 10)
-            .then(hash => {
-              const newUser = db.User.create({
+         const hash =  await bcrypt.hash(req.body.password, 10);    
+         console.log(hash)        
+              const newUser = await db.User.create({
                 pseudo: req.body.pseudo,
                 email: req.body.email,
                 password: hash,
                 admin: false
-              })
-                .then((newUser) => {
-                  newUser = newUser.toJSON();
-                  const tokenObject = token.issueJWT(newUser)
-                  res.status(200).send({
-                    user: newUser,
-                    token: tokenObject.token,
-                    expires: tokenObject.expiresIn,
-                    message: `Votre compte est bien créé ${newUser.pseudo} !`,
-                  });
-                })
-                .catch((error) => {
-                  res.status(500).send({ error: 'Erreur serveur' });
-                })
-            })
-            .catch((error) => {
-              res.status(500).send({ error: 'Erreur serveur' });
-            })
+              });  
+              console.log(newUser)              
+          
+          const tokenObject =  await token.issueJWT(newUser);
+          res.status(200).send({
+            user: newUser,
+            token: tokenObject.token,
+            expires: tokenObject.expiresIn,
+            message: `Votre compte est bien créé ${newUser.pseudo} !`,
+          });
         }
-      })
-      .catch((error) => {
-        return res.status(500).send({ error: 'Erreur serveur' });
-      })
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
   }
 };
 
-exports.login = async (req, res, next) => {
-  // connexion du user
+exports.login = async (req, res) => {  
   try {
     const user = await db.User.findOne({
       where: { email: req.body.email },
-    }) // on vérifie que l'adresse mail figure bien dan la bdd
-      .then((user) => {
-        if (user.admin = 1) {
-
+    }) // on vérifie que l'adresse mail figure bien dan la bdd          
+    if (user === null) {
+      return res.status(403).send({ error: 'Connexion échouée' });
+    } else {
+      const hash =  await bcrypt.compare(req.body.password, user.password); // on compare les mots de passes        
+        if (!hash) {
+          return res
+            .status(401)
+            .send({ error: 'Mot de passe incorrect !' });
         }
-        if (user === null) {
-          return res.status(403).send({ error: 'Connexion échouée' });
-        } else {
-          bcrypt
-            .compare(req.body.password, user.password) // on compare les mots de passes
-            .then((valid) => {
-              if (!valid) {
-                return res
-                  .status(401)
-                  .send({ error: 'Mot de passe incorrect !' });
-              }
-              user = user.toJSON();
-              const tokenObject = token.issueJWT(user)
-              res.status(200).send({
-                user: user,
-                token: tokenObject.token,
-                sub: tokenObject.sub,
-                expires: tokenObject.expiresIn,
-                message: 'Bonjour ' + user.pseudo + ' !',
-              });
-            })
-            .catch((error) => res.status(500).json({ error }));
-        }
-      })
-      .catch((error) => res.status(500).json({ error }));
+        else {
+          const tokenObject = await token.issueJWT(user)
+          res.status(200).send({
+            user: user,
+            token: tokenObject.token,
+            sub: tokenObject.sub,
+            expires: tokenObject.expiresIn,
+            message: 'Bonjour ' + user.pseudo + ' !',
+          });  
+        }  
+    }     
   } catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
   }
@@ -115,7 +90,6 @@ exports.getAllUsers = async (req, res) => {
   }
 }
 
-
 exports.updateAccount = async (req, res) => {
   try {
     const id = req.params.id;
@@ -144,8 +118,7 @@ exports.deleteAccount = async (req, res) => {
     console.log(id)
     const checkAdmin = await db.User.findOne({ where: {id: userId}})
     const user = await db.User.findOne({ where: { id: id } });
-    if ((userId === id) || (checkAdmin.admin === true)) {
-      
+    if ((userId === id) || (checkAdmin.admin === true)) {      
       if (user.photo) {
         const filename = user.photo.split('/upload')[1];
         console.log(user.photo);
