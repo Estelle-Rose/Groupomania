@@ -16,7 +16,7 @@ exports.getAllPosts = async (req, res) => {
       },
       {
         model: db.Comment,
-        attributes: ['message', 'UserId','id']
+        attributes: ['message', 'pseudo','UserId', 'id']
       }
       ]
     });
@@ -33,14 +33,17 @@ exports.getHotPosts = async (req, res) => {
       order: [['createdAt', 'DESC']],
       include: [{
         model: db.User,
+        as: 'PostUser',
         attributes: ['pseudo', 'id']
       },
       {
         model: db.Like,
         attributes: ['type', 'UserId']
-      }, {
+      },
+      {
         model: db.Comment,
-        attributes: ['message', 'UserId','id']
+        attributes: ['message', 'pseudo', 'UserId'],
+        order: [["createdAt", "DESC"]],
       }
       ]
     });
@@ -60,7 +63,7 @@ exports.getOnePost = async (req, res) => {
         {
           model: db.User,
           attributes: ['pseudo', 'photo', 'id']
-        }        
+        }
       ]
     })
     res.status(200).json(post);
@@ -108,12 +111,12 @@ exports.createPost = (req, res) => {
 };
 exports.deletePost = async (req, res) => {
   try {
-    const userId = token.getUserId(req);    
+    const userId = token.getUserId(req);
     console.log(userId)
-    const postId = parseInt(req.params.id);  
+    const postId = parseInt(req.params.id);
     console.log(postId)
-    const checkAdmin = await db.User.findOne({ where: {id: userId}})
-    
+    const checkAdmin = await db.User.findOne({ where: { id: userId } })
+
     const post = await db.Post.findOne({ where: { id: req.params.id } });
     console.log(post.userId)
     if ((userId === post.UserId) || (checkAdmin.admin === true)) {
@@ -142,11 +145,11 @@ exports.updatePost = async (req, res) => {
   try {
     let link;
     let newImageUrl;
-    const userId = token.getUserId(req);  
-    console.log(userId)  
-    const postId = parseInt(req.params.id);  
+    const userId = token.getUserId(req);
+    console.log(userId)
+    const postId = parseInt(req.params.id);
     console.log(postId)
-    
+
     if (req.file) {
       newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       link = null;
@@ -154,7 +157,7 @@ exports.updatePost = async (req, res) => {
       imageUrl = null;
     }
     let post = await db.Post.findOne({ where: { id: req.params.id } });
-      if (userId === post.userId)  {
+    if (userId === post.userId) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
@@ -222,47 +225,49 @@ exports.likePost = async (req, res, next) => {
 
   }
 }
-exports.addComment =  async (req,res)=> {
+exports.addComment = async (req, res) => {
   try {
     const userId = token.getUserId(req)
     console.log(userId)
     const comment = req.body.message;
+    const pseudo = req.body.pseudo;
     const postId = req.params.id;
     console.log(postId);
     const newComment = await db.Comment.create({
       message: comment,
+      pseudo: pseudo,
       UserId: userId,
       PostId: postId
     });
     console.log('post commenté');
-    res.status(201).send({ message: 'vous avez commenté le post'})
+    res.status(201).send({ message: 'vous avez commenté le post' })
   }
-    catch (error) {
-      return res.status(500).send({ error: 'Erreur serveur' }); 
-    
+  catch (error) {
+    return res.status(500).send({ error: 'Erreur serveur' });
+
   }
 }
-exports.deleteComment =  async (req,res)=> {
+exports.deleteComment = async (req, res) => {
   try {
     const userId = token.getUserId(req)
     console.log(userId)
     const commentId = req.params.comId;
     console.log(commentId)
     const postId = req.params.id;
-    const checkAdmin = await db.User.findOne({ where: {id: userId}})
+    const checkAdmin = await db.User.findOne({ where: { id: userId } })
     const comment = await db.Comment.findOne({ where: { id: commentId } });
     console.log(postId);
     if ((userId === comment.UserId) || (checkAdmin.admin === true)) {
-     
+
       db.Comment.destroy({ where: { id: comment.id } }, { truncate: true });
       res.status(200).json({ message: 'commentaire supprimé' })
-    
-  } else {
-    res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
-  }
+
+    } else {
+      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+    }
 
   }
   catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });   
-}
+    return res.status(500).send({ error: 'Erreur serveur' });
+  }
 }

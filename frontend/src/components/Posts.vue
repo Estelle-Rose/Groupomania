@@ -4,7 +4,8 @@
       <div>
         <div class="d-flex justify-space-between pr-2 blue-grey lighten-2">
           <v-card-title class="h6"
-            >Post publié par {{ pseudo }} {{ id }}  ||| le {{ createdAt.split("T") [0]}}
+            >Post publié par {{ pseudo }} {{ id }} ||| le
+            {{ createdAt.split("T")[0] }}
           </v-card-title>
           <div class="post-options">
             <v-btn
@@ -74,24 +75,43 @@
             </v-btn>
           </div>
 
-           <div>
+          <div>
             <v-btn @click="likePost">
               <v-icon class=" material-icons ">
                 {{ mdiEmoticonOutline }}
               </v-icon>
-              {{ Likes.filter((obj) => obj.type === true).length }}
+              {{ Likes.filter(obj => obj.type === true).length }}
             </v-btn>
             <v-btn @click="dislikePost" class="ml-3">
               <v-icon>{{ mdiEmoticonSadOutline }}</v-icon>
-              {{ Likes.filter((obj) => obj.type === false).length }}
+              {{ Likes.filter(obj => obj.type === false).length }}
             </v-btn>
           </div>
         </v-card-actions>
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
+            <div class="comments-box">
+              <v-list v-for="comment in comments" :key="comment.message">
+                <v-list-item>
+                  <v-list-item-avatar>
+                    <v-icon>{{ mdiAccountCircle }}</v-icon>
+                  </v-list-item-avatar>
 
-            <v-card-text> {{ comments }} </v-card-text>
+                  <v-list-item-content>
+                    <div class="comment">
+                    <v-list-item-title
+                      v-html="comment.pseudo"
+                    ></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="comment.message"
+                    ></v-list-item-subtitle>
+
+                    </div>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
+            </div>
           </div>
         </v-expand-transition>
       </div>
@@ -101,16 +121,16 @@
 
 <script>
 //import DeleteButton from "../components/DeleteButton";
-
 import { mdiEmoticonOutline } from "@mdi/js";
 import { mdiEmoticonSadOutline } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
 import { mdiUpdate } from "@mdi/js";
+import { mdiAccountCircle } from "@mdi/js";
 //import Likes from "../components/Likes.vue";
 //import PostService from "../services/PostService";
 export default {
   name: "Posts",
- 
+
   props: {
     link: {
       type: String
@@ -137,7 +157,7 @@ export default {
       type: Array
     },
     createdAt: {
-      type: Date
+      type: String
     },
     comments: {
       type: Array
@@ -149,9 +169,10 @@ export default {
       mdiEmoticonOutline,
       mdiEmoticonSadOutline,
       mdiTrashCanOutline,
+      mdiAccountCircle,
       mdiUpdate,
       width: 500,
-      
+
       user: false,
       showFeed: true,
       update: false,
@@ -169,15 +190,15 @@ export default {
       errorMessage: null
     };
   },
-
   methods: {
-    
     deletePost() {
       this.$emit("deletePost", this.id);
     },
     getOnePost() {
       this.$router.push(this.postUrl);
-    }
+    },
+    likePost() {},
+    dislikePost() {}
   }
 };
 </script>
@@ -187,7 +208,6 @@ export default {
 } */
 .body-1 {
   font-size: 20px;
-
   border: 2px grey solid;
   padding: 15px;
 }
@@ -204,5 +224,9 @@ export default {
 .update-title {
   display: flex;
   justify-content: space-between;
+}
+.comment {
+  display: flex;
+
 }
 </style>

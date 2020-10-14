@@ -55,8 +55,6 @@
 // @ is an alias to /src
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
-
-
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
@@ -84,7 +82,6 @@ export default {
       
      
      /* this.likes =  post.Likes.filter(obj => obj.type === true).length;
-
      this.dislikes =  post.Likes.filter(obj => obj.type === false).length; */
     
       };
@@ -92,7 +89,6 @@ export default {
       this.errorMessage = error.response.data.error;
     }
   },
-
   methods: {
     async getHotPosts() {
       try {
@@ -107,7 +103,6 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
-
     async deletePost(id) {
       try {
         const userId = this.$store.state.user.id;
