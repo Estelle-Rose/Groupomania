@@ -7,6 +7,7 @@ import Feed from '../views/Feed.vue';
 import NewPost from '../components/NewPost.vue';
 import Account from '../components/Account.vue';
 import SinglePost from '../components/SinglePost.vue';
+import AddComment from '../components/AddComment.vue';
 
 
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/posts/:id',
     name: 'singlePost',
     component: SinglePost,
+  },
+  {
+    path: '/posts/:id/addcomment',
+    name: 'AddComment',
+    component: AddComment,
   },
 
 

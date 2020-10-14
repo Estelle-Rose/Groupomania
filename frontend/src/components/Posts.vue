@@ -68,7 +68,7 @@
             <v-btn @click="show = !show, getPostId({id})" color="red lighten-2 " text>
               Commentaires
             </v-btn>
-            <v-btn icon @click="show = !show, getPostId({id})">
+            <v-btn icon @click="show = !show">
               <v-icon>{{
                 show ? "mdi-chevron-up" : "mdi-chevron-down"
               }}</v-icon>
@@ -77,6 +77,17 @@
           </div>
       
           <div>
+            <v-btn
+             
+              @click="getPostId({id}),addComment()"
+              class="mx-2"
+              fab
+              dark
+              x-small
+              color="white"
+            >
+              <v-icon class=" rounded-circle">{{ mdiUpdate }}</v-icon>
+            </v-btn>
             <v-btn @click="likePost">
               <v-icon class=" material-icons ">
                 {{ mdiEmoticonOutline }}
@@ -92,25 +103,9 @@
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
-            <div class="comments-box">
-                
-                  <v-form
-                  v-model="isValid"
-                  @submit.prevent="onSubmit"
-                  enctype="multipart/form-data"
-                  class="validate comment-form">
-                  <v-text-field
-                    name="input-1-3"                    
-                    label="ton commentaire"
-                    v-model="data.commentMessage"
-                    auto-grow
-                    class="comment-form__message"
-                  >
-                  </v-text-field>
-                  <v-btn @click="onSubmitComment()" :disabled="!isValid" class="comment-form__btn">Poster</v-btn>
-          
-                 </v-form>
-              <v-list v-for="comment in comments" :key="comment.message">
+            <div class="comments-box">               
+                 
+              <v-list v-for="comment in comments" :key="comment.id">
                 <v-list-item>
                   <v-list-item-avatar>
                     <v-icon>{{ mdiAccountCircle }}</v-icon>
@@ -150,7 +145,7 @@ import { mdiTrashCanOutline } from "@mdi/js";
 import { mdiUpdate } from "@mdi/js";
 import { mdiAccountCircle } from "@mdi/js";
 import { mdiCloseThick} from "@mdi/js";
-import axios from 'axios'
+
 //import Likes from "../components/Likes.vue";
 //import PostService fro;m "../services/PostService";
 export default {
@@ -227,6 +222,10 @@ export default {
       this.postId = parseInt(Object.values(id));
       console.log(this.postId);
     },
+    addComment() {
+      const id = this.postId
+      this.$router.push(`/posts/${id}/addcomment`)
+    },
     likePost() {
 
     },
@@ -238,22 +237,9 @@ export default {
     },
     deleteComment() {
 
-    },
-    async onSubmitComment() {   
-      const data = this.data;   
-      console.log(data)
-      try {
-        const response = await axios.post(
-        `http://localhost:3000/api/posts/${this.postId}/comments`,
-          data,
-          { headers: { Authorization: this.$store.state.token } }
-        );       
-        this.messageRetour = response.data.messageRetour;
-        console.log(response);   
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    }
+    }  
+    
+    
   }
 };
 </script>
