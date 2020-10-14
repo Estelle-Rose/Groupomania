@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="feed-container">
     <v-row class="text-center d-flex flex-column justify-center align-center">
       <v-img
         :src="require('../assets/logo_transparent.png')"
@@ -121,4 +121,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.feed-container {
+  margin-bottom: 50px;
+}
+</style>

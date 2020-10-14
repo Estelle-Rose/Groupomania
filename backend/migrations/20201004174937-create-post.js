@@ -17,13 +17,12 @@ module.exports = {
         references: {
           model: 'Users',
           key: 'id'
-        },
-      
+        },     
         
       },
       message: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       link: {
         allowNull: true,

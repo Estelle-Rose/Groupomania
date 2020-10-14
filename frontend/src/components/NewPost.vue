@@ -168,6 +168,7 @@ export default {
     },
     async onSubmit() {
       const formData = new FormData();
+      console.log(typeof(this.message))
       formData.append("message", this.message);
       if (this.link !== null) {
         formData.append("link", this.link);

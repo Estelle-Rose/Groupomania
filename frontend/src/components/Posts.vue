@@ -65,16 +65,17 @@
         <v-divider></v-divider>
         <v-card-actions class="pt-5  pr-4 d-flex justify-md-space-between">
           <div class="">
-            <v-btn @click="show = !show" color="red lighten-2 " text>
+            <v-btn @click="show = !show, getPostId({id})" color="red lighten-2 " text>
               Commentaires
             </v-btn>
-            <v-btn icon @click="show = !show">
+            <v-btn icon @click="show = !show, getPostId({id})">
               <v-icon>{{
                 show ? "mdi-chevron-up" : "mdi-chevron-down"
               }}</v-icon>
             </v-btn>
+            
           </div>
-
+      
           <div>
             <v-btn @click="likePost">
               <v-icon class=" material-icons ">
@@ -92,6 +93,23 @@
           <div v-show="show">
             <v-divider></v-divider>
             <div class="comments-box">
+                
+                  <v-form
+                  v-model="isValid"
+                  @submit.prevent="onSubmit"
+                  enctype="multipart/form-data"
+                  class="validate comment-form">
+                  <v-text-field
+                    name="input-1-3"                    
+                    label="ton commentaire"
+                    v-model="data.commentMessage"
+                    auto-grow
+                    class="comment-form__message"
+                  >
+                  </v-text-field>
+                  <v-btn @click="onSubmitComment()" :disabled="!isValid" class="comment-form__btn">Poster</v-btn>
+          
+                 </v-form>
               <v-list v-for="comment in comments" :key="comment.message">
                 <v-list-item>
                   <v-list-item-avatar>
@@ -99,17 +117,22 @@
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <div class="comment">
-                    <v-list-item-title
-                      v-html="comment.pseudo"
-                    ></v-list-item-title>
-                    <v-list-item-subtitle
-                      v-html="comment.message"
-                    ></v-list-item-subtitle>
-
+                    <div class="comment mt-5 ">
+                      <strong
+                        v-html="comment.pseudo" class="pr-5 comment__pseudo"
+                      ></strong>
+                      <p
+                        v-html="comment.message" class="pr-2 text-left comment__message"
+                      ></p>
+                     <v-icon
+                        @click="deleteComment"
+                        class=" rounded-circle comment-delete">{{ mdiCloseThick }}
+                        </v-icon>
+                     
                     </div>
                   </v-list-item-content>
                 </v-list-item>
+                <v-divider></v-divider>
               </v-list>
             </div>
           </div>
@@ -126,8 +149,10 @@ import { mdiEmoticonSadOutline } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
 import { mdiUpdate } from "@mdi/js";
 import { mdiAccountCircle } from "@mdi/js";
+import { mdiCloseThick} from "@mdi/js";
+import axios from 'axios'
 //import Likes from "../components/Likes.vue";
-//import PostService from "../services/PostService";
+//import PostService fro;m "../services/PostService";
 export default {
   name: "Posts",
 
@@ -169,23 +194,24 @@ export default {
       mdiEmoticonOutline,
       mdiEmoticonSadOutline,
       mdiTrashCanOutline,
+      mdiCloseThick,
       mdiAccountCircle,
       mdiUpdate,
       width: 500,
-
+      postId: 0,
+      commentForm:false,
       user: false,
       showFeed: true,
       update: false,
       isValid: true,
+      data: {
+        commentMessage:"",
+        commentPseudo: this.$store.state.user.pseudo,
+
+      },
       rules: {
         required: value => !!value || "Required."
-      },
-      formData: {
-        message: "",
-        link: null,
-        //userId: this.$store.state.user.id,
-        file: ""
-      },
+      }, 
       messageRetour: null,
       errorMessage: null
     };
@@ -197,8 +223,37 @@ export default {
     getOnePost() {
       this.$router.push(this.postUrl);
     },
-    likePost() {},
-    dislikePost() {}
+    getPostId(id) {
+      this.postId = parseInt(Object.values(id));
+      console.log(this.postId);
+    },
+    likePost() {
+
+    },
+    dislikePost() {
+
+    },
+    showComentForm() {
+      this.commentForm = true      
+    },
+    deleteComment() {
+
+    },
+    async onSubmitComment() {   
+      const data = this.data;   
+      console.log(data)
+      try {
+        const response = await axios.post(
+        `http://localhost:3000/api/posts/${this.postId}/comments`,
+          data,
+          { headers: { Authorization: this.$store.state.token } }
+        );       
+        this.messageRetour = response.data.messageRetour;
+        console.log(response);   
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
+    }
   }
 };
 </script>
@@ -227,6 +282,33 @@ export default {
 }
 .comment {
   display: flex;
+  align-content: center;
+  position: relative;
+  &__pseudo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  &__message {
+    width: 30rem;
+  }
 
+}
+.comment-delete {  
+    position: absolute;
+    right: 0;
+    bottom: 10px;   
+}
+.comment-form {
+  display: flex;
+  justify-content: space-between;
+ 
+  
+  padding: 10px;
+  
+  &__btn {
+    margin-left: 1rem;
+   margin-top:0.33rem;
+  }
 }
 </style>

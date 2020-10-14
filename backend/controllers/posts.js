@@ -229,18 +229,21 @@ exports.addComment = async (req, res) => {
   try {
     const userId = token.getUserId(req)
     console.log(userId)
-    const comment = req.body.message;
-    const pseudo = req.body.pseudo;
-    const postId = req.params.id;
+    const comment = req.body.commentMessage;
+    console.log(comment);
+    const pseudo = req.body.commentPseudo;
+    console.log(pseudo);
+    const postId = parseInt(req.params.id);
     console.log(postId);
     const newComment = await db.Comment.create({
       message: comment,
       pseudo: pseudo,
       UserId: userId,
       PostId: postId
-    });
-    console.log('post commenté');
-    res.status(201).send({ message: 'vous avez commenté le post' })
+    });   
+    
+      res.status(201).json({ newComment, messageRetour: 'votre commentaire est publié' });
+    
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
