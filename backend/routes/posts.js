@@ -2,6 +2,9 @@ const router = require('express').Router();
 const postsCtrl = require('../controllers/posts');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
+const multer2 = require('../middleware/multer-profile');
+
+
 
 router.get('/', auth, postsCtrl.getAllPosts);
 router.get('/hot', auth, postsCtrl.getHotPosts);

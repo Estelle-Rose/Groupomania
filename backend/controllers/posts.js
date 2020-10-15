@@ -8,7 +8,7 @@ exports.getAllPosts = async (req, res) => {
       order: [['createdAt', 'DESC']],
       include: [{
         model: db.User,
-        attributes: ['pseudo', 'id']
+        attributes: ['pseudo', 'id', 'photo']
       },
       {
         model: db.Like,
@@ -63,6 +63,15 @@ exports.getOnePost = async (req, res) => {
         {
           model: db.User,
           attributes: ['pseudo', 'photo', 'id']
+        },
+        {
+          model: db.Like,
+          attributes: ['PostId', 'UserId']
+        },
+        {
+          model: db.Comment,
+          attributes: ['message', 'pseudo', 'UserId'],
+          order: [["createdAt", "DESC"]],
         }
       ]
     })

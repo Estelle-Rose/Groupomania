@@ -18,15 +18,17 @@
 
               <v-card-title flat dense dark class="profil-middle__right">
                 <v-avatar size="96px">
-                  <!-- <img 
-                      src="https://cdn.vuetifyjs.com/images/john.jpg"
-                      alt="Phto de rofil"
-                    > -->
-                  <v-icon>{{ mdiAccountCircle }}</v-icon>
+                 <img v-if="user.data.photo"
+                      :src="user.data.photo"
+                      alt="Photo de profil"
+                    > 
+                  <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
                 </v-avatar></v-card-title
               >
             </div>
           </div>
+
+          <span class="ml-3 bio" >{{user.data.bio}}</span>
           <v-card-text v-if="options" class="d-flex justify-center my-3">
             <div class="bloc-option-profil">
               <v-btn @click="togglePhoto" class="mx-2 " dark small color="grey">
@@ -47,18 +49,18 @@
             >
               <v-card-text>
                  <v-text-field
-                 
+                 v-if="updatePseudo"
                 label="Nouveau pseudo"
-                v-model="user.data.pseudo"
+                v-model="newPseudo"
                 :rules="rules"
                 counter="30"
                 hint="Le pseudo doit avoir 4 caractères min et 30 max"
                 class="input-group--focused"
               ></v-text-field>
                 <v-textarea
+                v-if="updateBio"
                   label="Bio"
-                  v-model="user.data.bio"
-                 
+                  v-model="newBio"                 
                   text="text"
                   solo
                   name="input-7-4"
@@ -67,13 +69,13 @@
               </v-card-text>
              
 
-              <div>
-                <label for="image">Photo</label>
+              <div v-if="updatePhoto">
+                <label  for="image">Photo</label>
                 <input
                   @change="uploadImage"
                   type="file"
                   accept="image/png, image/jpeg,
-        image/bmp, image/gif"
+                  image/bmp, image/gif"
                   ref="file"
                   name="image"
                 />
@@ -96,12 +98,12 @@ export default {
     return {
       user: '',
       mdiAccountCircle,
-      
+      updateBio: false,
       updatePseudo: false,
       updatePhoto: false,
       isValid: true,
       options: true,
-      newPseudo: "",
+      newPseudo: '',
       newBio: "",
       rules: [v => v.length <= 30 || "Max 25 characters"],
       file: "",
@@ -109,7 +111,7 @@ export default {
       errorMessage: null
     };
   },
-     async mounted() {
+     async created() {
     try {
       const id = this.$store.state.user.id;
       console.log(id)
@@ -125,14 +127,17 @@ export default {
   },
   methods: {
     togglePseudo() {
-      this.updatePseudo = true;
-      this.showImage = false;
-      this.options = false;
+      this.updatePseudo = true;      
+      
     },
     togglePhoto() {
-      this.withImage = true;
+      this.updatePhoto = true;
       this.showImage = false;
-      this.options = false;
+      
+    },
+    toggleBio() {
+      this.updateBio = true;      
+      
     },
     uploadImage() {
       const file = this.$refs.file.files[0];
@@ -143,7 +148,10 @@ export default {
       const id = this.$store.state.user.id;
       const formData = new FormData();
       console.log(this.newBio, this.newPseudo);
-      formData.append("pseudo", this.newPseudo);
+      if(this.newPseudo !==null) {
+        formData.append("pseudo", this.newPseudo);        
+      }
+
       formData.append("bio", this.newBio);
 
       formData.append("photo", this.file);

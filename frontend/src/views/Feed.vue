@@ -37,7 +37,7 @@
               :id="item.id"
               :userId="item.UserId"              
               :comments="item.Comments"
-              
+              :photo="item.User.photo"
               :postUrl="'posts/' + item.id"
               @deletePost="deletePost(item.id)"
                   @forceRerender="forceRerender()"    

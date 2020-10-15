@@ -97,10 +97,10 @@ exports.updateAccount = async (req, res) => {
     console.log(accountId)
     const userId = token.getUserId(req);  
     console.log(userId) ;
-    let photo;   
+    let newPhoto;   
     
     if (req.file) {
-      photo = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
+      newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       
     } else {
       photo = null;
@@ -117,9 +117,9 @@ exports.updateAccount = async (req, res) => {
           }
         }))
       }
-      user.pseudo = req.body.pseudo;
+      user.pseudo = req.body.pseudo || user.pseudo;
       user.bio = req.body.bio;
-      user.photo = photo;
+      user.photo = newPhoto;
       const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
       console.log(newuser)
       res.status(200).json({ user: newuser, message: 'user modifié' })

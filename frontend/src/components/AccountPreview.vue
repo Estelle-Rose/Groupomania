@@ -4,10 +4,10 @@
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-if="$store.state.isLoggedIn" v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
-            <v-avatar size="96px">
-              <!-- <img v-if="photo" alt="Avatar" :src="photo" /> -->
+            <v-avatar size="35px">
+               <img v-if="photo" alt="Avatar" :src="photo" /> 
 
-              <v-icon>{{ mdiAccountCircle }}</v-icon>
+              <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
             </v-avatar>
           </v-btn>
         </template>
@@ -15,8 +15,8 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar>
-                <!-- <img v-if="$store.state.user.photo" alt="Avatar" :src="photo" /> -->
-                <v-icon>{{ mdiAccountCircle }}</v-icon>
+                 <img v-if="$store.state.user.photo" alt="Avatar" :src="photo" /> 
+                <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
               </v-avatar>
               <h3>{{ pseudo }}</h3>
               <p class="caption mt-1">{{ email }}</p>

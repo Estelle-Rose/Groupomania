@@ -6,11 +6,11 @@
           <v-card-title class="post-title"
             >
             <v-avatar size="52px">
-                 <!--  <img 
-                      src="https://cdn.vuetifyjs.com/images/john.jpg"
-                      alt="Phto de rofil"
-                    > -->
-                  <v-icon  >{{ mdiAccountCircle }}</v-icon>
+                   <img v-if="photo"
+                      :src="photo"
+                      alt="Photo de rofil"
+                    > 
+                  <v-icon v-else >{{ mdiAccountCircle }}</v-icon>
                 </v-avatar> 
                 <div class="nom-date mt-3">
                   <span class="pseudo pl-3">{{ pseudo }}</span>
@@ -199,6 +199,9 @@ export default {
     comments: {
       type: Array
     },
+    photo: {
+      type: String
+    }
     
 
   },
