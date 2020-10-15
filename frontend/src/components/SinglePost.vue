@@ -1,105 +1,26 @@
 <template >
   <v-container fluid class="bloc-modal">
     <div class="overlay "></div>
-    <div v-if="post.data.imageUrl" class="modal-card ">
-      <v-card class="mx-auto post-card" color="red lighten-4" max-width="600">
-        <v-card-title class="post-title-box">
-          <v-icon medium color="white" left>
-            {{ mdiMessageSettingsOutline }}
-          </v-icon>
-          <div class="update-title pl-3 pb-5">
-            <span class="title font-weight-light post-title "
-              >Modifiez votre post</span
-            >
-            <v-icon
-              @click="getBackToFeed"
-              class=" rounded-circle cancel-update"
-              >{{ mdiCloseThick }}</v-icon
-            >
-          </div>
-        </v-card-title>
-        <v-form
-          v-model="isValid"
-          @submit.prevent="onSubmit"
-          enctype="multipart/form-data"
-          class="validate "
-        >
-          <div class="text-box">
-            <v-textarea
-              v-if="textInput"
-              name="input-1-2"
-              filled
-              label="Message"
-              v-model="message"
-              :rules="[rules.required]"
-              auto-grow
-              class="mr-5 ml-3"
-            ></v-textarea>
-            <span v-else class="pl-5">{{ post.data.message }} </span>
-            <v-icon @click="newText" class=" rounded-circle cancel-update">{{
-              mdiCloseThick
-            }}</v-icon>
-          </div>
-
-          <div class="link-box pb-5 pt-5">
-            <v-text-field
-              v-if="linkInput"
-              name="input-1-3"
-              filled
-              label="link"
-              v-model="link"
-              auto-grow
-              class="mr-5 ml-3"
-            ></v-text-field>           
-            
-          </div>
-          <v-img           
-            :src="post.data.imageUrl"
-            :max-height="300"
-            :max-width="200"
-            class="mx-auto pb-5"
-          ></v-img>
-          <div class="pb-5 pt-5">
-            <label for="image" class="pl-5">Image</label>
-            <input
-              @change="uploadImage"
-              type="file"
-              accept="image/png, image/jpeg,
-        image/bmp, image/gif"
-              ref="file"
-              name="image"
-            />
-          </div>
-          <div class="pl-5 pt-5">
-            <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-          </div>
-
-          <br />
-          <div class="danger-alert" v-html="errorMessage" />
-          <div class="danger-alert" v-html="messageRetour" />
-        </v-form>
-      </v-card>
-    </div>
-    <div v-if="post.data.link" class="modal-card ">
+    <div class="modal-card ">
       <v-card class="mx-auto post-card" color="red lighten-4" max-width="600">
         <v-card-title class="post-title-box">
           <v-icon medium color="white" left>
             {{ mdiMessageSettingsOutline }}
           </v-icon>
           <div class="update-title pl-3 pb-5 ">
-            <span class="title font-weight-light post-title ">Votre post</span>            
-            <v-btn  @click="getBackToFeed" class="mx-2 return-btn" dark small  color="grey" > Retour  </v-btn>
+            <span class="title font-weight-light post-title ">Votre post</span>
+            <v-btn
+              @click="getBackToFeed"
+              class="mx-2 return-btn"
+              dark
+              small
+              color="grey"
+            >
+              Retour
+            </v-btn>
           </div>
         </v-card-title>
-        <v-card-text>
-           <span class="pl-5">{{ post.data.message }} </span>
-            <v-img        
-            :src="post.data.link"
-            :max-height="300"
-            :max-width="200"
-            class="mx-auto pb-5"
-          ></v-img>
-        </v-card-text>
+
         <v-form
           v-model="isValid"
           @submit.prevent="onSubmit"
@@ -108,24 +29,18 @@
         >
           <div class="text-box">
             <v-textarea
-              v-if="textInput"
-              name="input-1-2"
-              filled
               label="Message"
-              v-model="message"
+              v-model="post.data.message"
               :rules="[rules.required]"
-              auto-grow
-              class="mr-5 ml-3"
+              text="text"
+              solo
+              name="input-7-4"
+              class="mr-5 ml-3 text-area"
             ></v-textarea>
-           
-            <v-icon @click="newText" class=" rounded-circle cancel-update">{{
-              mdiCloseThick
-            }}</v-icon>
           </div>
 
-          <div class="link-box pb-5 pt-5">
+          <div v-if="withLink" class="link-box pb-5 pt-5">
             <v-text-field
-              v-if="linkInput"
               name="input-1-3"
               filled
               label="link"
@@ -133,23 +48,44 @@
               auto-grow
               class="mr-5 ml-3"
             ></v-text-field>
-            
-            <v-icon @click="newLink" class=" rounded-circle cancel-update">{{
-              mdiCloseThick
-            }}</v-icon>
           </div>
-          <div class="pb-5 pt-5">
-            <label for="image" class="pl-5">Image</label>
+          <v-img
+            v-if="showImage"
+            :src="post.data.imageUrl"
+            :max-height="200"
+            :max-width="100"
+            class="mx-auto pb-5"
+          ></v-img>
+          <v-img
+            v-if="showImage"
+            :src="post.data.link"
+            :max-height="200"
+            :max-width="100"
+            class="mx-auto pb-5"
+          ></v-img>
+          <div v-if="withImage" class="pb-5 pt-5 d-flex justify-center">
+            <label for="image" class="pr-3">Image</label>
             <input
               @change="uploadImage"
               type="file"
-              accept="image/png, image/jpeg,
-        image/bmp, image/gif"
+              accept="image/png, image/jpeg,image/bmp, image/gif"
               ref="file"
               name="image"
             />
           </div>
-          <div class="pl-5 pt-5">
+          <v-divider></v-divider>
+          <v-card-text v-if="options" class="d-flex justify-center my-3">
+            <div class="bloc-option">
+              <v-btn @click="toggleLink" class="mx-2 " dark large color="grey">
+                Lien
+              </v-btn>
+
+              <v-btn @click="toggleImage" class="mx-2" dark large color="grey">
+                Image
+              </v-btn>
+            </div>
+          </v-card-text>
+          <div class=" d-flex justify-center pt-5 ">
             <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
           </div>
 
@@ -173,10 +109,13 @@ export default {
   data() {
     return {
       post: "",
-      
+      options: true,
       mdiCloseThick,
       mdiMessageSettingsOutline,
       isValid: true,
+      withLink: false,
+      withImage: false,
+      showImage: true,
       rules: {
         required: value => !!value || "Required."
       },
@@ -191,14 +130,25 @@ export default {
   },
   async mounted() {
     try {
-      const id = this.$route.params.id;      
-      this.post = await PostService.getPostById(id);    
+      const id = this.$route.params.id;
+      this.post = await PostService.getPostById(id);
+      console.log(this.post);
     } catch (error) {
       console.log(error);
     }
   },
 
   methods: {
+    toggleLink() {
+      this.withLink = true;
+      this.showImage = false;
+      this.options = false;
+    },
+    toggleImage() {
+      this.withImage = true;
+      this.showImage = false;
+      this.options = false;
+    },
     uploadImage() {
       const file = this.$refs.file.files[0];
       this.file = file;
@@ -214,10 +164,10 @@ export default {
         formData.append("link", this.link);
       }
       formData.append("imageUrl", this.file);
-     console.log(this.message)
+      console.log(this.message);
       try {
         const response = await axios.put(
-          `http://localhost:3000/api/posts/ ${this.$route.params.id}`,
+          `http://localhost:3000/api/posts/${this.$route.params.id}`,
           formData,
           { headers: { Authorization: this.$store.state.token } }
         );
@@ -251,12 +201,16 @@ export default {
   position: absolute;
   right: 0;
 }
-.text-box {
-  display: flex;
-  align-content: center;
-}
+
 .link-box {
   display: flex;
   align-content: center;
+}
+.message {
+  font-size: 20px;
+  border: 2px grey solid;
+  padding: 15px;
+  width: 85%;
+  margin-left: 20px;
 }
 </style>

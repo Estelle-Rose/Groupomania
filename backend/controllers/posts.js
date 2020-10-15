@@ -12,7 +12,7 @@ exports.getAllPosts = async (req, res) => {
       },
       {
         model: db.Like,
-        attributes: ['type', 'UserId']
+        attributes: ['PostId', 'UserId']
       },
       {
         model: db.Comment,
@@ -38,7 +38,7 @@ exports.getHotPosts = async (req, res) => {
       },
       {
         model: db.Like,
-        attributes: ['type', 'UserId']
+        attributes: ['PostId', 'UserId']
       },
       {
         model: db.Comment,
@@ -146,8 +146,8 @@ exports.updatePost = async (req, res) => {
     let link;
     let newImageUrl;
     const userId = token.getUserId(req);
-    console.log(userId)
-    const postId = parseInt(req.params.id);
+    console.log(typeof(userId))
+    const postId = req.params.id;
     console.log(postId)
 
     if (req.file) {
@@ -157,7 +157,7 @@ exports.updatePost = async (req, res) => {
       imageUrl = null;
     }
     let post = await db.Post.findOne({ where: { id: req.params.id } });
-    if (userId === post.userId) {
+    if (userId === post.UserId) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
         console.log(post.imageUrl);
@@ -187,37 +187,25 @@ exports.updatePost = async (req, res) => {
 exports.likePost = async (req, res, next) => {
   try {
     const userId = token.getUserId(req)
-    console.log(userId)
-    const like = req.body.type;
+    console.log(userId)      
+
     const postId = req.params.id;
     console.log(postId);
-    const userLike = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
-    console.log(userLike instanceof db.Like);
-    if (userLike === null) {
-      if (like === 1) {
-        console.log(like)
-        const newLike = await db.Like.create({
-          type: true,
-          UserId: userId,
-          PostId: postId
-        });
-        console.log(newLike);
-        res.status(201).json({ message: 'vous aimez ce post', newLike });
-      }
-      if (like === -1) {
-        const newDislike = await db.Like.create({
-          type: false,
-          UserId: userId,
-          PostId: postId,
-        });
-        console.log(newDislike);
-        res.status(400).json({ message: 'vous aimez pas ce post', newDislike });
-      }
-    }
-    else {
+    const user = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
+    
+    if (user) {  
+      
       await db.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
       console.log('le like est annulé')
-      res.status(400).json({ message: 'le like est annulé' });
+      res.status(200).send({ messageRetour: 'vou n\'aimez plus ce post' , isalreadyliked:'yes'});      
+    }
+    else {
+      const newLike = await db.Like.create({          
+        UserId: userId,
+        PostId: postId
+      });
+      console.log(newLike);
+      res.status(201).json({ messageRetour: 'vous aimez ce post', isalreadyliked:'no' });
     }
   }
   catch (error) {

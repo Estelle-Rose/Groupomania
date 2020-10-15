@@ -7,10 +7,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      type: {
-        type: Sequelize.BOOLEAN
-      },
+      },      
       PostId: {
         allowNull: false,
         type: Sequelize.INTEGER,

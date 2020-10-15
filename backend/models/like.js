@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Like.init({
-    type: DataTypes.BOOLEAN
+  
   }, {
     sequelize,
     modelName: 'Like',

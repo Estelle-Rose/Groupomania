@@ -1,14 +1,14 @@
 <template>
   <v-footer fixed v-bind="localAttrs" :padless="padless">
-    <v-card flat tile width="100%" class="red lighten-4 text-center">
+    <v-card flat tile width="100%" height="50px" class="red lighten-4 text-center">
       <v-card-text class="white--text">
-        <v-btn  to="/" icon class="mx-4">
+        <v-btn  to="/" icon class="mx-4 pb-4">
           <v-icon  size="24px">
             {{ mdiHome }}
           </v-icon>
         </v-btn>
-        {{ new Date().getFullYear() }} — <strong>Groupomania</strong>
-        <v-btn icon class="mx-4">
+        <span class=" mx-4 mb-5 pb-5">{{ new Date().getFullYear() }} — <strong>Groupomania</strong></span>
+        <v-btn icon class="mx-4 pb-4">
           <v-icon size="24px">
             {{ mdiEmail }}
           </v-icon>
@@ -45,3 +45,6 @@
     },
   };
 </script>
+<style lang="stylus" scoped>
+
+</style>

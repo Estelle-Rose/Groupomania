@@ -4,7 +4,7 @@
       <v-menu bottom min-width="200px" rounded offset-y>
         <template v-if="$store.state.isLoggedIn" v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on">
-            <v-avatar size="36px">
+            <v-avatar size="96px">
               <!-- <img v-if="photo" alt="Avatar" :src="photo" /> -->
 
               <v-icon>{{ mdiAccountCircle }}</v-icon>
@@ -34,19 +34,21 @@
 
 <script>
 import { mdiAccountCircle } from "@mdi/js";
-
 export default {
   name: "AccountPreview",
-
   data() {
     return {
+           
       mdiAccountCircle,
-      // photo: this.$store.state.user.photo,
+      photo: this.$store.state.user.photo,
       pseudo: this.$store.state.user.pseudo,
-      email: this.$store.state.user.email
+     email: this.$store.state.user.email,
+      
     };
   },
   methods: {
+ 
+  
     logOut: function() {
       console.log(this.$store.state.user.photo);
       this.$store.dispatch("setToken", null);

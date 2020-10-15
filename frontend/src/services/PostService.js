@@ -9,7 +9,7 @@ export default {
   getPostById(id) {
     return Api().get('posts/' + id);
   },
-
+  
 
   deletePost(id) {
     return Api().delete('posts/' + id);

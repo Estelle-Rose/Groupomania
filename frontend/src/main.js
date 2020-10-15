@@ -10,6 +10,12 @@ import { sync } from 'vuex-router-sync';
 
 Vue.config.productionTip = false;
 
+ /// gestion de l'affichage des dates avec vue-moment
+const moment = require('moment')
+require('moment/locale/fr')
+Vue.use(require('vue-moment'), {
+  moment
+});
 Vue.use(Vuetify);
 const unsync = sync(store, router);
 

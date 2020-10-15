@@ -2,10 +2,21 @@
   <div>
     <v-card class="posts-card mx-auto mt-4 mb-4 pb-5" round elevation="2">
       <div>
-        <div class="d-flex justify-space-between pr-2 blue-grey lighten-2">
-          <v-card-title class="h6"
-            >Post publié par {{ pseudo }} {{ id }} ||| le
-            {{ createdAt.split("T")[0] }}
+        <div class="d-flex justify-space-between pr-2 ">
+          <v-card-title class="post-title"
+            >
+            <v-avatar size="52px">
+                 <!--  <img 
+                      src="https://cdn.vuetifyjs.com/images/john.jpg"
+                      alt="Phto de rofil"
+                    > -->
+                  <v-icon  >{{ mdiAccountCircle }}</v-icon>
+                </v-avatar> 
+                <div class="nom-date mt-3">
+                  <span class="pseudo pl-3">{{ pseudo }}</span>
+                  <span class="date">{{ createdAt | moment("calendar")  }}</span>
+                </div>
+           
           </v-card-title>
           <div class="post-options">
             <v-btn
@@ -30,7 +41,7 @@
               x-small
               color="white"
             >
-              <v-icon @click="deletePost({ id })" small class=" rounded-circle">
+              <v-icon @click="deletePost(id)" small class=" rounded-circle">
                 {{ mdiTrashCanOutline }}
               </v-icon>
             </v-btn>
@@ -65,7 +76,11 @@
         <v-divider></v-divider>
         <v-card-actions class="pt-5  pr-4 d-flex justify-md-space-between">
           <div class="">
-            <v-btn @click="show = !show, getPostId({id})" color="red lighten-2 " text>
+            <v-btn
+              @click="(show = !show), getPostId({ id })"
+              color="red lighten-2 "
+              text
+            >
               Commentaires
             </v-btn>
             <v-btn icon @click="show = !show">
@@ -73,38 +88,37 @@
                 show ? "mdi-chevron-up" : "mdi-chevron-down"
               }}</v-icon>
             </v-btn>
-            
           </div>
-      
-          <div>
-            <v-btn
-             
-              @click="getPostId({id}),addComment()"
-              class="mx-2"
-              fab
-              dark
-              x-small
-              color="white"
+          <div class="d-flex">
+            <span
+              ><v-btn @click="addComment(id)" class="mx-2" small>
+                <v-icon class="material-icons">{{
+                  mdiCommentTextOutline
+                }}</v-icon> </v-btn
+              >{{ comments.length }}</span
             >
-              <v-icon class=" rounded-circle">{{ mdiUpdate }}</v-icon>
-            </v-btn>
-            <v-btn @click="likePost">
-              <v-icon class=" material-icons ">
-                {{ mdiEmoticonOutline }}
-              </v-icon>
-              {{ Likes.filter(obj => obj.type === true).length }}
-            </v-btn>
-            <v-btn @click="dislikePost" class="ml-3">
-              <v-icon>{{ mdiEmoticonSadOutline }}</v-icon>
-              {{ Likes.filter(obj => obj.type === false).length }}
-            </v-btn>
+          </div>
+          <div class="d-flex">
+            <span
+              ><v-btn
+                
+                @click="likePost(id), reloadFeed()"
+                x-small
+                class="like-btn"          
+              >
+                
+                <v-icon  class=" material-icons ">
+                  {{ mdiEmoticonOutline }}
+                </v-icon>
+              </v-btn>              
+              {{ likes.length }}</span
+            >
           </div>
         </v-card-actions>
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
-            <div class="comments-box">               
-                 
+            <div class="comments-box">
               <v-list v-for="comment in comments" :key="comment.id">
                 <v-list-item>
                   <v-list-item-avatar>
@@ -114,16 +128,18 @@
                   <v-list-item-content>
                     <div class="comment mt-5 ">
                       <strong
-                        v-html="comment.pseudo" class="pr-5 comment__pseudo"
+                        v-html="comment.pseudo"
+                        class="pr-5 comment__pseudo"
                       ></strong>
                       <p
-                        v-html="comment.message" class="pr-2 text-left comment__message"
+                        v-html="comment.message"
+                        class="pr-2 text-left comment__message"
                       ></p>
-                     <v-icon
+                      <v-icon
                         @click="deleteComment"
-                        class=" rounded-circle comment-delete">{{ mdiCloseThick }}
-                        </v-icon>
-                     
+                        class=" rounded-circle comment-delete"
+                        >{{ mdiCloseThick }}
+                      </v-icon>
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -144,10 +160,11 @@ import { mdiEmoticonSadOutline } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
 import { mdiUpdate } from "@mdi/js";
 import { mdiAccountCircle } from "@mdi/js";
-import { mdiCloseThick} from "@mdi/js";
+import { mdiCloseThick } from "@mdi/js";
+import { mdiCommentTextOutline } from "@mdi/js";
 
 //import Likes from "../components/Likes.vue";
-//import PostService fro;m "../services/PostService";
+import axios from "axios";
 export default {
   name: "Posts",
 
@@ -173,7 +190,7 @@ export default {
     postUrl: {
       type: String
     },
-    Likes: {
+    likes: {
       type: Array
     },
     createdAt: {
@@ -181,65 +198,87 @@ export default {
     },
     comments: {
       type: Array
-    }
+    },
+    
+
   },
   data: function() {
     return {
       show: false,
       mdiEmoticonOutline,
+      mdiCommentTextOutline,
       mdiEmoticonSadOutline,
       mdiTrashCanOutline,
       mdiCloseThick,
       mdiAccountCircle,
       mdiUpdate,
       width: 500,
-      postId: 0,
-      commentForm:false,
+      commentForm: false,
       user: false,
       showFeed: true,
       update: false,
       isValid: true,
-      data: {
-        commentMessage:"",
-        commentPseudo: this.$store.state.user.pseudo,
-
-      },
+      isliked: false,
       rules: {
         required: value => !!value || "Required."
-      }, 
+      },
       messageRetour: null,
       errorMessage: null
     };
   },
+
+  
   methods: {
     deletePost() {
       this.$emit("deletePost", this.id);
     },
+    /* forceRerender() {
+      this.$emit("forceRerender");
+    }, */
     getOnePost() {
       this.$router.push(this.postUrl);
     },
-    getPostId(id) {
+    /* getPostId(id) {
       this.postId = parseInt(Object.values(id));
-      console.log(this.postId);
+    }, */
+    addComment(id) {
+      this.$router.push(`/posts/${id}/addcomment`);
     },
-    addComment() {
-      const id = this.postId
-      this.$router.push(`/posts/${id}/addcomment`)
-    },
-    likePost() {
+    /* likePost() {
+      this.$emit("likePost", this.id);
+    }, */
+    async likePost(id) {  
+      const data = 1;
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/posts/${id}/like`, 
+          data    ,     
+          { headers: { Authorization: this.$store.state.token } }
+        );
+        this.messageRetour = response.data.messageRetour;
+        console.log(typeof(response.data.isalreadyliked));
+         if (response.data.isalreadyliked === 'no'){
+          this.isliked = true;
+          console.log(this.isliked)
+        } else {
+          this.isliked = false;
+        }
+       
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      } 
 
+       
     },
-    dislikePost() {
 
+    reloadFeed() {
+      this.$emit("reloadFeed");
     },
+
     showComentForm() {
-      this.commentForm = true      
+      this.commentForm = true;
     },
-    deleteComment() {
-
-    }  
-    
-    
+    deleteComment() {}
   }
 };
 </script>
@@ -247,10 +286,16 @@ export default {
 /* .posts-card {
   width: 40em;
 } */
-.body-1 {
+.post-title {
   font-size: 20px;
-  border: 2px grey solid;
-  padding: 15px;
+  margin-left: 15px;
+}
+.nom-date{
+  display: flex;
+  flex-direction: column;
+}
+.date {
+  font-size: 14px;
 }
 .posts-row {
   justify-content: center;
@@ -278,23 +323,21 @@ export default {
   &__message {
     width: 30rem;
   }
-
 }
-.comment-delete {  
-    position: absolute;
-    right: 0;
-    bottom: 10px;   
+.comment-delete {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
 }
 .comment-form {
   display: flex;
   justify-content: space-between;
- 
-  
+
   padding: 10px;
-  
+
   &__btn {
     margin-left: 1rem;
-   margin-top:0.33rem;
+    margin-top: 0.33rem;
   }
 }
 </style>

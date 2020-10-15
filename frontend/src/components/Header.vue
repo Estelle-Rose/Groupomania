@@ -22,7 +22,7 @@
       <v-btn v-if="$store.state.isLoggedIn" text to="/posts">Fil d'actu</v-btn>
       <v-spacer></v-spacer>
       
-      <account-preview v-if="$store.state.isLoggedIn"></account-preview>
+      <account-preview v-if="$store.state.isLoggedIn" ></account-preview>
       <v-btn v-if="!$store.state.isLoggedIn" text to="/login">Connexion</v-btn>
       <v-btn v-if="!$store.state.isLoggedIn" text to="/signup"
         >Inscription</v-btn
@@ -85,15 +85,19 @@
 </template>
 <script>
 import AccountPreview from "../components/AccountPreview";
+
 export default {
   name: "PageHeader",
   components: {
     "account-preview": AccountPreview
   },
   data() {
-    return {};
+    return {
+      
+    };
   },
   computed: {},
+
   methods: {
     logOut: function() {
       this.$store.dispatch("setToken", null);

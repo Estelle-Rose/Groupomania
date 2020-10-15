@@ -25,22 +25,23 @@
               ><v-icon>{{ mdiPencilOutline }}</v-icon></v-btn
             >
           </v-card-title>
-          <v-card-text>
-            <posts
-              v-for="(item, i) in posts"
-              :key="i"
+          <v-card-text v-for="item of posts"
+              :key="`${item.id}-${item.Likes.length}-${item.Comments.length}-${componentKey}`">
+            <posts              
               :message="item.message"
               :pseudo="item.User.pseudo"
               :link="item.link"
               :imageUrl="item.imageUrl"
               :createdAt="item.createdAt"
-              :Likes="item.Likes"
+              :likes="item.Likes"
               :id="item.id"
               :userId="item.UserId"              
               :comments="item.Comments"
+              
               :postUrl="'posts/' + item.id"
               @deletePost="deletePost(item.id)"
-              
+                  @forceRerender="forceRerender()"    
+              @reloadFeed="reloadFeed()"            
             >
             </posts>
           </v-card-text>
@@ -55,6 +56,7 @@
 // @ is an alias to /src
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
+//import axios from 'axios';
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
@@ -65,31 +67,36 @@ export default {
   data() {
     return {
       posts: [],  
-      Likes: [],   
-      post: {},      
+       
+        
       errorMessage: null,
       mdiPencilOutline,
+      componentKey: 0,
      
     };
   },
-  async mounted() {
+  async beforeMount() {
     try {
       const response = await PostService.getPosts();
       console.log(response);
-      for (const post of response.data) {    
-        this.posts.push(post);          
-         this.Likes.push(post.Likes)
-      
-     
-     /* this.likes =  post.Likes.filter(obj => obj.type === true).length;
-     this.dislikes =  post.Likes.filter(obj => obj.type === false).length; */
-    
-      };
+      this.posts = response.data
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
   },
   methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
+     async reloadFeed() {
+    try {
+      const response = await PostService.getPosts();
+      console.log(response);
+      this.posts = response.data
+    } catch (error) {
+      this.errorMessage = error.response.data.error;
+    }
+  }, 
     async getHotPosts() {
       try {
         console.log(this.posts);
@@ -103,6 +110,18 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
+   /* async refresh() {
+    try {
+      const response = await PostService.getPosts();
+      console.log(response);
+      for (const post of response.data) {    
+        this.posts.push(post);          
+    
+      };
+    } catch (error) {
+      this.errorMessage = error.response.data.error;
+    }
+  }, */
     async deletePost(id) {
       try {
         const userId = this.$store.state.user.id;
@@ -117,7 +136,9 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     }
+    
   }
+  
 };
 </script>
 

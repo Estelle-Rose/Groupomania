@@ -69,10 +69,10 @@ exports.login = async (req, res) => {
 exports.getAccount = async (req, res) => {
   try {
     const user = await db.User.findOne({
-      attributes: ['pseudo', 'email', 'photo'],
+      
       where: { id: req.params.id }
     })
-    res.status(200).json(user);
+    res.status(200).send(user);
   }
   catch (error) {
     return res.status(500).send({ error: 'Erreur serveur' });
@@ -118,11 +118,11 @@ exports.updateAccount = async (req, res) => {
         }))
       }
       user.pseudo = req.body.pseudo;
-      user.bio = req.body.bio || link;
+      user.bio = req.body.bio;
       user.photo = photo;
       const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
       console.log(newuser)
-      res.status(200).json({ newuser: newuser, message: 'user modifié' })
+      res.status(200).json({ user: newuser, message: 'user modifié' })
     } else {
       res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
     }
