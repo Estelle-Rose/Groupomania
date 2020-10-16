@@ -16,7 +16,11 @@ exports.getAllPosts = async (req, res) => {
       },
       {
         model: db.Comment,
-        attributes: ['message', 'pseudo','UserId', 'id']
+        attributes: ['message', 'pseudo','UserId', 'id'],
+        include: [{
+          model: db.User,
+          attributes: ['photo']
+        }],
       }
       ]
     });
@@ -195,11 +199,9 @@ exports.updatePost = async (req, res) => {
 
 exports.likePost = async (req, res, next) => {
   try {
-    const userId = token.getUserId(req)
-    console.log(userId)      
+    const userId = token.getUserId(req)      
 
-    const postId = req.params.id;
-    console.log(postId);
+    const postId = req.params.id; 
     const user = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
     
     if (user) {  

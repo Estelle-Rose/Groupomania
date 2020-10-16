@@ -6,22 +6,22 @@
           <v-card-title class="post-title"
             >
             <v-avatar size="52px">
-                   <img v-if="photo"
-                      :src="photo"
-                      alt="Photo de rofil"
+                   <img v-if="post.User.photo"
+                      :src="post.User.photo"
+                      alt="Photo de profil"
                     > 
                   <v-icon v-else >{{ mdiAccountCircle }}</v-icon>
                 </v-avatar> 
                 <div class="nom-date mt-3">
-                  <span class="pseudo pl-3">{{ pseudo }}</span>
-                  <span class="date">{{ createdAt | moment("calendar")  }}</span>
+                  <span class="pseudo pl-3">{{ post.User.pseudo }}</span>
+                  <span class="date">{{ post.createdAt | moment("calendar")  }}</span>
                 </div>
            
           </v-card-title>
           <div class="post-options">
             <v-btn
-              v-if="userId === this.$store.state.user.id"
-              @click="getOnePost"
+              v-if="post.UserId === this.$store.state.user.id"
+              @click="getOnePost(post.id)"
               class="mx-2"
               fab
               dark
@@ -32,7 +32,7 @@
             </v-btn>
             <v-btn
               v-if="
-                userId === this.$store.state.user.id ||
+                post.UserId === this.$store.state.user.id ||
                   this.$store.state.user.admin === true
               "
               class="mx-2"
@@ -41,7 +41,7 @@
               x-small
               color="white"
             >
-              <v-icon @click="deletePost(id)" small class=" rounded-circle">
+              <v-icon @click="deletePost()" small class=" rounded-circle">
                 {{ mdiTrashCanOutline }}
               </v-icon>
             </v-btn>
@@ -50,22 +50,22 @@
         <div class="pl-3 pr-2-3">
           <v-card-text class="text-left">
             <p class="body-1">
-              {{ message }}
+              {{ post.message }}
             </p>
           </v-card-text>
         </div>
         <div class="pb-5">
           <v-img
-            v-if="link"
-            :src="link"
+            v-if="post.link"
+            :src="post.link"
             :max-height="600"
             :max-width="400"
             class="mx-auto pb-5"
           >
           </v-img>
           <v-img
-            v-if="imageUrl"
-            :src="imageUrl"
+            v-if="post.imageUrl"
+            :src="post.imageUrl"
             :max-height="600"
             :max-width="400"
             class="mx-auto pb-5"
@@ -77,7 +77,7 @@
         <v-card-actions class="pt-5  pr-4 d-flex justify-md-space-between">
           <div class="">
             <v-btn
-              @click="(show = !show), getPostId({ id })"
+              @click="(show = !show)"
               color="red lighten-2 "
               text
             >
@@ -91,18 +91,18 @@
           </div>
           <div class="d-flex">
             <span
-              ><v-btn @click="addComment(id)" class="mx-2" small>
+              ><v-btn @click="addComment(post.id)" class="mx-2" small>
                 <v-icon class="material-icons">{{
                   mdiCommentTextOutline
                 }}</v-icon> </v-btn
-              >{{ comments.length }}</span
+              >{{ post.Comments.length }}</span
             >
           </div>
           <div class="d-flex">
             <span
               ><v-btn
                 
-                @click="likePost(id), reloadFeed()"
+                @click="likePost(post.id), reloadFeed()"
                 x-small
                 class="like-btn"          
               >
@@ -111,7 +111,7 @@
                   {{ mdiEmoticonOutline }}
                 </v-icon>
               </v-btn>              
-              {{ likes.length }}</span
+              {{ post.Likes.length }}</span
             >
           </div>
         </v-card-actions>
@@ -119,10 +119,14 @@
           <div v-show="show">
             <v-divider></v-divider>
             <div class="comments-box">
-              <v-list v-for="comment in comments" :key="comment.id">
+              <v-list v-for="comment in post.Comments" :key="comment.id" :comment="comment">
                 <v-list-item>
                   <v-list-item-avatar>
-                    <v-icon>{{ mdiAccountCircle }}</v-icon>
+                    <img v-if="comment.User.photo"
+                      :src="comment.User.photo"
+                      alt="Photo de profil"
+                    > 
+                    <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
@@ -136,7 +140,7 @@
                         class="pr-2 text-left comment__message"
                       ></p>
                       <v-icon
-                        @click="deleteComment"
+                        @click="deleteComment(comment.id)"
                         class=" rounded-circle comment-delete"
                         >{{ mdiCloseThick }}
                       </v-icon>
@@ -169,40 +173,12 @@ export default {
   name: "Posts",
 
   props: {
-    link: {
-      type: String
-    },
-    message: {
-      type: String
-    },
-    userId: {
-      type: Number
-    },
-    pseudo: {
-      type: String
-    },
-    imageUrl: {
-      type: String
-    },
-    id: {
-      type: Number
-    },
+    post: {
+      type: Object
+    },     
     postUrl: {
       type: String
-    },
-    likes: {
-      type: Array
-    },
-    createdAt: {
-      type: String
-    },
-    comments: {
-      type: Array
-    },
-    photo: {
-      type: String
-    }
-    
+    },   
 
   },
   data: function() {
@@ -233,25 +209,21 @@ export default {
   
   methods: {
     deletePost() {
-      this.$emit("deletePost", this.id);
-    },
-    /* forceRerender() {
-      this.$emit("forceRerender");
-    }, */
+      this.$emit("deletePost", this.post.id);
+    },   
     getOnePost() {
       this.$router.push(this.postUrl);
     },
-    /* getPostId(id) {
-      this.postId = parseInt(Object.values(id));
-    }, */
     addComment(id) {
       this.$router.push(`/posts/${id}/addcomment`);
+      console.log(id)
     },
     /* likePost() {
       this.$emit("likePost", this.id);
     }, */
     async likePost(id) {  
       const data = 1;
+      console.log(id)
       try {
         const response = await axios.post(
           `http://localhost:3000/api/posts/${id}/like`, 

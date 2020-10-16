@@ -38,14 +38,20 @@ export default {
   name: "AccountPreview",
   data() {
     return {
-           
+      user:{},
       mdiAccountCircle,
       photo: this.$store.state.user.photo,
       pseudo: this.$store.state.user.pseudo,
-     email: this.$store.state.user.email,
+      email: this.$store.state.user.email,
       
     };
   },
+  computed: {
+    getUser() {
+      return this.$store.state.user
+    }
+  },
+  
   methods: {
  
   

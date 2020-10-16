@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="feed-container">
+  <v-container fluid  class="feed-container">
     <v-row class="text-center d-flex flex-column justify-center align-center">
       <v-img
         :src="require('../assets/logo_transparent.png')"
@@ -10,7 +10,7 @@
       <v-col sm="12" md="6">
         <v-card class="posts-card mx-auto" elevation="2">
           <v-card-title
-            class="d-flex justify-space-between red lighten-4"
+            class="d-flex justify-space-between"
             flat
             dense
             dark
@@ -25,23 +25,16 @@
               ><v-icon>{{ mdiPencilOutline }}</v-icon></v-btn
             >
           </v-card-title>
-          <v-card-text v-for="item of posts"
-              :key="`${item.id}-${item.Likes.length}-${item.Comments.length}-${componentKey}`">
-            <posts              
-              :message="item.message"
-              :pseudo="item.User.pseudo"
-              :link="item.link"
-              :imageUrl="item.imageUrl"
-              :createdAt="item.createdAt"
-              :likes="item.Likes"
-              :id="item.id"
-              :userId="item.UserId"              
-              :comments="item.Comments"
-              :photo="item.User.photo"
-              :postUrl="'posts/' + item.id"
-              @deletePost="deletePost(item.id)"
-                  @forceRerender="forceRerender()"    
-              @reloadFeed="reloadFeed()"            
+          <v-card-text>
+            <posts
+              v-for="post of posts"
+              :key="post.id"
+              :post="post"
+              :id="post.id"
+              :postUrl="'posts/' + post.id"
+              @deletePost="deletePost(post.id)"
+             
+              @reloadFeed="reloadFeed()"
             >
             </posts>
           </v-card-text>
@@ -54,6 +47,7 @@
 
 <script>
 // @ is an alias to /src
+
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
 //import axios from 'axios';
@@ -64,39 +58,37 @@ export default {
   components: {
     Posts
   },
+
   data() {
     return {
-      posts: [],  
-       
-        
+      posts: [],
+
       errorMessage: null,
       mdiPencilOutline,
-      componentKey: 0,
-     
+      componentKey: 0
     };
   },
   async beforeMount() {
     try {
       const response = await PostService.getPosts();
       console.log(response);
-      this.posts = response.data
+      this.posts = response.data;
+      this.$store.dispatch("setPosts", response.data);
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
   },
   methods: {
-    forceRerender() {
-      this.componentKey += 1;
+    
+    async reloadFeed() {
+      try {
+        const response = await PostService.getPosts();
+        console.log(response);
+        this.posts = response.data;
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
     },
-     async reloadFeed() {
-    try {
-      const response = await PostService.getPosts();
-      console.log(response);
-      this.posts = response.data
-    } catch (error) {
-      this.errorMessage = error.response.data.error;
-    }
-  }, 
     async getHotPosts() {
       try {
         console.log(this.posts);
@@ -110,7 +102,7 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     },
-   /* async refresh() {
+    /* async refresh() {
     try {
       const response = await PostService.getPosts();
       console.log(response);
@@ -124,9 +116,6 @@ export default {
   }, */
     async deletePost(id) {
       try {
-        const userId = this.$store.state.user.id;
-        console.log(userId);
-        console.log(id);
         const response = await PostService.deletePost(id);
         console.log(response);
         const postIndex = this.posts.findIndex(post => post.id === id);
@@ -136,14 +125,21 @@ export default {
         this.errorMessage = error.response.data.error;
       }
     }
-    
   }
-  
 };
 </script>
 
 <style lang="scss" scoped>
 .feed-container {
   margin-bottom: 50px;
+  margin-left: 0!important;
+ 
+  /* background-image:  linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url('../assets/test_fond.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+   */
+  
+ 
 }
 </style>

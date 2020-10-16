@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="comment-container">
+    <v-card-text class="comment-input">
     <v-form
       v-model="isValid"
       @submit.prevent="onSubmit"
@@ -25,6 +26,7 @@
       <div class="danger-alert" v-html="errorMessage" />
       <div class="danger-alert" v-html="messageRetour" />
     </div>
+    </v-card-text>
   </div>
 </template>
 
@@ -85,16 +87,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.signup-box {
-  position: relative;
+.comment-container {
+  display: flex;
   justify-content: center;
-
-  margin-left: 200px;
+  align-items: center;
+  height: 80vh;
 }
-.signup-card {
-  border: 3px solid #676c75 !important;
+.comment-input {
+  margin-top: 0!important;
+  justify-content: center;
+   border: 3px solid #676c75 !important;
   background-color: #ffebee !important;
+  width: 50%;  
+  
 }
+
 .team-img {
   clip-path: polygon(
     0 30%,

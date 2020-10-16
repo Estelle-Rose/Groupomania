@@ -1,12 +1,16 @@
 <template>
-  <v-container fluid class="signup-container">
+  <v-container fluid class="signup-container ">
     <v-img
       :src="require('../assets/teamjump.jpg')"
-      class="my-3 team-img hidden-sm-and-down"
+      class="my-3 team-img hidden-sm-and-down rotation20"
+    />
+    <v-img
+      :src="require('../assets/teamjump.jpg')"
+      class="my-3 team-img2 hidden-sm-and-down rotation20"
     />
     <v-layout row class="signup-box">
-      <v-col lg="5" md="8" ml-5>
-        <v-card class="signup-card" elevation="4" xs6>
+      <v-col lg="5" md="6" sm="8">
+        <v-card class="signup-card"  color="text2" elevation="4" xs6>
           <v-card-title flat dense dark>Inscription</v-card-title>
           <v-card-text class="font-weight-light">
             <v-form v-model="isValid" autocomplete="off">
@@ -125,30 +129,52 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.signup-box {
-  position: relative;
-  justify-content: center;
 
-  margin-left: 200px;
+.signup-container {
+     display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  }
+  .signup-box {
+    position: relative;
+    justify-content: center;  
+   
+  }
+  .signup-card {
+    border: 3px solid #676c75 !important;
+    &__submit {  
+      margin: auto;
+      padding-bottom: 20px;
+    }
+    
+  }
+  .team-img {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    bottom: 110px;
+    left: 0;
+  }
+  .team-img2 {
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top:0;
+    right: 0;
+  }
+  .rotation20 {
+   -webkit-transform: rotate(20deg);
+   -moz-transform: rotate(20deg);
+   -ms-transform: rotate(20deg);
+   -o-transform: rotate(20deg);
+   transform: rotate(20deg);
+ }
+    @media (max-width:640px) {
+.signup-box {
+  margin-left: 0!important;
 }
-.signup-card {
-  border: 3px solid #676c75 !important;
-  background-color: #ffebee !important;
-}
-.team-img {
-  clip-path: polygon(
-    0 30%,
-    60% 30%,
-    60% 0%,
-    100% 50%,
-    60% 100%,
-    60% 71%,
-    0 72%
-  );
-  width: 600px;
-  height: 500px;
-  position: absolute;
-  top: 70px;
-  left: 0;
-}
+  }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <nav>
     <!-- Start of app toolbar -->
-    <v-app-bar app color="red lighten-4" dark>
+    <v-app-bar app  dark>
       <v-btn-toggle
         @click.stop="drawer = !drawer"
         class="hidden-md-and-up"
@@ -13,88 +13,40 @@
             class="shrink mr-2"
             contain
             to="/"
-            :src="require('../assets/logogroupo.png')"
+            :src="require('../assets/icon-left-font-monochrome-white.png')"
             transition="scale-transition"
             width="250"
           />
         </router-link>
       </v-toolbar-title>
-      <v-btn v-if="$store.state.isLoggedIn" text to="/posts">Fil d'actu</v-btn>
       <v-spacer></v-spacer>
-      
-      <account-preview v-if="$store.state.isLoggedIn" ></account-preview>
-      <v-btn v-if="!$store.state.isLoggedIn" text to="/login">Connexion</v-btn>
-      <v-btn v-if="!$store.state.isLoggedIn" text to="/signup"
+     
+            
+       <v-btn v-if="$store.state.isLoggedIn"  small link to="/posts">Fil d'actu</v-btn>
+      <account-preview v-if="$store.state.isLoggedIn"></account-preview> 
+
+      <v-btn v-if="!$store.state.isLoggedIn" small to="/login">Connexion</v-btn>
+      <v-btn v-if="!$store.state.isLoggedIn" small to="/signup"
         >Inscription</v-btn
       >
-      <v-btn v-if="$store.state.isLoggedIn" @click="logOut" text to="/"
-        >Déconnexion</v-btn
-      >
-
-      <v-btn text to="/signup">Profil</v-btn>
-      <v-btn text to="/about">About</v-btn>
+      <v-btn  v-if="$store.state.isLoggedIn" small  to="/account">Mon profil</v-btn>
+      
+ 
+      
     </v-app-bar>
-    <!-- End of app toolbar -->
-    <!-- Start of mobile side menu -->
-    <!-- <v-navigation-drawer app v-model="drawer" left>
-    Menu title-->
-    <!--<v-app-bar text>
-        <v-list>
-          <v-list-tile>
-            <v-list-tile-title class="title">Menu</v-list-tile-title>
-          </v-list-tile>
-        </v-list>
-      </v-app-bar>
-      <v-divider></v-divider>
-    Menu Links-->
-    <!--<v-list>
-        <v-list-tile to="/" exact>
-          <v-list-tile-action>
-            <v-icon>home</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>Home</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile to="/signup">
-          <v-list-tile-action>
-            <v-icon>account-plus</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>Inscription</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile to="/signup">
-          <v-list-tile-action>
-            <v-icon>login</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>Connexion</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile to="/signup">
-          <v-list-tile-action>
-            <v-icon>account-circle</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>Profil</v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile to="/about">
-          <v-list-tile-action>
-            <v-icon>description</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>About</v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>-->
-    <!-- End of mobile side menu -->
+
   </nav>
 </template>
 <script>
-import AccountPreview from "../components/AccountPreview";
+//import AccountPreview from "../components/AccountPreview";
 
 export default {
   name: "PageHeader",
-  components: {
+ /*  components: {
     "account-preview": AccountPreview
-  },
+  }, */
   data() {
-    return {
-      
-    };
+    return {};
   },
   computed: {},
 
@@ -108,13 +60,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .v-btn {
-  margin-left: 20px;
+  margin-left: 20px;  
+  color: text2 !important;
+  background-color: accent !important;
+}
 
-  &__content {
-    color: cornsilk !important;
-  }
-}
-a {
-  background-color: transparent;
-}
 </style>

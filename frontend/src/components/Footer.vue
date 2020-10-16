@@ -1,20 +1,20 @@
 <template>
-  <v-footer fixed v-bind="localAttrs" :padless="padless">
-    <v-card flat tile width="100%" height="50px" class="red lighten-4 text-center">
-      <v-card-text class="white--text">
-        <v-btn  to="/" icon class="mx-4 pb-4">
-          <v-icon  size="24px">
-            {{ mdiHome }}
-          </v-icon>
-        </v-btn>
-        <span class=" mx-4 mb-5 pb-5">{{ new Date().getFullYear() }} — <strong>Groupomania</strong></span>
-        <v-btn icon class="mx-4 pb-4">
-          <v-icon size="24px">
-            {{ mdiEmail }}
-          </v-icon>
-        </v-btn>
-      </v-card-text>
-    </v-card>
+  <v-footer fixed padless dark  >
+    <v-row justify="space-between"
+      >
+        <v-btn small to="/about" class="ml-5 mt-2">About</v-btn>
+        <v-btn v-if="$store.state.isLoggedIn"  class="mr-5 mt-2" small @click="logOut"  to="/"
+        >Déconnexion</v-btn
+      >
+      <v-col
+        class="dark py-4 text-center white--text"
+        cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>Groupomania</strong>
+      </v-col>
+    </v-row>
+  
+    
   </v-footer>
 </template>
 <script>
@@ -26,25 +26,27 @@
       mdiHome,
 
       mdiEmail,
-      items: ['default', 'absolute', 'fixed'],
+   
       padless: false,
       variant: 'default',
     }),
-    computed: {
-      localAttrs() {
-        const attrs = {};
-
-        if (this.variant === 'default') {
-          attrs.absolute = false;
-          attrs.fixed = false;
-        } else {
-          attrs[this.variant] = true;
-        }
-        return attrs;
-      },
-    },
+   
+    
+    methods: {
+    logOut: function() {
+      this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null);
+    }
+  }
   };
 </script>
-<style lang="stylus" scoped>
+<style lang="scss" scoped>
+.footer {  
+  padding: 0!important;
+  
+}
+.footer-links {
+display: flex;
 
+}
 </style>

@@ -2,6 +2,8 @@ import Vue from 'vue';
 
 import Vuex from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
+//import Api from '../services/Api';
+//import PostService from '../services/PostService';
 
 Vue.use(Vuex);
 
@@ -11,6 +13,8 @@ export default new Vuex.Store({
     token: null,
     user: null,
     isLoggedIn: false,
+    loadingStatus: 'notLoading',
+    posts: [],
      
   },
   plugins: [
@@ -30,6 +34,12 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user;
     },
+    setLoadingStatus(state, status) {
+      state.loadingStatus = status
+    },
+    setPosts(state, posts) {
+      state.posts = posts
+    }
     
     
   },
@@ -40,7 +50,17 @@ export default new Vuex.Store({
     setUser({ commit }, user) {
       commit('setUser', user);
     },
-    
+    setPosts({ commit }, posts) {
+      commit('setPosts', posts);
+    },
+    /* fetchPosts(context) {
+      //
+      PostService.getPosts()
+      .then(response => {
+        //context.commit('setLoadingStatus', 'notLoading')
+        context.commit('setPosts', response.data.posts)
+      })
+    } */
     
   },
 });
