@@ -31,11 +31,11 @@ export default {
 </script>
 <style lang="scss">
 .v-btn {
-  color: text2 !important;
+  color: primary !important;
   background-color: accent !important;
  
   &:hover {
-    color: secondary !important; /*accent color*/
+   background-color:  #FFCDD2!important;
   }
   
 }

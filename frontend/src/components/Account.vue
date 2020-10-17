@@ -1,47 +1,82 @@
 <template>
-  <v-container fluid class="signup-container">
-    <v-img
-      :src="require('../assets/teamjump.jpg')"
-      class="my-3 team-img hidden-sm-and-down rotation20"
-    />
-    <v-img
-      :src="require('../assets/teamjump.jpg')"
-      class="my-3 team-img2 hidden-sm-and-down rotation20"
-    />
+  <v-container fluid class="signup-container ">
+    <!-- <v-img
+      :src="require('../assets/stars.svg')"
+      class="my-3 team-img  "
+      dark
+    /> -->
+    <!--  <v-img
+      :src="require('../assets/star_pink.svg')"
+      class="my-3 team-img2  rotation20"
+      dark
+    /> -->
     <v-layout row class="account-box">
-      <v-col lg="6" md="8" sm="10" class="mx-auto">
+      <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card" elevation="4" xs6>
           <div class="profil-top">
             <div class="profil-top__one ">
-              <v-card-title flat dense dark>Ton profil </v-card-title>
+              <v-card-title flat dense dark class="profil-title"
+                >Ton profil
+              </v-card-title>
             </div>
             <div class="profil-middle">
               <v-card-title flat dense dark class="profil-middle__left"
-                >Salut {{user.data.pseudo}}
+                >Salut {{ user.data.pseudo }} !
               </v-card-title>
 
               <v-card-title flat dense dark class="profil-middle__right">
                 <v-avatar size="96px">
-                 <img v-if="user.data.photo"
-                      :src="user.data.photo"
-                      alt="Photo de profil"
-                    > 
+                  <img
+                    v-if="user.data.photo"
+                    :src="user.data.photo"
+                    alt="Photo de profil"
+                  />
                   <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
                 </v-avatar></v-card-title
               >
             </div>
           </div>
 
-          <span class="ml-3 bio" >{{user.data.bio}}</span>
+          <v-card-text class=" bio"
+            ><strong>Ta bio: </strong>
+            <span v-if="!user.data.bio"> Parle nous de toi 😊</span>
+            <span>{{ user.data.bio }}</span></v-card-text
+          >
           <v-card-text v-if="options" class="d-flex justify-center my-3">
-            <div class="bloc-option-profil">
-              <v-btn @click="togglePhoto" class="mx-2 " dark small color="grey">
-                Changer ta photo
-              </v-btn>
+            <div
+              class="bloc-option-profil d-flex flex-column justify-center align-center"
+            >
+              <strong class="text-align pb-2">Que veux-tu modifier ?</strong>
 
-              <v-btn @click="togglePseudo" class="mx-2" dark small color="grey">
-                Changer ton pseudo
-              </v-btn>
+              <div>
+                <v-btn
+                  @click="togglePseudo"
+                  class="mx-2"
+                  text
+                  x-small
+                  :elevation="2"
+                >
+                  Changer ton pseudo
+                </v-btn>
+                <v-btn
+                  @click="toggleBio"
+                  class="mx-2 "
+                  text
+                  x-small
+                  :elevation="2"
+                >
+                  Changer ta bio
+                </v-btn>
+                <v-btn
+                  @click="togglePhoto"
+                  class="mx-2 "
+                  text
+                  x-small
+                  :elevation="2"
+                >
+                  Changer ta photo
+                </v-btn>
+              </div>
             </div>
           </v-card-text>
           <v-card-text class="font-weight-light">
@@ -52,29 +87,28 @@
               class="validate"
             >
               <v-card-text>
-                 <v-text-field
-                 v-if="updatePseudo"
-                label="Nouveau pseudo"
-                v-model="newPseudo"
-                :rules="rules"
-                counter="30"
-                hint="Le pseudo doit avoir 4 caractères min et 30 max"
-                class="input-group--focused"
-              ></v-text-field>
+                <v-text-field
+                  v-if="updatePseudo"
+                  label="Nouveau pseudo"
+                  v-model="newPseudo"
+                  :rules="rules"
+                  counter="30"
+                  hint="Le pseudo doit avoir 4 caractères min et 30 max"
+                  class="input-group--focused"
+                ></v-text-field>
                 <v-textarea
-                v-if="updateBio"
+                  v-if="updateBio"
                   label="Bio"
-                  v-model="newBio"                 
+                  v-model="newBio"
                   text="text"
                   solo
                   name="input-7-4"
                   class="bio"
                 ></v-textarea>
               </v-card-text>
-             
 
-              <div v-if="updatePhoto">
-                <label  for="image">Photo</label>
+              <div v-if="updatePhoto" class="d-flex justify-center">
+                <label for="image" class="mr-3">Photo</label>
                 <input
                   @change="uploadImage"
                   type="file"
@@ -84,7 +118,9 @@
                   name="image"
                 />
               </div>
-              <v-btn @click="onSubmit()" :disabled="!isValid">Envoyer</v-btn>
+              <div class="d-flex justify-center">
+                <v-btn @click="onSubmit()" :disabled="!isValid">Envoyer</v-btn>
+              </div>
             </v-form>
           </v-card-text>
         </v-card>
@@ -100,14 +136,14 @@ export default {
   name: "Account",
   data() {
     return {
-      user: '',
+      user: "",
       mdiAccountCircle,
       updateBio: false,
       updatePseudo: false,
       updatePhoto: false,
       isValid: true,
       options: true,
-      newPseudo: '',
+      newPseudo: "",
       newBio: "",
       rules: [v => v.length <= 30 || "Max 25 characters"],
       file: "",
@@ -115,33 +151,29 @@ export default {
       errorMessage: null
     };
   },
-     async created() {
+  async created() {
     try {
       const id = this.$store.state.user.id;
-      console.log(id)
+      console.log(id);
       this.user = await axios.get(
-         `http://localhost:3000/api/users/accounts/${id}`,          
-          { headers: { Authorization: this.$store.state.token } }        
+        `http://localhost:3000/api/users/accounts/${id}`,
+        { headers: { Authorization: this.$store.state.token } }
       );
       console.log(this.user);
-      
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
   },
   methods: {
     togglePseudo() {
-      this.updatePseudo = true;      
-      
+      this.updatePseudo = true;
     },
     togglePhoto() {
       this.updatePhoto = true;
       this.showImage = false;
-      
     },
     toggleBio() {
-      this.updateBio = true;      
-      
+      this.updateBio = true;
     },
     uploadImage() {
       const file = this.$refs.file.files[0];
@@ -152,8 +184,8 @@ export default {
       const id = this.$store.state.user.id;
       const formData = new FormData();
       console.log(this.newBio, this.newPseudo);
-      if(this.newPseudo !==null) {
-        formData.append("pseudo", this.newPseudo);        
+      if (this.newPseudo !== null) {
+        formData.append("pseudo", this.newPseudo);
       }
 
       formData.append("bio", this.newBio);
@@ -185,14 +217,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .v-avatar {
-  margin-top: -20px;
+  margin-top: -30px;
+  margin-right: 1em;
 }
 .signup-container {
-     display: flex;
+  background-image: url("../assets/stars.svg");
+  background-repeat: repeat;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 80vh;
-  }
+}
 .profil-top {
   display: flex;
   flex-direction: column;
@@ -201,43 +236,53 @@ export default {
   &__one {
     display: flex;
     justify-content: center;
+    padding-top: 0 !important;
   }
+}
+.profil-title {
+  padding: 0;
 }
 .profil-middle {
   display: flex;
   justify-content: space-between;
   height: 80px;
+  padding: 0;
 }
 .account-box {
   position: relative;
   justify-content: center;
-
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+.bio {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1em 0 1em;
+  width: 85%;
 }
 .signup-card {
   border: 3px solid #676c75 !important;
   background-color: #ffebee !important;
 }
-.team-img {
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+/* .team-img {
     width: 500px;
     height: 500px;
     position: absolute;
     bottom: 110px;
     left: 0;
-  }
-  .team-img2 {
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  } */
+/*  .team-img2 {
     width: 500px;
     height: 500px;
     position: absolute;
     top:0;
     right: 0;
-  }
-  .rotation20 {
-   -webkit-transform: rotate(20deg);
-   -moz-transform: rotate(20deg);
-   -ms-transform: rotate(20deg);
-   -o-transform: rotate(20deg);
-   transform: rotate(20deg);
- }
+  } */
+.rotation20 {
+  -webkit-transform: rotate(20deg);
+  -moz-transform: rotate(20deg);
+  -ms-transform: rotate(20deg);
+  -o-transform: rotate(20deg);
+  transform: rotate(20deg);
+}
 </style>

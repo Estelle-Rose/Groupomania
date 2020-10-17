@@ -1,5 +1,6 @@
 <template>
-  <v-container>
+  <v-container class="signup-container">
+    <v-card>
     <v-row class="text-center">
       <v-col cols="12">
         <v-img :src="require('../assets/logo_transparent.png')" class="my-2" contain height="100" />
@@ -22,6 +23,10 @@
         <h2 class="headline font-weight-bold mb-3">What's next?</h2>
       </v-col>
     </v-row>
+
+    </v-card>
+
+    
   </v-container>
 </template>
 
@@ -32,3 +37,13 @@ export default {
   name: "Home"
 };
 </script>
+<style lang="scss" scoped>
+.signup-container {
+  background-image: url('../assets/stars.svg');
+  background-repeat: repeat;
+     display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  }
+</style>

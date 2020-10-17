@@ -2,7 +2,7 @@
   <v-container fluid class="bloc-modal">
     <div class="overlay "></div>
     <div class="modal-card ">
-      <v-card class="mx-auto post-card" color="red lighten-4" max-width="600">
+      <v-card class="mx-auto post-card" color="text2" max-width="600">
         <v-card-title class="post-title-box">
           <v-icon medium color="white" left>
             {{ mdiMessageSettingsOutline }}
@@ -12,9 +12,9 @@
             <v-btn
               @click="getBackToFeed"
               class="mx-2 return-btn"
-              dark
+              
               small
-              color="grey"
+             
             >
               Retour
             </v-btn>
@@ -54,14 +54,14 @@
             :src="post.data.imageUrl"
             :max-height="200"
             :max-width="100"
-            class="mx-auto pb-5"
+            class="mx-auto mb-5"
           ></v-img>
           <v-img
             v-if="showImage"
             :src="post.data.link"
             :max-height="200"
             :max-width="100"
-            class="mx-auto pb-5"
+            class="mx-auto mb-5"
           ></v-img>
           <div v-if="withImage" class="pb-5 pt-5 d-flex justify-center">
             <label for="image" class="pr-3">Image</label>
@@ -76,11 +76,11 @@
           <v-divider></v-divider>
           <v-card-text v-if="options" class="d-flex justify-center my-3">
             <div class="bloc-option">
-              <v-btn @click="toggleLink" class="mx-2 " dark large color="grey">
+              <v-btn @click="toggleLink" class="mx-2"  medium>
                 Lien
               </v-btn>
 
-              <v-btn @click="toggleImage" class="mx-2" dark large color="grey">
+              <v-btn @click="toggleImage" class="mx-2"  medium >
                 Image
               </v-btn>
             </div>

@@ -15,15 +15,46 @@
             dense
             dark
           >
-            <div>
-              <v-btn to="/posts" class="recents">Les + récents</v-btn>
-              <v-btn class="ml-4 hot-posts" @click="getHotPosts()"
-                >Les + likés</v-btn
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                to="/posts"
+                  small class="recents"
+                v-bind="attrs"
+                v-on="on"
               >
-            </div>
-            <v-btn to="/add"
-              ><v-icon>{{ mdiPencilOutline }}</v-icon></v-btn
-            >
+              Les + récents
+              </v-btn>
+            </template>
+            <span>Les plus récents</span>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                small class="hot-posts" @click="getHotPosts()"
+                v-bind="attrs"
+                v-on="on"
+              >
+              Les + likés
+              </v-btn>
+            </template>
+            <span>Les plus likés</span>
+          </v-tooltip>          
+            
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+               small  to="/add"
+                v-bind="attrs"
+                v-on="on"
+              >
+             <v-icon>{{ mdiPencilOutline }}</v-icon>
+              </v-btn>
+            </template>
+            <span>Publier</span>
+          </v-tooltip>          
+            
+      
           </v-card-title>
           <v-card-text>
             <posts
@@ -31,9 +62,10 @@
               :key="post.id"
               :post="post"
               :id="post.id"
+              :isliked="isliked"
               :postUrl="'posts/' + post.id"
               @deletePost="deletePost(post.id)"
-             
+             @likePost="likePost(post.id)"
               @reloadFeed="reloadFeed()"
             >
             </posts>
@@ -50,7 +82,7 @@
 
 import PostService from "../services/PostService";
 import Posts from "../components/Posts.vue";
-//import axios from 'axios';
+import axios from 'axios';
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
@@ -62,7 +94,7 @@ export default {
   data() {
     return {
       posts: [],
-
+      isliked: false,
       errorMessage: null,
       mdiPencilOutline,
       componentKey: 0
@@ -124,7 +156,28 @@ export default {
       } catch (error) {
         this.errorMessage = error.response.data.error;
       }
-    }
+    },
+    async likePost(id) {
+      const data = 1;
+      console.log(id);
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/posts/${id}/like`,
+          data,
+          { headers: { Authorization: this.$store.state.token } }
+        );
+        this.messageRetour = response.data.messageRetour;
+        console.log(typeof response.data.isalreadyliked);
+        if (response.data.isalreadyliked === "no") {
+          this.isliked = true;
+          console.log(this.isliked);
+        } else {
+          this.isliked = false;
+        }
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
+    },
   }
 };
 </script>

@@ -3,48 +3,61 @@
     <v-card class="posts-card mx-auto mt-4 mb-4 pb-5" round elevation="2">
       <div>
         <div class="d-flex justify-space-between pr-2 ">
-          <v-card-title class="post-title"
-            >
+          <v-card-title class="post-title">
             <v-avatar size="52px">
-                   <img v-if="post.User.photo"
-                      :src="post.User.photo"
-                      alt="Photo de profil"
-                    > 
-                  <v-icon v-else >{{ mdiAccountCircle }}</v-icon>
-                </v-avatar> 
-                <div class="nom-date mt-3">
-                  <span class="pseudo pl-3">{{ post.User.pseudo }}</span>
-                  <span class="date">{{ post.createdAt | moment("calendar")  }}</span>
-                </div>
-           
+              <img
+                v-if="post.User.photo"
+                :src="post.User.photo"
+                alt="Photo de profil"
+              />
+              <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
+            </v-avatar>
+            <div class="nom-date mt-3">
+              <span class="pseudo pl-3">{{ post.User.pseudo }}</span>
+              <span class="date">{{
+                post.createdAt | moment("calendar")
+              }}</span>
+            </div>
           </v-card-title>
           <div class="post-options">
-            <v-btn
-              v-if="post.UserId === this.$store.state.user.id"
-              @click="getOnePost(post.id)"
+             <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+             
               class="mx-2"
               fab
-              dark
+              primary
               x-small
-              color="white"
-            >
-              <v-icon class=" rounded-circle">{{ mdiUpdate }}</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="
-                post.UserId === this.$store.state.user.id ||
-                  this.$store.state.user.admin === true
-              "
-              class="mx-2"
-              fab
-              dark
-              x-small
-              color="white"
-            >
-              <v-icon @click="deletePost()" small class=" rounded-circle">
-                {{ mdiTrashCanOutline }}
-              </v-icon>
-            </v-btn>
+               to="/add"
+                v-bind="attrs"
+                v-on="on"
+              >
+           <v-icon class=" rounded-circle">{{ mdiUpdate }}</v-icon>
+              </v-btn>
+            </template>
+            <span>Modifier</span>
+          </v-tooltip>        
+             <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn              
+                class="mx-2"
+                fab
+                primary
+                x-small
+                to="/add"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+            <v-icon @click="deletePost()" small class=" rounded-circle">
+                  {{ mdiTrashCanOutline }}
+                </v-icon>
+                </v-btn>
+              </template>
+            <span>Supprimer</span>
+          </v-tooltip>        
+            
+              
+         
           </div>
         </div>
         <div class="pl-3 pr-2-3">
@@ -58,7 +71,7 @@
           <v-img
             v-if="post.link"
             :src="post.link"
-            :max-height="600"
+            :max-height="300"
             :max-width="400"
             class="mx-auto pb-5"
           >
@@ -72,15 +85,15 @@
           >
           </v-img>
         </div>
-
         <v-divider></v-divider>
-        <v-card-actions class="pt-5  pr-4 d-flex justify-md-space-between">
-          <div class="">
-            <v-btn
-              @click="(show = !show)"
-              color="red lighten-2 "
-              text
-            >
+        <div class="d-flex flex-column align-end pr-3">
+          <div>{{ post.Comments.length }} comments</div>
+          <div>{{ post.Likes.length }} j'aime</div>
+        </div>
+        <v-divider></v-divider>
+        <v-card-actions class="pt-5  pr-4 d-flex justify-space-between">
+          <div class=" d-flex justify-md-space-between">
+            <v-btn @click="show = !show" text  >
               Commentaires
             </v-btn>
             <v-btn icon @click="show = !show">
@@ -89,43 +102,39 @@
               }}</v-icon>
             </v-btn>
           </div>
-          <div class="d-flex">
-            <span
-              ><v-btn @click="addComment(post.id)" class="mx-2" small>
-                <v-icon class="material-icons">{{
-                  mdiCommentTextOutline
-                }}</v-icon> </v-btn
-              >{{ post.Comments.length }}</span
+          <div class="d-flex  align-end pr-3">
+            <v-btn @click="addComment(post.id)" class="mx-2" x-small>
+              <v-icon class="material-icons">{{
+                mdiCommentTextOutline
+              }}</v-icon>
+            </v-btn>          
+            <v-btn
+              @click="likePost(post.id), reloadFeed()"
+              x-small
+             class="isliked isliked-btn"
             >
-          </div>
-          <div class="d-flex">
-            <span
-              ><v-btn
-                
-                @click="likePost(post.id), reloadFeed()"
-                x-small
-                class="like-btn"          
-              >
-                
-                <v-icon  class=" material-icons ">
-                  {{ mdiEmoticonOutline }}
-                </v-icon>
-              </v-btn>              
-              {{ post.Likes.length }}</span
-            >
+              <v-icon class=" material-icons ">
+                {{ mdiEmoticonOutline }}
+              </v-icon>
+            </v-btn>
           </div>
         </v-card-actions>
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
             <div class="comments-box">
-              <v-list v-for="comment in post.Comments" :key="comment.id" :comment="comment">
+              <v-list
+                v-for="comment in post.Comments"
+                :key="comment.id"
+                :comment="comment"
+              >
                 <v-list-item>
                   <v-list-item-avatar>
-                    <img v-if="comment.User.photo"
+                    <img
+                      v-if="comment.User.photo"
                       :src="comment.User.photo"
                       alt="Photo de profil"
-                    > 
+                    />
                     <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
                   </v-list-item-avatar>
 
@@ -139,11 +148,15 @@
                         v-html="comment.message"
                         class="pr-2 text-left comment__message"
                       ></p>
-                      <v-icon
-                        @click="deleteComment(comment.id)"
-                        class=" rounded-circle comment-delete"
-                        >{{ mdiCloseThick }}
-                      </v-icon>
+                       <v-tooltip bottom>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn class="mx-2" fab primary x-small  v-bind="attrs"  v-on="on">
+                              <v-icon @click="deleteComment(comment.id)" class=" rounded-circle ">{{ mdiTrashCanOutline }} </v-icon>
+                            </v-btn>
+                          </template>
+                          <span>Supprimer</span>
+                       </v-tooltip>        
+                    
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -168,18 +181,20 @@ import { mdiCloseThick } from "@mdi/js";
 import { mdiCommentTextOutline } from "@mdi/js";
 
 //import Likes from "../components/Likes.vue";
-import axios from "axios";
+
 export default {
   name: "Posts",
 
   props: {
     post: {
       type: Object
-    },     
+    },
     postUrl: {
       type: String
-    },   
-
+    },
+    isliked: {
+      type: Boolean
+    }
   },
   data: function() {
     return {
@@ -197,7 +212,7 @@ export default {
       showFeed: true,
       update: false,
       isValid: true,
-      isliked: false,
+      
       rules: {
         required: value => !!value || "Required."
       },
@@ -206,45 +221,24 @@ export default {
     };
   },
 
-  
   methods: {
     deletePost() {
       this.$emit("deletePost", this.post.id);
-    },   
+    },
+    likePost() {
+      this.$emit("likePost", this.post.id);
+    },
     getOnePost() {
       this.$router.push(this.postUrl);
     },
     addComment(id) {
       this.$router.push(`/posts/${id}/addcomment`);
-      console.log(id)
+      console.log(id);
     },
     /* likePost() {
       this.$emit("likePost", this.id);
     }, */
-    async likePost(id) {  
-      const data = 1;
-      console.log(id)
-      try {
-        const response = await axios.post(
-          `http://localhost:3000/api/posts/${id}/like`, 
-          data    ,     
-          { headers: { Authorization: this.$store.state.token } }
-        );
-        this.messageRetour = response.data.messageRetour;
-        console.log(typeof(response.data.isalreadyliked));
-         if (response.data.isalreadyliked === 'no'){
-          this.isliked = true;
-          console.log(this.isliked)
-        } else {
-          this.isliked = false;
-        }
-       
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      } 
-
-       
-    },
+    
 
     reloadFeed() {
       this.$emit("reloadFeed");
@@ -265,7 +259,7 @@ export default {
   font-size: 20px;
   margin-left: 15px;
 }
-.nom-date{
+.nom-date {
   display: flex;
   flex-direction: column;
 }
@@ -275,9 +269,7 @@ export default {
 .posts-row {
   justify-content: center;
 }
-.materials-icons {
-  color: brown;
-}
+
 .post-options {
   margin-top: 1rem;
   display: flex;
@@ -314,5 +306,9 @@ export default {
     margin-left: 1rem;
     margin-top: 0.33rem;
   }
+}
+.isliked {
+ color:#FF4081!important;
+
 }
 </style>
