@@ -1,10 +1,11 @@
 <template>
   <v-container fluid class="signup-container ">
-    
     <v-layout row class="signup-box">
-      <v-col lg="4" md="5" sm="7" >
-        <v-card class="signup-card"  color="text2" elevation="4" xs6>
-          <v-card-title flat dense dark class="justify-center">Inscription</v-card-title>
+      <v-col lg="4" md="5" sm="7">
+        <v-card class="signup-card" color="text2" elevation="4" xs6>
+          <v-card-title flat dense dark class="justify-center"
+            >Inscription</v-card-title
+          >
           <v-card-text class="font-weight-light">
             <v-form v-model="isValid" autocomplete="off">
               <v-text-field
@@ -39,15 +40,12 @@
               <input />
               <br />
               <div class="danger-alert" v-html="errorMessage" />
-              <div class="danger-alert" v-html="message">
-                
-              </div>
+              <div class="danger-alert" v-html="message"></div>
               <br />
             </v-form>
           </v-card-text>
           <v-card-actions class=" d-flex justify-center">
             <v-btn
-              
               elevation="2"
               :disabled="!isValid"
               v-on:click.prevent="signup"
@@ -103,32 +101,29 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
 .signup-container {
-  background-image: url('../assets/stars.svg');
+  background-image: url("../assets/stars.svg");
   background-repeat: repeat;
-     display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 80vh;
-  }
-  .signup-box {
-    position: relative;
-    justify-content: center;  
-   
-  }
-  .signup-card {
-    border: 3px solid #676c75 !important;
-    &__submit {  
-      margin: auto;
-      padding-bottom: 20px;
-    }
-    
-  }
-  
-    @media (max-width:640px) {
-.signup-box {
-  margin-left: 0!important;
 }
+.signup-box {
+  position: relative;
+  justify-content: center;
+}
+.signup-card {
+  border: 3px solid #676c75 !important;
+  &__submit {
+    margin: auto;
+    padding-bottom: 20px;
   }
+}
+
+@media (max-width: 640px) {
+  .signup-box {
+    margin-left: 0 !important;
+  }
+}
 </style>

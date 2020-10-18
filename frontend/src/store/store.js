@@ -15,13 +15,13 @@ export default new Vuex.Store({
     isLoggedIn: false,
     loadingStatus: 'notLoading',
     posts: [],
-     
+
   },
   plugins: [
     createPersistedState()
   ],
-  
-  
+
+
   mutations: {
     setToken(state, token) {
       state.token = token;
@@ -39,9 +39,12 @@ export default new Vuex.Store({
     },
     setPosts(state, posts) {
       state.posts = posts
+    },
+    reloadPosts(state,posts) {
+      state.posts = posts
     }
-    
-    
+
+
   },
   actions: {
     setToken({ commit }, token) {
@@ -61,6 +64,6 @@ export default new Vuex.Store({
         context.commit('setPosts', response.data.posts)
       })
     } */
-    
+
   },
 });

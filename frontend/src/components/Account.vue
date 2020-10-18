@@ -1,15 +1,6 @@
 <template>
   <v-container fluid class="signup-container ">
-    <!-- <v-img
-      :src="require('../assets/stars.svg')"
-      class="my-3 team-img  "
-      dark
-    /> -->
-    <!--  <v-img
-      :src="require('../assets/star_pink.svg')"
-      class="my-3 team-img2  rotation20"
-      dark
-    /> -->
+   
     <v-layout row class="account-box">
       <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card" elevation="4" xs6>
@@ -18,17 +9,41 @@
               <v-card-title flat dense dark class="profil-title"
                 >Ton profil
               </v-card-title>
+              <div class="delete-account">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    @click="deleteAccount()"
+                      class="mx-2"
+                      fab
+                      primary
+                      x-small                     
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon
+                        
+                        small
+                        class=" rounded-circle "
+                      >
+                        {{ mdiTrashCanOutline }}
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Supprimer le compte</span>
+                </v-tooltip>
+              </div>
             </div>
             <div class="profil-middle">
               <v-card-title flat dense dark class="profil-middle__left"
-                >Salut {{ user.data.pseudo }} !
+                >Salut {{ this.$store.state.user.pseudo }} !
               </v-card-title>
 
               <v-card-title flat dense dark class="profil-middle__right">
                 <v-avatar size="96px">
                   <img
-                    v-if="user.data.photo"
-                    :src="user.data.photo"
+                    v-if="this.$store.state.user.photo"
+                    :src="this.$store.state.user.photo"
                     alt="Photo de profil"
                   />
                   <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
@@ -39,8 +54,8 @@
 
           <v-card-text class=" bio"
             ><strong>Ta bio: </strong>
-            <span v-if="!user.data.bio"> Parle nous de toi 😊</span>
-            <span>{{ user.data.bio }}</span></v-card-text
+            <span v-if="!this.$store.state.user.bio"> Parle nous de toi 😊</span>
+            <span>{{ this.$store.state.user.bio }}</span></v-card-text
           >
           <v-card-text v-if="options" class="d-flex justify-center my-3">
             <div
@@ -48,10 +63,10 @@
             >
               <strong class="text-align pb-2">Que veux-tu modifier ?</strong>
 
-              <div>
+              <div class="d-flex flex-column flex-md-row">
                 <v-btn
                   @click="togglePseudo"
-                  class="mx-2"
+                  class="mx-2 mt-2"
                   text
                   x-small
                   :elevation="2"
@@ -60,7 +75,7 @@
                 </v-btn>
                 <v-btn
                   @click="toggleBio"
-                  class="mx-2 "
+                  class="mx-2 mt-2 "
                   text
                   x-small
                   :elevation="2"
@@ -69,7 +84,7 @@
                 </v-btn>
                 <v-btn
                   @click="togglePhoto"
-                  class="mx-2 "
+                  class="mx-2 mt-2"
                   text
                   x-small
                   :elevation="2"
@@ -118,6 +133,10 @@
                   name="image"
                 />
               </div>
+               <br />
+              <div class="danger-alert" v-html="errorMessage" />
+              <div class="danger-alert" v-html="messageRetour" />
+              <br />
               <div class="d-flex justify-center">
                 <v-btn @click="onSubmit()" :disabled="!isValid">Envoyer</v-btn>
               </div>
@@ -132,12 +151,14 @@
 <script>
 import axios from "axios";
 import { mdiAccountCircle } from "@mdi/js";
+import { mdiTrashCanOutline } from "@mdi/js";
 export default {
   name: "Account",
   data() {
     return {
       user: "",
       mdiAccountCircle,
+      mdiTrashCanOutline,
       updateBio: false,
       updatePseudo: false,
       updatePhoto: false,
@@ -151,7 +172,7 @@ export default {
       errorMessage: null
     };
   },
-  async created() {
+  /* async beforeMount() {
     try {
       const id = this.$store.state.user.id;
       console.log(id);
@@ -159,11 +180,12 @@ export default {
         `http://localhost:3000/api/users/accounts/${id}`,
         { headers: { Authorization: this.$store.state.token } }
       );
-      console.log(this.user);
+      console.log(this.user.data.pseudo);
+      
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
-  },
+  }, */
   methods: {
     togglePseudo() {
       this.updatePseudo = true;
@@ -187,10 +209,11 @@ export default {
       if (this.newPseudo !== null) {
         formData.append("pseudo", this.newPseudo);
       }
-
       formData.append("bio", this.newBio);
+      if(this.file !== null) {
+        formData.append("photo", this.file);
 
-      formData.append("photo", this.file);
+      }
 
       //formData.append("userId", this.userId);
       try {
@@ -209,7 +232,26 @@ export default {
       } catch (error) {
         this.errorMessage = error.response.data.error;
       }
+    },
+     async deleteAccount() {
+    try {
+      const id = this.$store.state.user.id;
+      console.log(id);
+      const response = await axios.delete(
+        `http://localhost:3000/api/users/accounts/${id}`,
+        { headers: { Authorization: this.$store.state.token } }
+      );
+      this.messageRetour = response.data.messageRetour;
+      
+       setTimeout(function() {
+          this.$router.push('/');
+        }, 2000);
+        this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null);
+    } catch (error) {
+      this.errorMessage = error.response.data.error;
     }
+  },
   }
 };
 </script>
@@ -226,6 +268,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+
   height: 80vh;
 }
 .profil-top {
@@ -233,11 +276,19 @@ export default {
   flex-direction: column;
   justify-content: center;
   height: 150px;
+
   &__one {
     display: flex;
     justify-content: center;
     padding-top: 0 !important;
+    position: relative;
   }
+}
+.delete-account {
+  position: absolute;
+
+  right: 0;
+  top: -10px;
 }
 .profil-title {
   padding: 0;
@@ -249,7 +300,6 @@ export default {
   padding: 0;
 }
 .account-box {
-  position: relative;
   justify-content: center;
   margin-top: 3em;
   margin-bottom: 3em;

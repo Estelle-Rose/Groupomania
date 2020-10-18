@@ -23,7 +23,7 @@
      
             
        <v-btn v-if="$store.state.isLoggedIn"  small link to="/posts">Fil d'actu</v-btn>
-      <account-preview v-if="$store.state.isLoggedIn"></account-preview> 
+    
 
       <v-btn v-if="!$store.state.isLoggedIn" small to="/login">Connexion</v-btn>
       <v-btn v-if="!$store.state.isLoggedIn" small to="/signup"

@@ -20,44 +20,39 @@
             </div>
           </v-card-title>
           <div class="post-options">
-             <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-             
-              class="mx-2"
-              fab
-              primary
-              x-small
-               to="/add"
-                v-bind="attrs"
-                v-on="on"
-              >
-           <v-icon class=" rounded-circle">{{ mdiUpdate }}</v-icon>
-              </v-btn>
-            </template>
-            <span>Modifier</span>
-          </v-tooltip>        
-             <v-tooltip bottom>
+            <v-tooltip  v-if="$store.state.user.id === post.UserId " bottom>
               <template v-slot:activator="{ on, attrs }">
-                <v-btn              
-                class="mx-2"
-                fab
-                primary
-                x-small
-                to="/add"
+                <v-btn
+                  class="mx-2"
+                  fab
+                  primary
+                  x-small                  
                   v-bind="attrs"
                   v-on="on"
                 >
-            <v-icon @click="deletePost()" small class=" rounded-circle">
-                  {{ mdiTrashCanOutline }}
-                </v-icon>
+                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle">{{ mdiUpdate }}</v-icon>
                 </v-btn>
               </template>
-            <span>Supprimer</span>
-          </v-tooltip>        
-            
-              
-         
+              <span>Modifier</span>
+            </v-tooltip>
+            <v-tooltip v-if="($store.state.user.id === post.UserId || $store.state.user.admin === true) " bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mx-2"
+                  fab
+                  primary
+                  x-small
+                 
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon @click="deletePost(post.id)" small class=" rounded-circle">
+                    {{ mdiTrashCanOutline }}
+                  </v-icon>
+                </v-btn>
+              </template>
+              <span>Supprimer</span>
+            </v-tooltip>
           </div>
         </div>
         <div class="pl-3 pr-2-3">
@@ -93,7 +88,7 @@
         <v-divider></v-divider>
         <v-card-actions class="pt-5  pr-4 d-flex justify-space-between">
           <div class=" d-flex justify-md-space-between">
-            <v-btn @click="show = !show" text  >
+            <v-btn @click="show = !show" text>
               Commentaires
             </v-btn>
             <v-btn icon @click="show = !show">
@@ -107,11 +102,11 @@
               <v-icon class="material-icons">{{
                 mdiCommentTextOutline
               }}</v-icon>
-            </v-btn>          
+            </v-btn>
             <v-btn
               @click="likePost(post.id), reloadFeed()"
               x-small
-             class="isliked isliked-btn"
+              class="isliked isliked-btn"
             >
               <v-icon class=" material-icons ">
                 {{ mdiEmoticonOutline }}
@@ -148,15 +143,25 @@
                         v-html="comment.message"
                         class="pr-2 text-left comment__message"
                       ></p>
-                       <v-tooltip bottom>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn class="mx-2" fab primary x-small  v-bind="attrs"  v-on="on">
-                              <v-icon @click="deleteComment(comment.id)" class=" rounded-circle ">{{ mdiTrashCanOutline }} </v-icon>
-                            </v-btn>
-                          </template>
-                          <span>Supprimer</span>
-                       </v-tooltip>        
-                    
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn
+                            class="mx-2"
+                            fab
+                            primary
+                            x-small
+                            v-bind="attrs"
+                            v-on="on"
+                          >
+                            <v-icon
+                              @click="deleteComment(comment.id)"
+                              class=" rounded-circle "
+                              >{{ mdiTrashCanOutline }}
+                            </v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Supprimer</span>
+                      </v-tooltip>
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -212,7 +217,7 @@ export default {
       showFeed: true,
       update: false,
       isValid: true,
-      
+     
       rules: {
         required: value => !!value || "Required."
       },
@@ -238,7 +243,6 @@ export default {
     /* likePost() {
       this.$emit("likePost", this.id);
     }, */
-    
 
     reloadFeed() {
       this.$emit("reloadFeed");
@@ -308,7 +312,6 @@ export default {
   }
 }
 .isliked {
- color:#FF4081!important;
-
+  color: #ff4081 !important;
 }
 </style>

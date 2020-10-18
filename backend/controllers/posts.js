@@ -25,6 +25,7 @@ exports.getAllPosts = async (req, res) => {
       ]
     });
     res.status(200).send(posts);
+    
   }
   catch (error) {
     return res.status(500).send({ error: 'Une erreur est survenu lors de la récupération des posts ' });
@@ -158,11 +159,8 @@ exports.updatePost = async (req, res) => {
   try {
     let link;
     let newImageUrl;
-    const userId = token.getUserId(req);
-    console.log(typeof(userId))
-    const postId = req.params.id;
-    console.log(postId)
-
+    const userId = token.getUserId(req);    
+    console.log(userId)
     if (req.file) {
       newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       link = null;
@@ -170,6 +168,7 @@ exports.updatePost = async (req, res) => {
       imageUrl = null;
     }
     let post = await db.Post.findOne({ where: { id: req.params.id } });
+    console.log(post.UserId)
     if (userId === post.UserId) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split('/upload')[1];
@@ -181,7 +180,7 @@ exports.updatePost = async (req, res) => {
           }
         }))
       }
-      post.message = req.body.message;
+      post.message = req.body.message ;
       post.link = req.body.link || link;
       post.imageUrl = newImageUrl;
       const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });

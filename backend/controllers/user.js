@@ -122,9 +122,9 @@ exports.updateAccount = async (req, res) => {
       user.photo = newPhoto;
       const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
       console.log(newuser)
-      res.status(200).json({ user: newuser, message: 'user modifié' })
+      res.status(200).json({ user: newuser, messageRetour: 'user modifié' })
     } else {
-      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
+      res.status(400).json({ messageRetour: 'Vous n\'avez pas les droits requis' })
     }
   }
   catch (error) {
@@ -134,9 +134,9 @@ exports.updateAccount = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     const userId = token.getUserId(req);
-    console.log(userId)
+    
     const id = parseInt(req.params.id);
-    console.log(id)
+   
     const checkAdmin = await db.User.findOne({ where: {id: userId}})
     const user = await db.User.findOne({ where: { id: id } });
     if ((userId === id) || (checkAdmin.admin === true)) {      
@@ -145,14 +145,14 @@ exports.deleteAccount = async (req, res) => {
         console.log(user.photo);
         fs.unlink(`upload/${filename}`, () => {
           db.User.destroy({ where: { id: id } });
-          res.status(200).json({ message: 'user supprimé' })
+          res.status(200).json({ messageRetour: 'user supprimé' })
         })
       } else {
         db.User.destroy({ where: { id: id } });
-        res.status(200).json({ message: 'user supprimé' })
+        res.status(200).json({ messageRetour: 'user supprimé' })
       }
     } else {
-      console.log('user not allowed')
+      res.status(400).json({errorMessage: 'user not allowed'})
     }
 
   }

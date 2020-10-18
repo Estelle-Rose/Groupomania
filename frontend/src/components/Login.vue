@@ -1,9 +1,8 @@
 <template>
   <v-container fluid class="signup-container ">
-    
     <v-layout row class="signup-box">
-      <v-col lg="4" md="5" sm="7" >
-        <v-card class="signup-card" elevation="4" xs6 >
+      <v-col lg="4" md="5" sm="7">
+        <v-card class="signup-card" elevation="4" xs6>
           <v-card-title flat dense dark>Connexion</v-card-title>
           <v-card-text class="font-weight-light">
             <v-form v-model="isValid">
@@ -11,7 +10,7 @@
                 label="email"
                 v-model="email"
                 type="email"
-                :rules="[(v) => !!v || 'Email is required']"
+                :rules="[v => !!v || 'Email is required']"
                 required
                 class="input-group--focused"
               >
@@ -20,7 +19,7 @@
                 label="mot de passe"
                 v-model="password"
                 type="password"
-                :rules="[(v) => !!v || 'Password is required']"
+                :rules="[v => !!v || 'Password is required']"
                 required
                 class="input-group--focused"
               >
@@ -42,7 +41,6 @@
               elevation="2"
               :disabled="!isValid"
               v-on:click.prevent="login"
-              
               >Envoyer
             </v-btn>
           </v-card-actions>
@@ -53,70 +51,68 @@
 </template>
 
 <script>
-  // import axios from 'axios';
-  import Auth from '../services/Auth.js';
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        email: '',
-        password: '',
-        errorMessage: null,
-        isValid: true,
-        message: null,
-      };
-    },
-    methods: {
-      async login() {
-        try {
-          const response = await Auth.login({
-            email: this.email,
-            password: this.password,
-          });
-          console.log(response.data);
-          this.message = response.data.message;
-          this.$store.dispatch('setToken', response.data.token);
-          this.$store.dispatch('setUser', response.data.user);
-          let router = this.$router;
-          console.log(response.data.user)
-          setTimeout(function() {
-            router.push('/posts');
-          }, 1500);
-        } catch (error) {
-          this.errorMessage = error.response.data.error;
-        }
-      },
-    },
-  };
+// import axios from 'axios';
+import Auth from "../services/Auth.js";
+export default {
+  name: "Login",
+  data() {
+    return {
+      email: "",
+      password: "",
+      errorMessage: null,
+      isValid: true,
+      message: null
+    };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await Auth.login({
+          email: this.email,
+          password: this.password
+        });
+        console.log(response.data);
+        this.message = response.data.message;
+        this.$store.dispatch("setToken", response.data.token);
+        this.$store.dispatch("setUser", response.data.user);
+        let router = this.$router;
+        console.log(response.data.user);
+        setTimeout(function() {
+          router.push("/posts");
+        }, 1500);
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
+    }
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  scoped lang="scss">
- .signup-container {
-  background-image: url('../assets/stars.svg');
+.signup-container {
+  background-image: url("../assets/stars.svg");
   background-repeat: repeat;
-     display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 80vh;
-  }
-  .signup-box {
-    position: relative;
-    justify-content: center;  
-   
-  }
-  .signup-card {
-    border: 3px solid #676c75 !important;
-    &__submit {  
-      margin: auto;
-      padding-bottom: 20px;
-    }
-    
-  }
-  
-  @media (max-width:640px) {
-.signup-box {
-  margin-left: 0!important;
 }
+.signup-box {
+  position: relative;
+  justify-content: center;
+}
+.signup-card {
+  border: 3px solid #676c75 !important;
+  &__submit {
+    margin: auto;
+    padding-bottom: 20px;
   }
+}
+
+@media (max-width: 640px) {
+  .signup-box {
+    margin-left: 0 !important;
+  }
+}
 </style>

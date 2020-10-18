@@ -105,7 +105,8 @@ export default {
       const response = await PostService.getPosts();
       console.log(response);
       this.posts = response.data;
-      this.$store.dispatch("setPosts", response.data);
+      
+      console.log(this.posts)
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }

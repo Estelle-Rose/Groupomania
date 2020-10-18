@@ -8,30 +8,30 @@
             {{ mdiMessageSettingsOutline }}
           </v-icon>
           <div class="update-title pl-3 pb-5 ">
-            <span class="title font-weight-light post-title ">Votre post</span>
+            <span class="title font-weight-light post-title ">Modifier le post</span>
             <v-btn
               @click="getBackToFeed"
-              class="mx-2 return-btn"
-              
-              small
-             
+              class="mx-2 return-btn"              
+              small            
             >
               Retour
             </v-btn>
           </div>
         </v-card-title>
-
+  <v-card-text>
+    <span>Ton message: </span>
+    <span>{{ post.data.message }}</span>
+  </v-card-text>
         <v-form
           v-model="isValid"
           @submit.prevent="onSubmit"
           enctype="multipart/form-data"
           class="validate "
         >
-          <div class="text-box">
+          <div v-if="withMessage" class="text-box">
             <v-textarea
               label="Message"
-              v-model="post.data.message"
-              :rules="[rules.required]"
+              v-model="message"              
               text="text"
               solo
               name="input-7-4"
@@ -76,13 +76,31 @@
           <v-divider></v-divider>
           <v-card-text v-if="options" class="d-flex justify-center my-3">
             <div class="bloc-option">
-              <v-btn @click="toggleLink" class="mx-2"  medium>
-                Lien
-              </v-btn>
-
-              <v-btn @click="toggleImage" class="mx-2"  medium >
-                Image
-              </v-btn>
+               <v-btn
+                  @click="toggleMessage"
+                  class="mx-2 mt-2 "
+                  text
+                  x-small
+                  :elevation="2"
+                >   Changer ton message
+                </v-btn>
+               <v-btn
+                  @click="toggleLink"
+                  class="mx-2 mt-2 "
+                  text
+                  x-small
+                  :elevation="2"
+                >   Poster un lien
+                </v-btn>
+               <v-btn
+                  @click="toggleImage"
+                  class="mx-2 mt-2 "
+                  text
+                  x-small
+                  :elevation="2"
+                >  Poster une image
+                </v-btn>
+             
             </div>
           </v-card-text>
           <div class=" d-flex justify-center pt-5 ">
@@ -115,10 +133,10 @@ export default {
       isValid: true,
       withLink: false,
       withImage: false,
+      withMessage: false,
       showImage: true,
-      rules: {
-        required: value => !!value || "Required."
-      },
+      shoMessage:true,
+     
       message: null,
       link: null,
       file: "",
@@ -139,6 +157,11 @@ export default {
   },
 
   methods: {
+    toggleMessage() {
+      this.withMessage = true;
+      this.showMessage = false;
+      
+    },
     toggleLink() {
       this.withLink = true;
       this.showImage = false;
@@ -164,7 +187,7 @@ export default {
         formData.append("link", this.link);
       }
       formData.append("imageUrl", this.file);
-      console.log(this.message);
+      
       try {
         const response = await axios.put(
           `http://localhost:3000/api/posts/${this.$route.params.id}`,
