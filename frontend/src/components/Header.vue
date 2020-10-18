@@ -29,7 +29,7 @@
       <v-btn v-if="!$store.state.isLoggedIn" small to="/signup"
         >Inscription</v-btn
       >
-      <v-btn  v-if="$store.state.isLoggedIn" small  to="/account">Mon profil</v-btn>
+      <v-btn  v-if="$store.state.isLoggedIn" small  @click="getProfile(user.id)">Mon profil</v-btn>
       
  
       
@@ -39,6 +39,7 @@
 </template>
 <script>
 //import AccountPreview from "../components/AccountPreview";
+import {mapState} from 'vuex';
 
 export default {
   name: "PageHeader",
@@ -48,13 +49,18 @@ export default {
   data() {
     return {};
   },
-  computed: {},
-
+   computed: mapState(
+    ['user']
+  ),
   methods: {
     logOut: function() {
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUser", null);
-    }
+    },
+    getProfile(id) {
+      this.$router.push(`/account/${id}`);
+      
+    },
   }
 };
 </script>

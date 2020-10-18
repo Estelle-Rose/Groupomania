@@ -245,6 +245,7 @@ export default {
     }, */
 
     reloadFeed() {
+      
       this.$emit("reloadFeed");
     },
 

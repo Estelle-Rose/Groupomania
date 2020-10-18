@@ -70,7 +70,7 @@ exports.getAccount = async (req, res) => {
   try {
     const user = await db.User.findOne({
       
-      where: { id: req.params.id }
+      where: { id: id }
     })
     res.status(200).send(user);
   }
@@ -92,22 +92,13 @@ exports.getAllUsers = async (req, res) => {
 }
 
 exports.updateAccount = async (req, res) => {
-  try {
-    const accountId = req.params.id;
-    console.log(accountId)
+  try {    
     const userId = token.getUserId(req);  
-    console.log(userId) ;
-    let newPhoto;   
-    
-    if (req.file) {
-      newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-      
-    } else {
-      photo = null;
-    }
-    let user = await db.User.findOne({ where: { id: req.params.id } });
+    let newPhoto;         
+    let user = await db.User.findOne({ where: { id: id } });
       if (userId === user.id) {
-      if (user.photo) {
+      if (req.file && user.photo) {
+        newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
         const filename = user.photo.split('/upload')[1];
         console.log(user.photo);
         fs.unlink(`upload/${filename}`, (err => {
@@ -116,10 +107,19 @@ exports.updateAccount = async (req, res) => {
             console.log(`Deleted file: upload/${filename}`);
           }
         }))
+      } else if (req.file) {
+        newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
       }
-      user.pseudo = req.body.pseudo || user.pseudo;
-      user.bio = req.body.bio;
-      user.photo = newPhoto;
+     
+      if(newPhoto ) {
+        user.photo = newPhoto  ;        
+      }
+      if(req.body.bio ) {
+        user.bio = req.body.bio  ;        
+      }
+      if(req.body.pseudo ) {
+        user.pseudo = req.body.pseudo  ;        
+      }
       const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
       console.log(newuser)
       res.status(200).json({ user: newuser, messageRetour: 'user modifié' })
@@ -133,11 +133,10 @@ exports.updateAccount = async (req, res) => {
 }
 exports.deleteAccount = async (req, res) => {
   try {
-    const userId = token.getUserId(req);
-    
+    const userId = token.getUserId(req);    
     const id = parseInt(req.params.id);
-   
-    const checkAdmin = await db.User.findOne({ where: {id: userId}})
+   console.log(id)
+    const checkAdmin = await db.User.findOne({ where: {id: id}})
     const user = await db.User.findOne({ where: { id: id } });
     if ((userId === id) || (checkAdmin.admin === true)) {      
       if (user.photo) {

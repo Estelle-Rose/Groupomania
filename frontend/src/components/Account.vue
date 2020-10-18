@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid class="signup-container ">
+  <v-container fluid class="signup-container">
    
-    <v-layout row class="account-box">
+    <v-layout  v-if="$store.state.isLoggedIn" row class="account-box">
       <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card" elevation="4" xs6>
           <div class="profil-top">
@@ -13,7 +13,7 @@
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
-                    @click="deleteAccount()"
+                    @click="deleteAccount(user.id)"
                       class="mx-2"
                       fab
                       primary
@@ -36,14 +36,14 @@
             </div>
             <div class="profil-middle">
               <v-card-title flat dense dark class="profil-middle__left"
-                >Salut {{ this.$store.state.user.pseudo }} !
+                >Salut {{ user.pseudo }} !
               </v-card-title>
 
               <v-card-title flat dense dark class="profil-middle__right">
                 <v-avatar size="96px">
                   <img
-                    v-if="this.$store.state.user.photo"
-                    :src="this.$store.state.user.photo"
+                    v-if="user.photo"
+                    :src="user.photo"
                     alt="Photo de profil"
                   />
                   <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
@@ -54,8 +54,8 @@
 
           <v-card-text class=" bio"
             ><strong>Ta bio: </strong>
-            <span v-if="!this.$store.state.user.bio"> Parle nous de toi 😊</span>
-            <span>{{ this.$store.state.user.bio }}</span></v-card-text
+            <span v-if="!user.bio"> Parle nous de toi 😊</span>
+            <span>{{ user.bio }}</span></v-card-text
           >
           <v-card-text v-if="options" class="d-flex justify-center my-3">
             <div
@@ -145,10 +145,26 @@
         </v-card>
       </v-col>
     </v-layout>
+    <v-card v-else >
+      <v-card-title class="post-title-box">
+         
+          <div class=" d-flex flex-column update-title pl-3 pb-5 ">
+            <span class="title font-weight-light post-title pb-5 ">Votre compte a été supprimé</span>
+            <v-btn
+              @click="getBackHome"
+              class="mx-2 return-btn"              
+              small            
+            >
+              Retour à l'accueil
+            </v-btn>
+          </div>
+        </v-card-title>
+         </v-card>
   </v-container>
 </template>
 
 <script>
+import {mapState} from 'vuex';
 import axios from "axios";
 import { mdiAccountCircle } from "@mdi/js";
 import { mdiTrashCanOutline } from "@mdi/js";
@@ -156,7 +172,8 @@ export default {
   name: "Account",
   data() {
     return {
-      user: "",
+      
+      users:[],
       mdiAccountCircle,
       mdiTrashCanOutline,
       updateBio: false,
@@ -172,21 +189,28 @@ export default {
       errorMessage: null
     };
   },
-  /* async beforeMount() {
+   async beforeMount() {
     try {
       const id = this.$store.state.user.id;
       console.log(id);
-      this.user = await axios.get(
-        `http://localhost:3000/api/users/accounts/${id}`,
+      const response = await axios.get(
+        `http://localhost:3000/api/users/accounts`,
         { headers: { Authorization: this.$store.state.token } }
       );
-      console.log(this.user.data.pseudo);
+      this.users = response.data;
+      console.log(this.users)     
       
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
-  }, */
+  }, 
+  computed: mapState(
+    ['user']
+  ),
   methods: {
+     getBackHome() {
+      this.$router.push("/");
+    },
     togglePseudo() {
       this.updatePseudo = true;
     },
@@ -203,19 +227,12 @@ export default {
       console.log(this.file);
     },
     async onSubmit() {
-      const id = this.$store.state.user.id;
+      const id = this.user.id;
       const formData = new FormData();
-      console.log(this.newBio, this.newPseudo);
-      if (this.newPseudo !== null) {
-        formData.append("pseudo", this.newPseudo);
-      }
-      formData.append("bio", this.newBio);
-      if(this.file !== null) {
-        formData.append("photo", this.file);
+      formData.append("pseudo", this.newPseudo);      
+      formData.append("bio", this.newBio);      
+      formData.append("photo", this.file);     
 
-      }
-
-      //formData.append("userId", this.userId);
       try {
         const response = await axios.put(
           `http://localhost:3000/api/users/accounts/${id}`,
@@ -225,6 +242,7 @@ export default {
         this.messageRetour = response.data.messageRetour;
         console.log(response);
         this.$store.dispatch("setUser", response.data.user);
+        console.log(response.data.user)
         let router = this.$router;
         setTimeout(function() {
           router.push("/posts");
@@ -235,19 +253,15 @@ export default {
     },
      async deleteAccount() {
     try {
-      const id = this.$store.state.user.id;
-      console.log(id);
+     let id = this.user.id
       const response = await axios.delete(
         `http://localhost:3000/api/users/accounts/${id}`,
         { headers: { Authorization: this.$store.state.token } }
       );
-      this.messageRetour = response.data.messageRetour;
-      
-       setTimeout(function() {
-          this.$router.push('/');
-        }, 2000);
-        this.$store.dispatch("setToken", null);
+      console.log( response.data.messageRetour);      
       this.$store.dispatch("setUser", null);
+        this.$store.dispatch("setToken", null);
+      
     } catch (error) {
       this.errorMessage = error.response.data.error;
     }
