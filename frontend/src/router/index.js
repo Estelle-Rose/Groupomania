@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Signup from '../components/Signup.vue';
 import Login from '../components/Login.vue';
 import Feed from '../views/Feed.vue';
+import HotFeed from '../views/HotFeed.vue';
 import NewPost from '../components/NewPost.vue';
 import Account from '../components/Account.vue';
 import SinglePost from '../components/SinglePost.vue';
@@ -38,6 +39,11 @@ const routes = [
     path: '/posts',
     name: 'feed',
     component: Feed,
+  },
+  {
+    path: '/hot',
+    name: 'hotFeed',
+    component: HotFeed,
   },
   {
     path: '/posts/:id',

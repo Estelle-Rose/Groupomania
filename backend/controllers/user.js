@@ -4,6 +4,7 @@ const token = require('../middleware/token');
 const fs = require('fs');
 
 
+
 exports.signup = async (req, res) => {
   try {
     const user = await db.User.findOne({
@@ -67,6 +68,7 @@ exports.login = async (req, res) => {
   }
 };
 exports.getAccount = async (req, res) => {
+  const id = req.params.id;
   try {
     const user = await db.User.findOne({
       
@@ -92,10 +94,11 @@ exports.getAllUsers = async (req, res) => {
 }
 
 exports.updateAccount = async (req, res) => {
+  const id = req.params.id;
   try {    
     const userId = token.getUserId(req);  
     let newPhoto;         
-    let user = await db.User.findOne({ where: { id: id } });
+    let user = await db.User.findOne({ where: { id:id } });
       if (userId === user.id) {
       if (req.file && user.photo) {
         newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;

@@ -41,7 +41,7 @@ const errorHandler = (error) => {
 
 const server = http.createServer(app);
 
-models.sequelize.sync( ).then(function () {
+models.sequelize.sync().then(function () {
   /**
    * Listen on provided port, on all network interfaces.
    */

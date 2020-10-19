@@ -34,12 +34,15 @@ exports.getAllPosts = async (req, res) => {
 // afficher le sposts les plus likés
 exports.getHotPosts = async (req, res) => {
   try {
-    const posts = await db.Post.findAll({
-      order: [['createdAt', 'DESC']],
+    const posts = await db.Post.findAll({  
+      attributes: [ 'id','message','imageUrl','link','createdAt', [db.sequelize.literal('(SELECT COUNT(*) FROM Likes WHERE Likes.PostId = Post.id)'), 'LikeCount']
+
+      ] ,  
+      order: [[db.sequelize.literal('LikeCount'), 'DESC']],
+
       include: [{
-        model: db.User,
-        as: 'PostUser',
-        attributes: ['pseudo', 'id']
+        model: db.User,      
+        attributes: ['pseudo', 'id','photo']
       },
       {
         model: db.Like,
@@ -47,9 +50,14 @@ exports.getHotPosts = async (req, res) => {
       },
       {
         model: db.Comment,
-        attributes: ['message', 'pseudo', 'UserId'],
         order: [["createdAt", "DESC"]],
+        attributes: ['message', 'pseudo', 'UserId', 'id'],
+        include: [{
+          model: db.User,
+          attributes: ['photo']
+        }],
       }
+      
       ]
     });
     res.status(200).send(posts);

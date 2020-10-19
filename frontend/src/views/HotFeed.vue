@@ -31,7 +31,7 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-               to="/hot"
+              to="/hot"
                 small class="hot-posts" 
                 v-bind="attrs"
                 v-on="on"
@@ -63,7 +63,7 @@
               :key="post.id"
               :post="post"
               :id="post.id"
-              :isliked="isliked"
+              :liked="liked"
               :postUrl="'posts/' + post.id"
               @deletePost="deletePost(post.id)"
              @likePost="likePost(post.id)"
@@ -87,7 +87,7 @@ import axios from 'axios';
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
-  name: "Feed",
+  name: "HotFeed",
   components: {
     Posts
   },
@@ -95,15 +95,15 @@ export default {
   data() {
     return {
       posts: [],
-      isliked: false,
+      liked: false,
       errorMessage: null,
       mdiPencilOutline,
-    
+      componentKey: 0
     };
   },
   async beforeMount() {
     try {
-      const response = await PostService.getPosts();
+      const response = await PostService.getHotPosts();
       console.log(response);
       this.posts = response.data;
       
@@ -124,6 +124,7 @@ export default {
       }
     },
    
+  
     async deletePost(id) {
       try {
         const response = await PostService.deletePost(id);
