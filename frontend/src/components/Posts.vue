@@ -154,7 +154,7 @@
                             v-on="on"
                           >
                             <v-icon
-                              @click="deleteComment(comment.id)"
+                              @click="deleteComment(post.id,comment.id)"
                               class=" rounded-circle "
                               >{{ mdiTrashCanOutline }}
                             </v-icon>
@@ -240,19 +240,17 @@ export default {
       this.$router.push(`/posts/${id}/addcomment`);
       console.log(id);
     },
-    /* likePost() {
-      this.$emit("likePost", this.id);
-    }, */
-
-    reloadFeed() {
-      
+  
+    reloadFeed() {      
       this.$emit("reloadFeed");
     },
 
     showComentForm() {
       this.commentForm = true;
     },
-    deleteComment() {}
+    deleteComment() {
+       this.$emit("deletePost", this.post.id, this.comment.id);
+    }
   }
 };
 </script>

@@ -70,13 +70,11 @@ export default {
         const response = await Auth.login({
           email: this.email,
           password: this.password
-        });
-        console.log(response.data);
+        });  
         this.message = response.data.message;
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);
-        let router = this.$router;
-        console.log(response.data.user);
+        let router = this.$router;        
         setTimeout(function() {
           router.push("/posts");
         }, 1500);

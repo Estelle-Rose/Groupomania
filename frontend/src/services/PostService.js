@@ -12,7 +12,12 @@ export default {
   getPostById(id) {
     return Api().get('posts/' + id);
   },
-  
+  createPost(data) {
+    return Api().post('posts/add',data)
+  },
+  updatePost(id,data) {
+    return Api.put('posts/'+ id, data)
+  },
 
   deletePost(id) {
     return Api().delete('posts/' + id);
@@ -35,9 +40,3 @@ export default {
     );
   },
 };
-
-/* Auth.register({
-    pseudo: 'john'
-    email: 'test@mail.com',
-    password: '123456'
-}) */

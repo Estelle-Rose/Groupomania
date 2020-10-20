@@ -82,8 +82,7 @@ export default {
           email: this.email,
           password: this.password
         });
-        this.message = response.data.message;
-        console.log(response.data);
+        this.message = response.data.message;  
 
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);

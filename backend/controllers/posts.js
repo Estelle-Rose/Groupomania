@@ -211,19 +211,17 @@ exports.likePost = async (req, res, next) => {
     const postId = req.params.id; 
     const user = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
     
-    if (user) {  
-      
+    if (user) {        
       await db.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
       console.log('le like est annulé')
-      res.status(200).send({ messageRetour: 'vou n\'aimez plus ce post' , isalreadyliked:'yes'});      
+      res.status(200).send({ messageRetour: 'vou n\'aimez plus ce post' , isLiked: false});      
     }
     else {
       const newLike = await db.Like.create({          
         UserId: userId,
         PostId: postId
-      });
-      console.log(newLike);
-      res.status(201).json({ messageRetour: 'vous aimez ce post', isalreadyliked:'no' });
+      });      
+      res.status(201).json({ messageRetour: 'vous aimez ce post', isLiked: true });
     }
   }
   catch (error) {

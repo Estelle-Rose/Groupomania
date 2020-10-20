@@ -20,11 +20,10 @@
         </v-card-title>
   <v-card-text>
     <span>Ton message: </span>
-    <span>{{ post.data.message }}</span>
+    <span>{{ post.message }}</span>
   </v-card-text>
         <v-form
-          v-model="isValid"
-          @submit.prevent="onSubmit"
+          v-model="isValid"          
           enctype="multipart/form-data"
           class="validate "
         >
@@ -51,14 +50,14 @@
           </div>
           <v-img
             v-if="showImage"
-            :src="post.data.imageUrl"
+            :src="post.imageUrl"
             :max-height="200"
             :max-width="100"
             class="mx-auto mb-5"
           ></v-img>
           <v-img
             v-if="showImage"
-            :src="post.data.link"
+            :src="post.link"
             :max-height="200"
             :max-width="100"
             class="mx-auto mb-5"
@@ -117,16 +116,16 @@
 </template>
 <script>
 //import PostService from "../services/PostService";
-import axios from "axios";
+//import axios from "axios";
 import { mdiCloseThick } from "@mdi/js";
 import { mdiMessageSettingsOutline } from "@mdi/js";
-import PostService from "../services/PostService";
+//import PostService from "../services/PostService";
 export default {
   name: "SinglePost",
 
   data() {
     return {
-      post: "",
+      
       options: true,
       mdiCloseThick,
       mdiMessageSettingsOutline,
@@ -146,21 +145,20 @@ export default {
       textInput: false
     };
   },
-  async mounted() {
-    try {
-      const id = this.$route.params.id;
-      this.post = await PostService.getPostById(id);
-      console.log(this.post);
-    } catch (error) {
-      console.log(error);
-    }
+  computed: {
+   post() {
+            return this.$store.getters.post;
+        },
   },
+  beforeMount() {
+    let id = this.$route.params.id
+        this.$store.dispatch('getPostById',id);
+    },
 
   methods: {
     toggleMessage() {
       this.withMessage = true;
-      this.showMessage = false;
-      
+      this.showMessage = false;      
     },
     toggleLink() {
       this.withLink = true;
@@ -176,33 +174,26 @@ export default {
       const file = this.$refs.file.files[0];
       this.file = file;
     },
-    async onSubmit() {
+     onSubmit() {         
       const formData = new FormData();
       if (this.message !== null) {
         formData.append("message", this.message);
       } else {
-        formData.append("message", this.post.data.message);
+        formData.append("message", this.post.message);
       }
       if (this.link !== null) {
         formData.append("link", this.link);
       }
       formData.append("imageUrl", this.file);
-      
-      try {
-        const response = await axios.put(
-          `http://localhost:3000/api/posts/${this.$route.params.id}`,
-          formData,
-          { headers: { Authorization: this.$store.state.token } }
-        );
-        this.messageRetour = response.data.messageRetour;
-        console.log(response);
-        let router = this.$router;
+      this.$store.dispatch('updatePost',
+   formData);
+       this.messageRetour = this.post.messageRetour;
+       this.errorMessage = this.post.error;
+      let router = this.$router;
         setTimeout(function() {
           router.push("/posts");
-        }, 2000);
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
+        }, 2000);      
+    
     },
     getBackToFeed() {
       this.$router.push("/posts");

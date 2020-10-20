@@ -127,7 +127,7 @@
 <script>
 import { mdiMessageSettingsOutline } from "@mdi/js";
 //import PostService from "../services/PostService";
-import axios from "axios";
+//import axios from "axios";
 
 export default {
   name: "NewPost",
@@ -145,11 +145,17 @@ export default {
       },
       message: "",
       link: null,
-
-      file: "",
-      messageRetour: null,
-      errorMessage: null
+      file: "",    
+     
     };
+  },
+  computed: {
+    messageRetour() {
+            return this.$store.getters.message;
+        },
+    errorMessage() {
+            return this.$store.getters.error;
+        },
   },
   methods: {
     toggleLink() {
@@ -166,7 +172,7 @@ export default {
       this.file = file;
       console.log(this.file)
     },
-    async onSubmit() {
+    onSubmit() {
       const formData = new FormData();
       console.log(typeof(this.message))
       formData.append("message", this.message);
@@ -176,22 +182,13 @@ export default {
       if (this.imageUrl !== null) {
         formData.append("imageUrl", this.file);
       }
-      //formData.append("userId", this.userId);
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/api/posts/add",
-          formData,
-          { headers: { Authorization: this.$store.state.token } }
-        );
-        this.messageRetour = response.data.messageRetour;
-        console.log(response);
-        let router = this.$router;
+     this.$store.dispatch('createPost',formData);      
+      
+      let router = this.$router;
         setTimeout(function() {
           router.push("/posts");
-        }, 2000);
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
+        }, 2000); 
+     
     }
   }
 };

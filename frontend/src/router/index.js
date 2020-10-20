@@ -49,13 +49,13 @@ const routes = [
     path: '/posts/:id',
     name: 'singlePost',
     component: SinglePost,
-    props: true
+    
   },
   {
     path: '/posts/:id/addcomment',
     name: 'AddComment',
     component: AddComment,
-    props: true
+    
   },
 
 
