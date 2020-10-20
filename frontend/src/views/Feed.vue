@@ -67,7 +67,9 @@
               :postUrl="'posts/' + post.id"
                @deletePost="deletePost(post.id)"
                @likePost="likePost(post.id)" 
-               @reloadFeed="reloadFeed()"             
+               @reloadFeed="reloadFeed()" 
+               @onSubmitComment="onSubmitComment(post.id)"  
+               @deleteComment="deleteComment(comment.id)"          
             >
             </posts>
           </v-card-text>
@@ -123,6 +125,11 @@ export default {
      this.$store.dispatch('deletePost',id),
      this.reloadFeed();
    },
+    deleteComment(id) {
+      console.log
+     this.$store.dispatch('deleteComment',id),
+     this.reloadFeed();
+   }, 
  
   likePost(id) {
     const data = 1;
@@ -133,8 +140,8 @@ export default {
       })
       
   },
-   
   }
+ 
 };
 </script>
 

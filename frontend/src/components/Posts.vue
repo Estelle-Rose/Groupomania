@@ -98,16 +98,15 @@
             </v-btn>
           </div>
           <div class="d-flex  align-end pr-3">
-            <v-btn @click="addComment(post.id)" class="mx-2" x-small>
+            <v-btn @click="show = !show" class="mx-2" x-small>
               <v-icon class="material-icons">{{
                 mdiCommentTextOutline
               }}</v-icon>
             </v-btn>
             <v-btn
-              @click="likePost(post.id), reloadFeed()"
+              @click="likePost(post.id)"
               x-small
-              class="isliked isliked-btn"
-            >
+              class="isliked isliked-btn">
               <v-icon class=" material-icons ">
                 {{ mdiEmoticonOutline }}
               </v-icon>
@@ -118,6 +117,33 @@
           <div v-show="show">
             <v-divider></v-divider>
             <div class="comments-box">
+              <v-card-text class="comment-input">
+                <v-form
+                  v-model="isValid"   
+                  @submit.prevent="onSubmitComment(post.id)"              
+                  enctype="multipart/form-data"
+                  class="validate comment-form"
+                >
+                  <v-text-field
+                    name="input-1-3"
+                    label="ton commentaire"
+                    v-model="data.commentMessage"
+                    auto-grow
+                    class="comment-form__message"
+                  >
+                  </v-text-field>
+                  <v-btn
+                    @click="onSubmitComment(post.id)"
+                    :disabled="!isValid"
+                    class="comment-form__btn"
+                    >Poster</v-btn
+                  >
+                </v-form>
+                <div>
+                  <div class="danger-alert" v-html="errorMessage" />
+                  <div class="danger-alert" v-html="messageRetour" />
+                </div>
+              </v-card-text> 
               <v-list
                 v-for="comment in post.Comments"
                 :key="comment.id"
@@ -144,7 +170,7 @@
                         class="pr-2 text-left comment__message"
                       ></p>
                       <v-tooltip bottom>
-                        <template v-slot:activator="{ on, attrs }">
+                        <template v-if="($store.state.user.id === comment.UserId || $store.state.user.admin === true) " v-slot:activator="{ on, attrs }">
                           <v-btn
                             class="mx-2"
                             fab
@@ -154,7 +180,7 @@
                             v-on="on"
                           >
                             <v-icon
-                              @click="deleteComment(post.id,comment.id)"
+                              @click="deleteComment(comment.id)"
                               class=" rounded-circle "
                               >{{ mdiTrashCanOutline }}
                             </v-icon>
@@ -184,7 +210,7 @@ import { mdiUpdate } from "@mdi/js";
 import { mdiAccountCircle } from "@mdi/js";
 import { mdiCloseThick } from "@mdi/js";
 import { mdiCommentTextOutline } from "@mdi/js";
-
+import PostService from '../services/PostService';
 //import Likes from "../components/Likes.vue";
 
 export default {
@@ -222,11 +248,24 @@ export default {
         required: value => !!value || "Required."
       },
       messageRetour: null,
-      errorMessage: null
+      errorMessage: null,
+       data: {
+        commentMessage: "",
+        commentPseudo: this.$store.state.user.pseudo
+      }
     };
   },
 
   methods: {
+     async reloadFeed() {
+      try {
+        const response = await PostService.getPosts();
+        console.log(response);
+        this.posts = response.data;
+      } catch (error) {
+        this.errorMessage = error.response.data.error;
+      }
+    },
     deletePost() {
       this.$emit("deletePost", this.post.id);
     },
@@ -236,21 +275,27 @@ export default {
     getOnePost() {
       this.$router.push(this.postUrl);
     },
-    addComment(id) {
-      this.$router.push(`/posts/${id}/addcomment`);
-      console.log(id);
-    },
+    onSubmitComment(id) {    
+    console.log(id);
   
-    reloadFeed() {      
-      this.$emit("reloadFeed");
-    },
-
-    showComentForm() {
-      this.commentForm = true;
-    },
-    deleteComment() {
-       this.$emit("deletePost", this.post.id, this.comment.id);
-    }
+    this.$store.dispatch('commentPost',  {
+      id: id,
+      data: this.data
+      });
+        this.data.commentMessage = '';
+  }, 
+    /* deleteComment() {   
+      this.$emit("deleteComment", this.comment.id); 
+      console.log(this.comment.id) 
+   
+       /* this.$store.dispatch("deleteComment", { id : id, comId : comId});
+            this.reloadFeed(); 
+    }, */
+    deleteComment(id) {
+      console.log(id)
+     this.$store.dispatch('deleteComment',id),
+     this.reloadFeed();
+   }, 
   }
 };
 </script>

@@ -17,6 +17,7 @@ exports.getAllPosts = async (req, res) => {
       {
         model: db.Comment,
         attributes: ['message', 'pseudo','UserId', 'id'],
+        order: [['createdAt', 'DESC']],
         include: [{
           model: db.User,
           attributes: ['photo']
@@ -257,16 +258,13 @@ exports.addComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   try {
     const userId = token.getUserId(req)
-    console.log(userId)
-    const commentId = req.params.comId;
-    console.log(commentId)
-    const postId = req.params.id;
+    console.log(userId) 
     const checkAdmin = await db.User.findOne({ where: { id: userId } })
-    const comment = await db.Comment.findOne({ where: { id: commentId } });
-    console.log(postId);
+    const comment = await db.Comment.findOne({ where: { id: req.params.id } });
+console.log(req.params.id)
     if ((userId === comment.UserId) || (checkAdmin.admin === true)) {
 
-      db.Comment.destroy({ where: { id: comment.id } }, { truncate: true });
+      db.Comment.destroy({ where: { id: req.params.id } }, { truncate: true });
       res.status(200).json({ message: 'commentaire supprimé' })
 
     } else {

@@ -78,7 +78,13 @@ export default new Vuex.Store({
       Object.assign(state.posts.find(element => element.id === id), post);
     },    
       
-     DELETE_POST(state, id) {
+    DELETE_POST(state, id) {
+        state.posts = [
+           ...state.posts.filter((item) => item.id !== id)
+        ];
+       
+    },   
+    DELETE_COMMENT(state, id) {
         state.posts = [
            ...state.posts.filter((item) => item.id !== id)
         ];
@@ -89,6 +95,11 @@ export default new Vuex.Store({
       
       state.isLiked = like.isLiked;
       console.log(state.isLiked)
+    },
+    COMMENT_POST(state,comment) {
+      state.posts = [comment, ...state.posts];
+      state.message = 'post commenté'
+      
     }
 
   },
@@ -100,7 +111,7 @@ export default new Vuex.Store({
       commit('SET_USER', user);
     },
     
-     deletePost ({commit},id) {
+    deletePost ({commit},id) {
       PostService.deletePost(id)
         .then(() => {                      
             commit('DELETE_POST', id)
@@ -165,6 +176,49 @@ export default new Vuex.Store({
         })
       }) 
     }, 
+     commentPost({commit}, payload) {     
+      axios.post(
+        `http://localhost:3000/api/posts/${payload.id}/comments`,
+        payload.data,
+        { headers: { Authorization: this.state.token } }
+      )
+      .then(response => {
+        const comment = response.data;
+       console.log(comment)   
+        commit('COMMENT_POST', comment);           
+      })
+      .then(() => {             
+        PostService.getPosts()
+        .then(response => {
+          const posts = response.data;          
+          commit('GET_POSTS', posts)
+        })
+      }) 
+    }, 
+    /* deleteComment ({commit},id) {
+      console.log(id)
+      axios.post(
+        `http://localhost:3000/api/posts/comments/${id}`,
+      
+        { headers: { Authorization: this.state.token } }
+      )
+        .then(() => {                      
+            commit('DELETE_COMMENT', id)
+        })
+    }, */
+    deleteComment ({commit},id) {
+      PostService.deleteComment(id)
+        .then(() => {                      
+            commit('DELETE_COMMENT', id)
+        })
+        .then(() => {             
+          PostService.getPosts()
+          .then(response => {
+            const posts = response.data;          
+            commit('GET_POSTS', posts)
+          })
+        }) 
+    },
 
   },
 });

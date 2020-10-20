@@ -26,17 +26,17 @@ export default {
     return Api().post('posts/' + id) + '/like';
   },
 
-  commentPost(id) {
-    return Api().post('posts/' + id + '/comment');
+  commentPost(id,data) {
+    return Api().post('posts/' + id + '/comments', data);
   },
   updateComment(id, comId) {
     return Api().put(
-      'posts/' + id + '/comment/' + comId
+      'posts/' + id + '/comments/' + comId
     );
   },
-  deleteComment(id, comId) {
+  deleteComment(id) {
     return Api().delete(
-      'posts/' + id + '/comment' + comId
+       'posts/comments/' + id
     );
   },
 };
