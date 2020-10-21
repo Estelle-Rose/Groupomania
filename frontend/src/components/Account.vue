@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="signup-container">
-    <v-layout v-if="$store.state.isLoggedIn" row class="account-box">
+    <v-layout v-if="$store.state.isLoggedIn" row class="account-box mb-5">
       <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card d-flex flex-column" elevation="4" xs6>
           <div class="profil-top ">
@@ -43,10 +43,11 @@
             </v-card-title>
 
             <v-card-title
-              class="profil-middle__right d-flex justify-space-between"
+              class="profil-middle__right d-flex flex-column"
             >
               <v-avatar size="96px">
                 <img
+                rounded
                   v-if="user.photo"
                   :src="user.photo"
                   alt="Photo de profil"
@@ -99,7 +100,7 @@
                     v-model="newPseudo"
                     :rules="rules"
                     counter="30"
-                    hint="Le pseudo doit avoir 4 caractères min et 30 max"
+                    hint="Le pseudo doit avoir 3 caractères min et 30 max"
                     class="input-group--focused"
                   ></v-text-field>
                   <v-textarea
@@ -127,8 +128,8 @@
                 <br />
                 <div class="danger-alert" v-html="errorMessage" />
                 <div class="danger-alert" v-html="messageRetour" />
-                <br />
-                <div class="d-flex justify-center">
+               
+                <div class="d-flex justify-center mt-n10">
                   <v-btn
                   
                     @click="onSubmit(user.id)"
@@ -175,7 +176,7 @@ export default {
       options: false,
       newPseudo: "",
       newBio: "",
-      rules: [v => v.length <= 30 || "Max 25 characters"],
+      rules: [v  => v.length <= 30 || "Max 30 characters"],
       file: "",
       messageRetour: null,
       errorMessage: null
@@ -300,12 +301,14 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  height: 80vh;
+  height: 100%;
+  
 }
 .account-card {
   display: flex;
   justify-content: space-around;
+  margin-top: 2em;
+  margin-bottom: 4em;
 }
 .profil-top {
   display: flex;

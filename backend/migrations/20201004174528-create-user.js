@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       bio: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING(500)
       },
       admin: {
         type: Sequelize.BOOLEAN, allowNull: false, default: false

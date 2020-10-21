@@ -1,5 +1,7 @@
 <template>
-  <v-container fluid class="">
+  <v-container fluid class="signup-container">
+    <div class="account">
+
     <v-layout v-if="$store.state.users" row class="account-box">
       <v-card
         v-for="user of users"
@@ -9,7 +11,7 @@
         class="users"
         elevation="4"
       >
-        <div v-if="!user.admin === true" class="d-flex justify-space-between">
+        <div  class="d-flex justify-space-between">
           <v-card-title flat dense dark>
             <v-avatar size="42px" class="mt-3">
               <img v-if="user.photo" :src="user.photo" alt="Photo de profil" />
@@ -25,12 +27,12 @@
             </div>
           </v-card-title>
           <div>
-            <v-tooltip v-if="($store.state.user.id === user.id || $store.state.user.admin === true)" bottom>
+            <v-tooltip v-if="($store.state.user.id === user.id || $store.state.user.admin === true)" bottom >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                
+                class="delete-btn"
                   @click="deleteAccount(user.id)"
-                  class="mt-3 mr-3"
+                 
                   fab
                   primary
                   x-small
@@ -48,6 +50,7 @@
         </div>
       </v-card>
     </v-layout>
+    </div>
   </v-container>
 </template>
 
@@ -98,9 +101,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.v-avatar {
-  margin-top: -30px;
+.v-avatar {  
   margin-right: 1em;
+}
+strong {
+  font-size: 16px;
+}
+span {
+  font-size: 16px;
 }
 .signup-container {
   background-image: url("../assets/stars.svg");
@@ -108,71 +116,32 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
   height: 80vh;
 }
-.profil-top {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 150px;
+.account {
+  width: 80%;
+}
+.delete-btn {
+position: absolute;
+right: 10px;
+top: 10px;
+}
 
-  &__one {
-    display: flex;
-    justify-content: center;
-    padding-top: 0 !important;
-    position: relative;
-  }
-}
-.delete-account {
-  position: absolute;
-
-  right: 0;
-  top: -10px;
-}
-.profil-title {
-  padding: 0;
-}
-.profil-middle {
-  display: flex;
-  justify-content: space-between;
-  height: 80px;
-  padding: 0;
-}
 .account-box {
   justify-content: center;
+  flex-direction: row-reverse;
   margin-top: 3em;
-  margin-bottom: 3em;
+  margin-bottom: 3em; 
+ 
+
 }
-.bio {
-  display: flex;
-  flex-direction: column;
-  padding: 0 1em 0 1em;
-  width: 85%;
+.users {
+  
+  margin-right: 2em;
+  margin-top: 2em;
+  width: 370px;
+  height: 120px;
+   position: relative;
 }
-.signup-card {
-  border: 3px solid #676c75 !important;
-  background-color: #ffebee !important;
-}
-/* .team-img {
-    width: 500px;
-    height: 500px;
-    position: absolute;
-    bottom: 110px;
-    left: 0;
-  } */
-/*  .team-img2 {
-    width: 500px;
-    height: 500px;
-    position: absolute;
-    top:0;
-    right: 0;
-  } */
-.rotation20 {
-  -webkit-transform: rotate(20deg);
-  -moz-transform: rotate(20deg);
-  -ms-transform: rotate(20deg);
-  -o-transform: rotate(20deg);
-  transform: rotate(20deg);
-}
+
 </style>

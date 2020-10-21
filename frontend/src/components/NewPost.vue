@@ -1,43 +1,23 @@
 <template>
   <v-container fluid class="post-box">
-    <v-card class="mx-auto post-card" color="red lighten-4" max-width="600">
+    <v-card class="mx-auto post-card" max-width="600">
       <v-card-title class="post-title-box">
         <v-icon large color="white" left>
           {{ mdiMessageSettingsOutline }}
         </v-icon>
         <div>
           <span class="title font-weight-light post-title"
-            >Que partagez-vous aujourd'hui ?</span
+            >Que partages-tu aujourd'hui ?</span
           >
         </div>
       </v-card-title>
-      <v-card-text v-if="options" class="d-flex justify-center my-3">
-        <div class="bloc-statut mr-5">
-        <v-btn @click="toggleText" class="mx-2" dark large color="grey">
-          Statut
-        </v-btn>
-        <v-icon large color="white" >
-          mdi-plus
-        </v-icon>
-
-        </div>
-        <div class="bloc-option">
-          <v-btn @click="toggleLink" class="mx-2 mb-2" dark large color="grey">
-            Lien
-          </v-btn>
-        
-          <v-btn @click="toggleImage" class="mx-2" dark large color="grey">
-            Image
-          </v-btn>
-        </div>
-      </v-card-text>
-      <div v-if="withImage">
-        <v-form
-          v-model="isValid"
-          @submit.prevent="onSubmit"
-          enctype="multipart/form-data"
-          class="validate"
-        >
+      <v-form
+        v-model="isValid"
+        @submit.prevent="onSubmit"
+        enctype="multipart/form-data"
+        class="validate"
+      >
+        <div class="bloc-statut py-5 px-5 mr-5">
           <v-textarea
             name="input-1-3"
             filled
@@ -46,86 +26,65 @@
             :rules="[rules.required]"
             auto-grow
           ></v-textarea>
+        </div>
+        <v-card-text v-if="options" class="d-flex flex-column justify-center my-3">
+           
+           <div class=" d-flex justify-center">
+             <v-icon large  center>
+              {{ mdiHospitalBox }}
+            </v-icon>
+             </div>
+          <div >
+            <div class=" d-flex justify-space-around">
+              <v-btn @click="toggleLink" small>
+                Lien
+              </v-btn>
 
-          <div>
-            <label for="image">Image</label>
-            <input
-              @change="uploadImage"
-              type="file"
-              accept="image/png, image/jpeg,
-          image/bmp, image/gif"
-              ref="file"
-              name="image"
-            />
+              <v-btn @click="toggleImage"  small >
+                Image
+              </v-btn>
+            </div>
           </div>
+        </v-card-text>
+        <div class="d-flex justify-center">
+          <div v-if="withImage" class="pb-5 pt-5 ">
+            <div class="d-flex  justify-center ">
+              <label for="image" class="pr-2">Image</label>
+              <input
+                @change="uploadImage"
+                type="file"
+                accept="image/png, image/jpeg,
+                image/bmp, image/gif"
+                ref="file"
+                name="image"
+              />
+            </div>
+          </div>
+          <div v-if="withLink" class="pb-5 pt-5 d-flex  justify-center">
+            <v-text-field
+              name="input-1-7"
+              filled
+              label="link"
+              v-model="link"
+              auto-grow
+            >
+            </v-text-field>
+          </div>
+        </div>
+        <div class="pb-5 pt-5 d-flex justify-center">
           <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-          <br />
-          <br />
-          <div class="danger-alert" v-html="errorMessage" />
-          <div class="danger-alert" v-html="messageRetour" />
-        </v-form>
-      </div>
-      <div v-if="withLink">
-        <v-form
-          v-model="isValid"
-          @submit.prevent="onSubmit"
-          enctype="multipart/form-data"
-          class="validate"
-        >
-          <v-textarea
-            name="input-1-3"
-            filled
-            label="Message"
-            v-model="message"
-            :rules="[rules.required]"
-            auto-grow
-          >
-          </v-textarea>
-          <v-text-field
-            name="input-1-3"
-            filled
-            label="link"
-            v-model="link"
-            auto-grow
-          >
-          </v-text-field>
-
-          <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-          <br />
-          <br />
-          <div class="danger-alert" v-html="errorMessage" />
-          <div class="danger-alert" v-html="messageRetour" />
-        </v-form>
-      </div>
-
-      <div v-if="withText">
-        <v-form
-          v-model="isValid"
-          @submit.prevent="onSubmit"
-          enctype="multipart/form-data"
-          class="validate"
-        >
-          <v-textarea
-            name="input-1-3"
-            filled
-            label="Message"
-            v-model="message"
-            :rules="[rules.required]"
-            auto-grow
-          ></v-textarea>
-
-          <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
-          <br />
-          <br />
-          <div class="danger-alert" v-html="errorMessage" />
-          <div class="danger-alert" v-html="messageRetour" />
-        </v-form>
-      </div>
+        </div>
+      </v-form>
+      <br />
+      <br />
+      <div class="danger-alert" v-html="errorMessage" />
+      <div class="danger-alert" v-html="messageRetour" />
     </v-card>
   </v-container>
 </template>
 <script>
 import { mdiMessageSettingsOutline } from "@mdi/js";
+import { mdiHospitalBox } from '@mdi/js';
 //import PostService from "../services/PostService";
 //import axios from "axios";
 
@@ -135,8 +94,11 @@ export default {
   data() {
     return {
       mdiMessageSettingsOutline,
+      mdiHospitalBox,
       isValid: true,
       options: true,
+      showLink: true,
+      showImage: false,
       withLink: false,
       withImage: false,
       withText: false,
@@ -145,17 +107,16 @@ export default {
       },
       message: "",
       link: null,
-      file: "",    
-     
+      file: ""
     };
   },
   computed: {
     messageRetour() {
-            return this.$store.getters.message;
-        },
+      return this.$store.getters.message;
+    },
     errorMessage() {
-            return this.$store.getters.error;
-        },
+      return this.$store.getters.error;
+    }
   },
   methods: {
     toggleLink() {
@@ -164,17 +125,15 @@ export default {
     toggleImage() {
       (this.withImage = true), (this.options = false);
     },
-    toggleText() {
-      (this.withText = true), (this.options = false);
-    },
+
     uploadImage() {
       const file = this.$refs.file.files[0];
       this.file = file;
-      console.log(this.file)
+      console.log(this.file);
     },
     onSubmit() {
       const formData = new FormData();
-      console.log(typeof(this.message))
+      console.log(typeof this.message);
       formData.append("message", this.message);
       if (this.link !== null) {
         formData.append("link", this.link);
@@ -182,13 +141,12 @@ export default {
       if (this.imageUrl !== null) {
         formData.append("imageUrl", this.file);
       }
-     this.$store.dispatch('createPost',formData);      
-      
+      this.$store.dispatch("createPost", formData);
+
       let router = this.$router;
-        setTimeout(function() {
-          router.push("/posts");
-        }, 2000); 
-     
+      setTimeout(function() {
+        router.push("/posts");
+      }, 2000);
     }
   }
 };
@@ -201,14 +159,9 @@ export default {
 .bloc-statut {
   display: flex;
   align-items: center;
-  
-  
 }
 // lien ou image
-.bloc-option {
-  display: flex;
-  flex-direction: column;
-}
+
 .post-title-box {
   background-color: gray;
   .post-title {

@@ -116,7 +116,7 @@
         <v-expand-transition>
           <div v-show="show">
             <v-divider></v-divider>
-            <div class="comments-box">
+            <div class="comments-box d-flex flex-column justify-center">
               <v-card-text class="comment-input">
                 <v-form
                   v-model="isValid"   
@@ -149,8 +149,8 @@
                 :key="comment.id"
                 :comment="comment"
               >
-                <v-list-item>
-                  <v-list-item-avatar>
+                <v-list-item class="comment">
+                  <v-list-item-avatar class="comment_photo">
                     <img
                       v-if="comment.User.photo"
                       :src="comment.User.photo"
@@ -159,20 +159,22 @@
                     <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
                   </v-list-item-avatar>
 
-                  <v-list-item-content>
-                    <div class="comment mt-5 ">
-                      <strong
-                        v-html="comment.pseudo"
-                        class="pr-5 comment__pseudo"
-                      ></strong>
-                      <p
-                        v-html="comment.message"
-                        class="pr-2 text-left comment__message"
-                      ></p>
-                      <v-tooltip bottom>
+                  <v-list-item-content class="comment_body d-flex ">                  
+                          <strong
+                            v-html="comment.pseudo"
+                            
+                            class="pr-5 text-left comment__pseudo"
+                          ></strong>                                                    
+                            <span
+                              v-html="comment.message"
+                              class=" text-left comment__message"
+                            ></span>
+                  </v-list-item-content>
+                 
+                      <v-tooltip bottom >
                         <template v-if="($store.state.user.id === comment.UserId || $store.state.user.admin === true) " v-slot:activator="{ on, attrs }">
                           <v-btn
-                            class="mx-2"
+                            
                             fab
                             primary
                             x-small
@@ -188,8 +190,10 @@
                         </template>
                         <span>Supprimer</span>
                       </v-tooltip>
-                    </div>
-                  </v-list-item-content>
+         
+                         
+                     
+                 
                 </v-list-item>
                 <v-divider></v-divider>
               </v-list>
@@ -284,13 +288,7 @@ export default {
       });
         this.data.commentMessage = '';
   }, 
-    /* deleteComment() {   
-      this.$emit("deleteComment", this.comment.id); 
-      console.log(this.comment.id) 
-   
-       /* this.$store.dispatch("deleteComment", { id : id, comId : comId});
-            this.reloadFeed(); 
-    }, */
+    
     deleteComment(id) {
       console.log(id)
      this.$store.dispatch('deleteComment',id),
@@ -300,9 +298,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-/* .posts-card {
-  width: 40em;
-} */
+
 .post-title {
   font-size: 20px;
   margin-left: 15px;
@@ -326,24 +322,16 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.comment {
-  display: flex;
-  align-content: center;
-  position: relative;
-  &__pseudo {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  &__message {
-    width: 30rem;
-  }
+.comment__message {
+  max-width:600px;
+}  
+
+@media screen and (max-width: 768px) {
+  .comment__message {
+  max-width:350px;
 }
-.comment-delete {
-  position: absolute;
-  right: 0;
-  bottom: 10px;
 }
+
 .comment-form {
   display: flex;
   justify-content: space-between;
@@ -355,7 +343,5 @@ export default {
     margin-top: 0.33rem;
   }
 }
-.isliked {
-  color: #ff4081 !important;
-}
+
 </style>
