@@ -6,7 +6,7 @@
           <v-card-title class="post-title">
             <v-avatar size="52px">
               <img
-                v-if="post.User.photo"
+                v-if="post.User.photo !==null"
                 :src="post.User.photo"
                 alt="Photo de profil"
               />

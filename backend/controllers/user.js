@@ -123,9 +123,9 @@ exports.updateAccount = async (req, res) => {
       if(req.body.pseudo ) {
         user.pseudo = req.body.pseudo  ;        
       }
-      const newuser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
-      console.log(newuser)
-      res.status(200).json({ user: newuser, messageRetour: 'user modifié' })
+      const newUser = await user.save({ fields: ['pseudo', 'bio', 'photo'] });
+      console.log(newUser)
+      res.status(200).json({ user: newUser, messageRetour: 'Votre profil a bien été modifié' })
     } else {
       res.status(400).json({ messageRetour: 'Vous n\'avez pas les droits requis' })
     }
@@ -139,7 +139,7 @@ exports.deleteAccount = async (req, res) => {
     const userId = token.getUserId(req);    
     const id = parseInt(req.params.id);
    console.log(id)
-    const checkAdmin = await db.User.findOne({ where: {id: id}})
+    const checkAdmin = await db.User.findOne({ where: {id: userId}})
     const user = await db.User.findOne({ where: { id: id } });
     if ((userId === id) || (checkAdmin.admin === true)) {      
       if (user.photo) {

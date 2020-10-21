@@ -44,6 +44,7 @@ export default {
 .signup-container {
   background-image: url("../assets/stars.svg");
   background-repeat: repeat;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;

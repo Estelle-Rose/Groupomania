@@ -29,7 +29,15 @@
       <v-btn v-if="!$store.state.isLoggedIn" small to="/signup"
         >Inscription</v-btn
       >
-      <v-btn  v-if="$store.state.isLoggedIn" small  @click="getProfile(user.id)">Mon profil</v-btn>
+    <!--   <v-btn  v-if="$store.state.isLoggedIn" small  @click="getProfile(user.id)">Mon profil</v-btn> -->
+      <v-btn  v-if="$store.state.isLoggedIn" icon @click="getProfile(user.id)" size="35px" ><v-avatar >
+                 <img v-if="user.photo" alt="Avatar" :src="user.photo"  />  
+                <v-icon v-else >{{ mdiAccountCircle }}</v-icon>
+              </v-avatar></v-btn>
+      <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon  size="25px" ><v-avatar >
+                
+                <v-icon >{{ mdiAccountSupervisorCircle  }}</v-icon>
+              </v-avatar></v-btn>
       
  
       
@@ -39,24 +47,34 @@
 </template>
 <script>
 //import AccountPreview from "../components/AccountPreview";
-import {mapState} from 'vuex';
+import { mdiAccountSupervisorCircle  } from '@mdi/js';
+import { mdiAccountCircle} from '@mdi/js';
+
 
 export default {
   name: "PageHeader",
- /*  components: {
-    "account-preview": AccountPreview
-  }, */
+   props: {
+     user: {
+       type: Object
+     }
+   },
   data() {
-    return {};
+    return {
+      mdiAccountCircle,
+      mdiAccountSupervisorCircle 
+    };
   },
-   computed: mapState(
-    ['user']
-  ),
+  /*  computed:{
+     user() {
+       return this.$store.getters.user
+     }
+   }, */
   methods: {
-    logOut: function() {
-      this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setUser", null);
-    },
+    /* logOut: function() {
+      this.$store.dispatch("logOut");
+     /*  this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null); */
+    
     getProfile(id) {
       this.$router.push(`/account/${id}`);
       

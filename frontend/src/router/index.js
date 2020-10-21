@@ -8,7 +8,7 @@ import HotFeed from '../views/HotFeed.vue';
 import NewPost from '../components/NewPost.vue';
 import Account from '../components/Account.vue';
 import SinglePost from '../components/SinglePost.vue';
-import AddComment from '../components/AddComment.vue';
+import Accounts from '../components/Accounts.vue';
 
 
 
@@ -52,12 +52,11 @@ const routes = [
     
   },
   {
-    path: '/posts/:id/addcomment',
-    name: 'AddComment',
-    component: AddComment,
+    path: '/accounts',
+    name: 'accounts',
+    component: Accounts,
     
   },
-
 
   {
     path: '/add',

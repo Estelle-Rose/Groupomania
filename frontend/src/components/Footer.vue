@@ -34,8 +34,7 @@
     
     methods: {
     logOut: function() {
-      this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setUser", null);
+      this.$store.dispatch("logOut");
     }
   }
   };

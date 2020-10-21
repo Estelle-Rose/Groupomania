@@ -1,14 +1,14 @@
 <template>
   <v-app>
     <!-- header -->
-    <page-header></page-header>
+    <page-header :user="user"    ></page-header>
     <v-main>
     
         <router-view></router-view>
         <!-- Display view pages here based on route -->
      
     </v-main>
-    <page-footer></page-footer>
+    <page-footer  :user="user"></page-footer>
   </v-app>
 </template>
 
@@ -26,7 +26,12 @@ export default {
     return {
       
     };
-  }
+  },
+   computed:{
+     user() {
+       return this.$store.getters.user
+     }
+   },
 };
 </script>
 <style lang="scss">
