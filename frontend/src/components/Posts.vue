@@ -173,8 +173,7 @@
                  
                       <v-tooltip bottom >
                         <template v-if="($store.state.user.id === comment.UserId || $store.state.user.admin === true) " v-slot:activator="{ on, attrs }">
-                          <v-btn
-                            
+                          <v-btn                            
                             fab
                             primary
                             x-small
@@ -189,9 +188,7 @@
                           </v-btn>
                         </template>
                         <span>Supprimer</span>
-                      </v-tooltip>
-         
-                         
+                      </v-tooltip>                       
                      
                  
                 </v-list-item>

@@ -63,7 +63,7 @@
               :key="post.id"
               :post="post"
               :id="post.id"
-              :isLiked="isLiked"
+              
               :postUrl="'posts/' + post.id"
                @deletePost="deletePost(post.id)"
                @likePost="likePost(post.id)" 
@@ -83,10 +83,8 @@
 <script>
 // @ is an alias to /src
 
-import PostService from "../services/PostService";
+
 import Posts from "../components/Posts.vue";
-//import axios from 'axios';
-//import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
   name: "Feed",
@@ -111,24 +109,15 @@ export default {
      this.$store.dispatch('getPosts')
   },
   
-  methods: {        
-    async reloadFeed() {
-      try {
-        const response = await PostService.getPosts();
-        console.log(response);
-        this.posts = response.data;
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
+  methods: {       
+   
    deletePost(id) {
-     this.$store.dispatch('deletePost',id),
-     this.reloadFeed();
+     this.$store.dispatch('deletePost',id)
+    
    },
     deleteComment(id) {
       console.log
-     this.$store.dispatch('deleteComment',id),
-     this.reloadFeed();
+     this.$store.dispatch('deleteComment',id)     
    }, 
  
   likePost(id) {
@@ -137,8 +126,7 @@ export default {
     this.$store.dispatch('likePost',  {
       id: id,
       data: data
-      })
-      
+      })      
   },
   }
  

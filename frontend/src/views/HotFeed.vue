@@ -62,8 +62,7 @@
               v-for="post of posts"
               :key="post.id"
               :post="post"
-              :id="post.id"
-              :liked="liked"
+              :id="post.id"              
               :postUrl="'posts/' + post.id"
               @deletePost="deletePost(post.id)"
              @likePost="likePost(post.id)"
@@ -81,9 +80,9 @@
 <script>
 // @ is an alias to /src
 
-import PostService from "../services/PostService";
+
 import Posts from "../components/Posts.vue";
-import axios from 'axios';
+
 //import UpdatePost from '../components/UpdatePost';
 import { mdiPencilOutline } from "@mdi/js";
 export default {
@@ -93,16 +92,20 @@ export default {
   },
 
   data() {
-    return {
-      posts: [],
-      liked: false,
+    return {            
       errorMessage: null,
       mdiPencilOutline,
-      componentKey: 0
+      
     };
   },
+   computed: {
+    posts() {
+      return this.$store.getters.posts
+    }
+   },
   async beforeMount() {
-    try {
+    this.$store.dispatch('getHotPosts')
+   /*  try {
       const response = await PostService.getHotPosts();
       console.log(response);
       this.posts = response.data;
@@ -110,53 +113,26 @@ export default {
       console.log(this.posts)
     } catch (error) {
       this.errorMessage = error.response.data.error;
-    }
+    } */
   },
   methods: {
-    
-    async reloadFeed() {
-      try {
-        const response = await PostService.getPosts();
-        console.log(response);
-        this.posts = response.data;
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
-   
-  
-    async deletePost(id) {
-      try {
-        const response = await PostService.deletePost(id);
-        console.log(response);
-        const postIndex = this.posts.findIndex(post => post.id === id);
-        console.log(postIndex);
-        this.posts.splice(postIndex, 1);
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
-    async likePost(id) {
-      const data = 1;
-      console.log(id);
-      try {
-        const response = await axios.post(
-          `http://localhost:3000/api/posts/${id}/like`,
-          data,
-          { headers: { Authorization: this.$store.state.token } }
-        );
-        this.messageRetour = response.data.messageRetour;
-        console.log(typeof response.data.isalreadyliked);
-        if (response.data.isalreadyliked === "no") {
-          this.isliked = true;
-          console.log(this.isliked);
-        } else {
-          this.isliked = false;
-        }
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      }
-    },
+ 
+  deletePost(id) {
+     this.$store.dispatch('deletePost',id)
+   },
+    deleteComment(id) {
+      console.log
+     this.$store.dispatch('deleteComment',id)  
+   }, 
+ 
+  likePost(id) {
+    const data = 1;
+    console.log(id);
+    this.$store.dispatch('likePost',  {
+      id: id,
+      data: data
+      })      
+  },
   }
 };
 </script>
@@ -165,13 +141,6 @@ export default {
 .feed-container {
   margin-bottom: 50px;
   margin-left: 0!important;
- 
-  /* background-image:  linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,.5)),url('../assets/test_fond.jpg');
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-   */
-  
  
 }
 </style>

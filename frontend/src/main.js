@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import App from './App.vue';
-import router from './router';
+import router from './router'; // vue-router instance
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import vuetify from './plugins/vuetify';
-import store from './store/store';
-import { sync } from 'vuex-router-sync';
+import store from './store/store'; // vuex store instance
+import { sync } from 'vuex-router-sync'; 
 
 
 Vue.config.productionTip = false;
 
- /// gestion de l'affichage des dates avec vue-moment
-const moment = require('moment')
+ 
+const moment = require('moment') // gestion de l'affichage des dates avec vue-moment
 require('moment/locale/fr')
 Vue.use(require('vue-moment'), {
   moment
@@ -26,4 +26,4 @@ new Vue({
   render: (h) => h(App),
 }).$mount('#app');
 
-unsync();
+unsync();// Unsyncs store from router

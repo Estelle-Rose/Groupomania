@@ -129,7 +129,7 @@
                 <div class="danger-alert" v-html="errorMessage" />
                 <div class="danger-alert" v-html="messageRetour" />
                
-                <div class="d-flex justify-center mt-n10">
+                <div class="d-flex justify-center">
                   <v-btn
                   
                     @click="onSubmit(user.id)"

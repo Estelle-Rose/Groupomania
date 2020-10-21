@@ -125,7 +125,6 @@ export default {
     toggleImage() {
       (this.withImage = true), (this.options = false);
     },
-
     uploadImage() {
       const file = this.$refs.file.files[0];
       this.file = file;
@@ -142,11 +141,7 @@ export default {
         formData.append("imageUrl", this.file);
       }
       this.$store.dispatch("createPost", formData);
-
-      let router = this.$router;
-      setTimeout(function() {
-        router.push("/posts");
-      }, 2000);
+      this.$router.push("/posts");      
     }
   }
 };
