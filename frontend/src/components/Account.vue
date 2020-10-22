@@ -213,7 +213,7 @@ export default {
       const formData = new FormData();
       formData.append("pseudo", this.newPseudo);
       formData.append("bio", this.newBio);
-      formData.append("photo", this.file);
+      formData.append("image", this.file);
       this.$store.dispatch("updateAccount", formData);
       this.updateBio = false;
       this.updatePhoto = false;

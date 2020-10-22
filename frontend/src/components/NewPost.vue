@@ -139,8 +139,8 @@ export default {
       if (this.link !== null) {
         formData.append("link", this.link);
       }
-      if (this.imageUrl !== null) {
-        formData.append("imageUrl", this.file);
+      if (this.file !== null) {
+        formData.append("image", this.file);
       }
       this.$store.dispatch("createPost", formData);
       this.$router.push("/posts");

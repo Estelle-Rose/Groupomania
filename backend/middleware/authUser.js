@@ -1,7 +1,7 @@
 const emailValidator = require("email-validator");
 const passwordValidator = require("password-validator");
 
-exports.signup = (req, res, next) => {
+exports.signup = (req, res, next) => { // on vérifie le password et l'email
   const passwordSchema = new passwordValidator();
   passwordSchema
     .is()
@@ -33,7 +33,7 @@ exports.signup = (req, res, next) => {
     next();
   }
 };
-exports.checkPseudo = (req, res, next) => {
+exports.checkPseudo = (req, res, next) => { // on vérifie le pseudo
   const regex = /^[a-zA-Z0-9_]{3,30}$/; // Lettres, espaces et doit être entre 4 et 30 caractères
   const pseudo = req.body.pseudo;
   if (regex.test(pseudo) === true) {

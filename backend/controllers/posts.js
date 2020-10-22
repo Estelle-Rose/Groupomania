@@ -1,6 +1,6 @@
 const token = require('../middleware/token');
 const db = require('../models'); // accès tables
-const fs = require('fs');
+const fs = require('fs'); // 
 
 exports.getAllPosts = async (req, res) => {
   try {

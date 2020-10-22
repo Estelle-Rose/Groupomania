@@ -2,7 +2,7 @@ const JWT = require('jsonwebtoken');
 const config = require('../config/config');
 
 
-function issueJWT(user) {
+function issueJWT(user) { // on génére le token
     const id = user.id;
     const expiresIn = '4d';
     const payload = {
@@ -15,7 +15,7 @@ function issueJWT(user) {
         expires: expiresIn
     }
 }
-function getUserId(req) {
+function getUserId(req) { // on vérifie le userId du token
     const token = req.headers.authorization.split(' ')[1]; // on récupère le token de la requête entrante
     const decodedToken = JWT.verify(token, 'secret'); // on le vérifie
     const userId = decodedToken.sub;

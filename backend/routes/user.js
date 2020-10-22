@@ -2,7 +2,7 @@ const router = require('express').Router();
 const userCtrl = require('../controllers/user');
 const authUser = require('../middleware/authUser');
 const auth = require('../middleware/auth');
-const multer = require('../middleware/multer-profile');
+const multer = require('../middleware/multer-config');
 
 router.post('/signup', authUser.checkPseudo, authUser.signup, userCtrl.signup);
 router.post('/login', authUser.signup, userCtrl.login);

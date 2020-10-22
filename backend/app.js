@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
 require('dotenv').config();
 
 
@@ -17,8 +18,8 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
+app.use(cors()); // CORS - partage de ressources entre serveurs
+app.use(helmet()); // helmet
 
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 app.use('/api/users', userRoutes);
