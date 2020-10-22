@@ -78,7 +78,7 @@
                <v-btn
                   @click="toggleMessage"
                   class="mx-2 mt-2 "
-                  text
+                  
                   x-small
                   :elevation="2"
                 >   Changer ton message
@@ -86,7 +86,7 @@
                <v-btn
                   @click="toggleLink"
                   class="mx-2 mt-2 "
-                  text
+                  
                   x-small
                   :elevation="2"
                 >   Poster un lien
@@ -94,7 +94,7 @@
                <v-btn
                   @click="toggleImage"
                   class="mx-2 mt-2 "
-                  text
+                  
                   x-small
                   :elevation="2"
                 >  Poster une image
@@ -134,7 +134,7 @@ export default {
       withImage: false,
       withMessage: false,
       showImage: true,
-      shoMessage:true,
+      showMessage:true,
      
       message: null,
       link: null,

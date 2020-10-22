@@ -2,10 +2,7 @@
   <nav>
     <!-- Start of app toolbar -->
     <v-app-bar app  dark>
-      <v-btn-toggle
-        @click.stop="drawer = !drawer"
-        class="hidden-md-and-up"
-      ></v-btn-toggle>
+     
       <v-toolbar-title class="headline text-uppercase">
         <router-link to="/">
           <v-img
@@ -19,24 +16,19 @@
           />
         </router-link>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-     
-            
-       <v-btn v-if="$store.state.isLoggedIn"  small link to="/posts">Fil d'actu</v-btn>
-    
-
-      <v-btn v-if="!$store.state.isLoggedIn" small to="/login">Connexion</v-btn>
-      <v-btn v-if="!$store.state.isLoggedIn" small to="/signup"
+      <v-spacer></v-spacer>                
+       <v-btn v-if="$store.state.isLoggedIn"  x-small link to="/posts">Fil d'actu</v-btn>   
+      <v-btn v-if="!$store.state.isLoggedIn" x-small to="/login">Connexion</v-btn>
+      <v-btn v-if="!$store.state.isLoggedIn" x-small to="/signup"
         >Inscription</v-btn
       >
-    <!--   <v-btn  v-if="$store.state.isLoggedIn" small  @click="getProfile(user.id)">Mon profil</v-btn> -->
-      <v-btn  v-if="$store.state.isLoggedIn" icon @click="getProfile(user.id)" size="35px" ><v-avatar >
-                 <img v-if="user.photo" alt="Avatar" :src="user.photo"  />  
-                <v-icon v-else >{{ mdiAccountCircle }}</v-icon>
+      <v-btn  v-if="$store.state.isLoggedIn"  small icon @click="getProfile(user.id)"  ><v-avatar >
+                 <img v-if="user.photo" alt="Avatar" :src="user.photo" width="30px" height="30px"/>  
+                <v-icon  size="35px" v-else >$vuetify.icons.account</v-icon>
               </v-avatar></v-btn>
-      <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon  size="25px" ><v-avatar >
+      <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon small  class="mr-4"><v-avatar >
                 
-                <v-icon >{{ mdiAccountSupervisorCircle  }}</v-icon>
+                <v-icon size="35px" >$vuetify.icons.friends</v-icon>
               </v-avatar></v-btn>
       
  
@@ -47,9 +39,6 @@
 </template>
 <script>
 //import AccountPreview from "../components/AccountPreview";
-import { mdiAccountSupervisorCircle  } from '@mdi/js';
-import { mdiAccountCircle} from '@mdi/js';
-
 
 export default {
   name: "PageHeader",
@@ -60,15 +49,10 @@ export default {
    },
   data() {
     return {
-      mdiAccountCircle,
-      mdiAccountSupervisorCircle 
+ 
     };
   },
-  /*  computed:{
-     user() {
-       return this.$store.getters.user
-     }
-   }, */
+  
   methods: {
     /* logOut: function() {
       this.$store.dispatch("logOut");

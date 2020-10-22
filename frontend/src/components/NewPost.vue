@@ -27,20 +27,22 @@
             auto-grow
           ></v-textarea>
         </div>
-        <v-card-text v-if="options" class="d-flex flex-column justify-center my-3">
-           
-           <div class=" d-flex justify-center">
-             <v-icon large  center>
+        <v-card-text
+          v-if="options"
+          class="d-flex flex-column justify-center my-3"
+        >
+          <div class=" d-flex justify-center">
+            <v-icon large center>
               {{ mdiHospitalBox }}
             </v-icon>
-             </div>
-          <div >
+          </div>
+          <div>
             <div class=" d-flex justify-space-around">
               <v-btn @click="toggleLink" small>
                 Lien
               </v-btn>
 
-              <v-btn @click="toggleImage"  small >
+              <v-btn @click="toggleImage" small>
                 Image
               </v-btn>
             </div>
@@ -84,7 +86,7 @@
 </template>
 <script>
 import { mdiMessageSettingsOutline } from "@mdi/js";
-import { mdiHospitalBox } from '@mdi/js';
+import { mdiHospitalBox } from "@mdi/js";
 //import PostService from "../services/PostService";
 //import axios from "axios";
 
@@ -103,11 +105,11 @@ export default {
       withImage: false,
       withText: false,
       rules: {
-        required: value => !!value || "Required."
+        required: (value) => !!value || "Required.",
       },
       message: "",
       link: null,
-      file: ""
+      file: "",
     };
   },
   computed: {
@@ -116,7 +118,7 @@ export default {
     },
     errorMessage() {
       return this.$store.getters.error;
-    }
+    },
   },
   methods: {
     toggleLink() {
@@ -141,9 +143,9 @@ export default {
         formData.append("imageUrl", this.file);
       }
       this.$store.dispatch("createPost", formData);
-      this.$router.push("/posts");      
-    }
-  }
+      this.$router.push("/posts");
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

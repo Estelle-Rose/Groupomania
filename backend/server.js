@@ -56,5 +56,6 @@ models.sequelize.sync().then(function () {
     console.log('Listening on ' + bind);
   });
 
-require('./config/admin');
+require('./config/admin'); // la fonction setAdmin est appelée
+
 }); // un écouteur d'évènements est également enregistré, consignant le port ou le canal nommé sur lequel le serveur s'exécute dans la console.

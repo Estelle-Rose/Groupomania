@@ -78,12 +78,9 @@
 </template>
 
 <script>
-// @ is an alias to /src
 
 
-import Posts from "../components/Posts.vue";
-
-//import UpdatePost from '../components/UpdatePost';
+import Posts from "@/components/Posts.vue";
 import { mdiPencilOutline } from "@mdi/js";
 export default {
   name: "HotFeed",
@@ -137,7 +134,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style>
 .feed-container {
   margin-bottom: 50px;
   margin-left: 0!important;

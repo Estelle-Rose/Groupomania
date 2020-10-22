@@ -62,8 +62,7 @@
               v-for="post of posts"
               :key="post.id"
               :post="post"
-              :id="post.id"
-              
+              :id="post.id"              
               :postUrl="'posts/' + post.id"
                @deletePost="deletePost(post.id)"
                @likePost="likePost(post.id)" 
@@ -81,10 +80,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
-
-import Posts from "../components/Posts.vue";
+import Posts from "@/components/Posts.vue";
 import { mdiPencilOutline } from "@mdi/js";
 export default {
   name: "Feed",

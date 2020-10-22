@@ -20,7 +20,7 @@
                 label="email"
                 v-model="email"
                 type="email"
-                :rules="[v => !!v || 'Email is required']"
+                :rules="emailRules"
                 required
                 class="input-group--focused"
                 autocomplete="off"
@@ -71,7 +71,19 @@ export default {
       errorMessage: null,
       message: null,
       isValid: true,
-      hasSignedUp: false
+      hasSignedUp: false,
+      emailRules: [
+        v => !!v || "L'email est obligatoire",
+        v =>
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          "L'email doit être valide"
+      ],
+      pseudoRules: [
+        v  => v.length <= 30 || "Entre 3 et 30 caractères, sans symboles"
+      ],
+      passwordRules: [
+        v  => v.length <= 30 || "Le mot de passe doit être de 8 lettres minimum, majuscules et minucules, pas de symboles"
+      ]
     };
   },
   methods: {
@@ -99,30 +111,5 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-.signup-container {
-  background-image: url("../assets/stars.svg");
-  background-repeat: repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-}
-.signup-box {
-  position: relative;
-  justify-content: center;
-}
-.signup-card {
-  border: 3px solid #676c75 !important;
-  &__submit {
-    margin: auto;
-    padding-bottom: 20px;
-  }
-}
-
-@media (max-width: 640px) {
-  .signup-box {
-    margin-left: 0 !important;
-  }
-}
+<style >
 </style>

@@ -3,12 +3,12 @@
     <v-layout v-if="$store.state.isLoggedIn" row class="account-box mb-5">
       <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card d-flex flex-column" elevation="4" xs6>
-          <div class="profil-top ">
-            <v-btn to="/posts" class="mx-2 return-btn" small>
+          <div class="profil-top pb-3 ">
+            <v-btn to="/posts" class="mx-2 return-btn" x-small>
               Retour
             </v-btn>
             <v-card-title flat dense dark class="profil-title mr-3"
-              >Ton profil
+              >Modifier le profil
             </v-card-title>
             <div class="delete-account">
               <v-tooltip v-if="!$store.state.user.admin === true" bottom>
@@ -16,14 +16,13 @@
                   <v-btn
                     @click="deleteAccount(user.id)"
                     class="mx-2"
-                    fab
-                    primary
+                    fab                    
                     x-small
                     v-bind="attrs"
                     v-on="on"
                   >
                     <v-icon small class=" rounded-circle ">
-                      {{ mdiTrashCanOutline }}
+                     $vuetify.icons.delete
                     </v-icon>
                   </v-btn>
                 </template>
@@ -31,90 +30,53 @@
               </v-tooltip>
             </div>
           </div>
-          <div class="profil-middle">
-            <v-card-title
+          <v-divider></v-divider>
+          <div class="profil-middle mt-3 ">
+            <v-card-title     
+            v-if="showPseudo"       
               dark
-              class=" profil-middle__left d-flex justify-space-between"
-            >
-              <span> Salut {{ user.pseudo }} ! </span>
-              <v-btn @click="togglePseudo" class="" text x-small :elevation="2">
+              class=" profil-middle__left d-flex justify-space-between">            
+              <span > Salut {{ user.pseudo }} ! </span>
+              <v-btn @click="togglePseudo"  x-small >
                 Modifier
-              </v-btn>
+              </v-btn>            
             </v-card-title>
-
+              <v-text-field
+                    v-if="updatePseudo"
+                    label="Nouveau pseudo"
+                    v-model="newPseudo"
+                    :rules="pseudoRules"
+                    required
+                    counter="30"
+                    hint="Le pseudo doit avoir 3 caractères min et 30 max"
+                    class="input-group--focused"
+                  ></v-text-field>
+          
+            <v-divider></v-divider>
             <v-card-title
-              class="profil-middle__right d-flex flex-column"
+            v-if="showPhoto"
+              class="profil-middle__right d-flex  flex-column"
             >
-              <v-avatar size="96px">
+              <v-avatar size="96px" class="mt-2">
                 <img
                 rounded
                   v-if="user.photo"
                   :src="user.photo"
                   alt="Photo de profil"
+                  
                 />
-                <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
+                <v-icon v-else>$vuetify.icons.account</v-icon>
               </v-avatar>
               <v-btn
                 @click="togglePhoto"
-                class="mx-2"
-                text
-                x-small
-                :elevation="2"
+                class="mx-2"               
+                x-small                
               >
-                modifier
+                Changer
               </v-btn>
             </v-card-title>
-          </div>
-
-          <v-card-text class=" bio">
-            <div class="d-flex flex-column justify-space-between" max-width="70%">
-              <strong>Ta bio: </strong>
-              <div>
-                <span v-if="!user.bio"> Parle nous de toi 😊</span>
-                <span class="bio-field">{{ user.bio }}</span>
-              </div>
-            </div>
-              <v-btn
-                @click="toggleBio"
-                class="mx-2 mt-2 "
-                text
-                x-small
-                :elevation="2"
-              >
-                Modifier
-              </v-btn>
-          </v-card-text>
-          
-          <div>
-            <v-card-text v-if="options" class="font-weight-light">
-              <v-form
-                v-model="isValid"
-                @submit.prevent="onSubmit"
-                enctype="multipart/form-data"
-                class="validate"
-              >
-                <v-card-text>
-                  <v-text-field
-                    v-if="updatePseudo"
-                    label="Nouveau pseudo"
-                    v-model="newPseudo"
-                    :rules="rules"
-                    counter="30"
-                    hint="Le pseudo doit avoir 3 caractères min et 30 max"
-                    class="input-group--focused"
-                  ></v-text-field>
-                  <v-textarea
-                    v-if="updateBio"
-                    label="Bio"
-                    v-model="newBio"
-                    text="text"
-                    solo
-                    name="input-7-4"
-                    class="bio"
-                  ></v-textarea>
-                </v-card-text>
-
-                <div v-if="updatePhoto" class="d-flex justify-center">
+           
+              <div v-if="updatePhoto" class="d-flex justify-center">
                   <label for="image" class="mr-3">Photo</label>
                   <input
                     @change="uploadImage"
@@ -125,6 +87,37 @@
                     name="image"
                   />
                 </div>
+          </div>
+   <v-divider></v-divider>
+          <v-card-text v-if="showBio" class=" bio">
+            <div class="d-flex flex-column justify-space-between" max-width="70%">
+              <strong>Ta bio: </strong>
+              <div>
+                <span v-if="!user.bio"> Parle nous de toi 😊</span>
+                <span class="bio-field">{{ user.bio }}</span>
+              </div>
+            </div>
+              <v-btn
+                @click="toggleBio"
+                class="mx-2 mt-2 mr-n6"                
+                x-small              
+              >
+                Modifier
+              </v-btn>
+          </v-card-text>
+           <v-textarea
+              v-if="updateBio"
+              label="Bio"
+              v-model="newBio"
+              :rules="pseudoRules"              
+              solo                    
+              name="input-7-4"
+              class="bio">
+            </v-textarea>
+        <div>
+            <v-card-text v-if="options" class="font-weight-light">     
+
+              
                 <br />
                 <div class="danger-alert" v-html="errorMessage" />
                 <div class="danger-alert" v-html="messageRetour" />
@@ -137,7 +130,7 @@
                     >Envoyer</v-btn
                   >
                 </div>
-              </v-form>
+             
             </v-card-text>
           </div>
         </v-card>
@@ -159,44 +152,30 @@
 </template>
 
 <script>
-//import axios from "axios";
-import { mdiAccountCircle } from "@mdi/js";
-import { mdiTrashCanOutline } from "@mdi/js";
+
 export default {
   name: "Account",
   data() {
-    return {
-      mdiAccountCircle,
-      mdiTrashCanOutline,
+    return {      
       updateBio: false,
       updatePseudo: false,
       updatePhoto: false,
-   
+      showPseudo: true,
+      showPhoto: true,
+      showBio: true,   
       isValid: true,
       options: false,
-      newPseudo: "",
-      newBio: "",
-      rules: [v  => v.length <= 30 || "Max 30 characters"],
+      newPseudo: this.$store.state.user.pseudo,
+      newBio: this.$store.state.user.bio ,
+      pseudoRules: [v  => v.length <= 30 || "Max 30 caractères",
+      v => !!v || "Le pseudo est obligatoire",],
+      bioRules: [v  => v.length <= 400 || "Max 400 caractères"],
       file: "",
       messageRetour: null,
       errorMessage: null
     };
   },
-  /*  async beforeMount() {
-    try {
-      const id = this.$store.state.user.id;
-      console.log(id);
-      const response = await axios.get(
-        `http://localhost:3000/api/users/accounts`,
-        { headers: { Authorization: this.$store.state.token } }
-      );
-      this.users = response.data;
-      console.log(this.users)     
-      
-    } catch (error) {
-      this.errorMessage = error.response.data.error;
-    }
-  },  */
+ 
   computed: {
     user() {
       return this.$store.getters.user;
@@ -210,19 +189,19 @@ export default {
       this.$router.push("/");
     },
     togglePseudo() {
-      this.updatePseudo = true;
-      
+      this.updatePseudo = true;   
+      this.showPseudo = false;   
       this.options = true;
     },
     togglePhoto() {
       this.updatePhoto = true;
-      this.showImage = false;
-      
+      this.showImage = false;      
       this.options = true;
+      this.showPhoto = false;
     },
     toggleBio() {
-      this.updateBio = true;
-    
+      this.updateBio = true;    
+      this.showBio = false;    
       this.options = true;
     },
     uploadImage() {
@@ -236,29 +215,14 @@ export default {
       formData.append("bio", this.newBio);
       formData.append("photo", this.file);
       this.$store.dispatch("updateAccount", formData);
-
       this.updateBio = false;
       this.updatePhoto = false;
-      this.updatePseudo = false;
-     
+      this.updatePseudo = false;     
       this.options = false;
-      /* try {
-        const response = await axios.put(
-          `http://localhost:3000/api/users/accounts/${id}`,
-          formData,
-          { headers: { Authorization: this.$store.state.token } }
-        );
-        this.messageRetour = response.data.messageRetour;
-        console.log(response);
-        this.$store.dispatch("setUser", response.data.user);
-        console.log(response.data.user)
-        this.updateBio = false;
-        this.updatePhoto = false;
-        this.updatePseudo = false;
-        
-      } catch (error) {
-        this.errorMessage = error.response.data.error;
-      } */
+      this.showPseudo = true;
+      this.showBio = true;
+      this.showPhoto = true;
+    
     },
     deleteAccount(id) {
       this.$store.dispatch("deleteAccount", id);
@@ -269,22 +233,6 @@ export default {
         this.getBackHome();
       }
     }
-
-    /*   async deleteAccount() {
-    try {
-     let id = this.user.id
-      const response = await axios.delete(
-        `http://localhost:3000/api/users/accounts/${id}`,
-        { headers: { Authorization: this.$store.state.token } }
-      );
-      console.log( response.data.messageRetour);      
-      this.$store.dispatch("setUser", null);
-        this.$store.dispatch("setToken", null);
-      
-    } catch (error) {
-      this.errorMessage = error.response.data.error;
-    }
-  }, */
   }
 };
 </script>
@@ -295,15 +243,7 @@ export default {
   margin-top: -30px;
   margin-right: 1em;
 }
-.signup-container {
-  background-image: url("../assets/stars.svg");
-  background-repeat: repeat;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  
-}
+
 .account-card {
   display: flex;
   justify-content: space-around;
@@ -316,17 +256,13 @@ export default {
   padding-top: 1em;
 }
 .profil-middle {
-  width: 80%;
+  width: 100%;
   margin: auto !important;
 }
-
 
 .profil-title {
   padding: 0;
 }
 
-.signup-card {
-  border: 3px solid #676c75 !important;
-  background-color: #ffebee !important;
-}
+
 </style>

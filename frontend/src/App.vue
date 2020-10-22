@@ -15,6 +15,7 @@
 <script>
 import PageHeader from "./components/Header.vue";
 import PageFooter from "./components/Footer.vue";
+import '../public/style.scss';
 export default {
   name: "app",
   components: {
@@ -35,15 +36,6 @@ export default {
 };
 </script>
 <style lang="scss">
-.v-btn {
-  color: primary !important;
-  background-color: accent !important;
- 
-  &:hover {
-   background-color:  #FFCDD2!important;
-  }
-  
-}
 
 
 </style>

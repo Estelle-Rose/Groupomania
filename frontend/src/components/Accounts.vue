@@ -15,7 +15,7 @@
           <v-card-title flat dense dark>
             <v-avatar size="42px" class="mt-3">
               <img v-if="user.photo" :src="user.photo" alt="Photo de profil" />
-              <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
+              <v-icon  size="42" v-else>$vuetify.icons.account</v-icon>
             </v-avatar>
             <div class="d-flex flex-column">
               <div>
@@ -31,8 +31,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                 class="delete-btn"
-                  @click="deleteAccount(user.id)"
-                 
+                  @click="deleteAccount(user.id)"                 
                   fab
                   primary
                   x-small
@@ -40,7 +39,7 @@
                   v-on="on"
                 >
                   <v-icon small class=" rounded-circle ">
-                    {{ mdiTrashCanOutline }}
+                    $vuetify.icons.delete
                   </v-icon>
                 </v-btn>
               </template>
@@ -56,15 +55,11 @@
 
 <script>
 
-import { mdiAccountCircle } from "@mdi/js";
-import { mdiTrashCanOutline } from "@mdi/js";
 export default {
   name: "Account",
 
   data() {
     return {
-      mdiAccountCircle,
-      mdiTrashCanOutline,
       messageRetour: null,
       errorMessage: null
     };
@@ -104,20 +99,6 @@ export default {
 .v-avatar {  
   margin-right: 1em;
 }
-strong {
-  font-size: 16px;
-}
-span {
-  font-size: 16px;
-}
-.signup-container {
-  background-image: url("../assets/stars.svg");
-  background-repeat: repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-}
 .account {
   width: 80%;
 }
@@ -132,11 +113,8 @@ top: 10px;
   flex-direction: row-reverse;
   margin-top: 3em;
   margin-bottom: 3em; 
- 
-
 }
-.users {
-  
+.users {  
   margin-right: 2em;
   margin-top: 2em;
   width: 370px;

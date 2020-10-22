@@ -4,17 +4,17 @@
       <div>
         <div class="d-flex justify-space-between pr-2 ">
           <v-card-title class="post-title">
-            <v-avatar size="52px">
+            <v-avatar v-if="$store.state.isLoggedIn"  @click="getProfile(user.id)" size="52px">
               <img
                 v-if="post.User.photo !==null"
                 :src="post.User.photo"
                 alt="Photo de profil"
               />
-              <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
+              <v-icon size="52px" v-else>$vuetify.icons.account</v-icon>
             </v-avatar>
             <div class="nom-date mt-3">
-              <span class="pseudo pl-3">{{ post.User.pseudo }}</span>
-              <span class="date">{{
+              <span class="pseudo text-left ml-5" >{{ post.User.pseudo }}</span>
+              <span class="date ml-5 text-left" >{{
                 post.createdAt | moment("calendar")
               }}</span>
             </div>
@@ -30,7 +30,7 @@
                   v-bind="attrs"
                   v-on="on"
                 >
-                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle">{{ mdiUpdate }}</v-icon>
+                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle">$vuetify.icons.update</v-icon>
                 </v-btn>
               </template>
               <span>Modifier</span>
@@ -47,7 +47,7 @@
                   v-on="on"
                 >
                   <v-icon @click="deletePost(post.id)" small class=" rounded-circle">
-                    {{ mdiTrashCanOutline }}
+                    $vuetify.icons.delete
                   </v-icon>
                 </v-btn>
               </template>
@@ -99,16 +99,14 @@
           </div>
           <div class="d-flex  align-end pr-3">
             <v-btn @click="show = !show" class="mx-2" x-small>
-              <v-icon class="material-icons">{{
-                mdiCommentTextOutline
-              }}</v-icon>
+              <v-icon >$vuetify.icons.comment</v-icon>
             </v-btn>
             <v-btn
               @click="likePost(post.id)"
               x-small
               class="isliked isliked-btn">
-              <v-icon class=" material-icons ">
-                {{ mdiEmoticonOutline }}
+              <v-icon >
+               $vuetify.icons.like
               </v-icon>
             </v-btn>
           </div>
@@ -150,13 +148,13 @@
                 :comment="comment"
               >
                 <v-list-item class="comment">
-                  <v-list-item-avatar class="comment_photo">
+                  <v-list-item-avatar  v-if="$store.state.isLoggedIn"  @click="getProfile(user.id)" class="comment_photo">
                     <img
                       v-if="comment.User.photo"
                       :src="comment.User.photo"
                       alt="Photo de profil"
                     />
-                    <v-icon v-else>{{ mdiAccountCircle }}</v-icon>
+                    <v-icon size="32px" v-else>$vuetify.icons.account</v-icon>
                   </v-list-item-avatar>
 
                   <v-list-item-content class="comment_body d-flex ">                  
@@ -183,7 +181,7 @@
                             <v-icon
                               @click="deleteComment(comment.id)"
                               class=" rounded-circle "
-                              >{{ mdiTrashCanOutline }}
+                              >$vuetify.icons.delete
                             </v-icon>
                           </v-btn>
                         </template>
@@ -203,16 +201,9 @@
 </template>
 
 <script>
-//import DeleteButton from "../components/DeleteButton";
-import { mdiEmoticonOutline } from "@mdi/js";
-import { mdiEmoticonSadOutline } from "@mdi/js";
-import { mdiTrashCanOutline } from "@mdi/js";
-import { mdiUpdate } from "@mdi/js";
-import { mdiAccountCircle } from "@mdi/js";
-import { mdiCloseThick } from "@mdi/js";
-import { mdiCommentTextOutline } from "@mdi/js";
+
 import PostService from '../services/PostService';
-//import Likes from "../components/Likes.vue";
+
 
 export default {
   name: "Posts",
@@ -230,21 +221,13 @@ export default {
   },
   data: function() {
     return {
-      show: false,
-      mdiEmoticonOutline,
-      mdiCommentTextOutline,
-      mdiEmoticonSadOutline,
-      mdiTrashCanOutline,
-      mdiCloseThick,
-      mdiAccountCircle,
-      mdiUpdate,
+      show: false,    
       width: 500,
       commentForm: false,
       user: false,
       showFeed: true,
       update: false,
-      isValid: true,
-     
+      isValid: true,     
       rules: {
         required: value => !!value || "Required."
       },
@@ -266,6 +249,10 @@ export default {
       } catch (error) {
         this.errorMessage = error.response.data.error;
       }
+    },
+    getProfile(id) {
+      this.$router.push(`/account/${id}`);
+      
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);
@@ -304,9 +291,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.date {
-  font-size: 14px;
-}
+
 .posts-row {
   justify-content: center;
 }

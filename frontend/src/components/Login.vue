@@ -52,6 +52,7 @@
 
 <script>
 // import axios from 'axios';
+
 import Auth from "../services/Auth.js";
 export default {
   name: "Login",
@@ -87,30 +88,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style  scoped lang="scss">
-.signup-container {
-  background-image: url("../assets/stars.svg");
-  background-repeat: repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-}
-.signup-box {
-  position: relative;
-  justify-content: center;
-}
-.signup-card {
-  border: 3px solid #676c75 !important;
-  &__submit {
-    margin: auto;
-    padding-bottom: 20px;
-  }
-}
+<style lang="scss">
 
-@media (max-width: 640px) {
-  .signup-box {
-    margin-left: 0 !important;
-  }
-}
 </style>
