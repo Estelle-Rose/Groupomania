@@ -39,7 +39,7 @@
           <div>
             <div class=" d-flex justify-space-around">
               <v-btn @click="toggleLink" small>
-                Lien
+                Gif
               </v-btn>
 
               <v-btn @click="toggleImage" small>
@@ -66,7 +66,7 @@
             <v-text-field
               name="input-1-7"
               filled
-              label="link"
+              label="lien du gif"
               v-model="link"
               auto-grow
             >

@@ -16,13 +16,13 @@
                   <v-btn
                     @click="deleteAccount(user.id)"
                     class="mx-2"
-                    fab                    
+                    fab
                     x-small
                     v-bind="attrs"
                     v-on="on"
                   >
                     <v-icon small class=" rounded-circle ">
-                     $vuetify.icons.delete
+                      $vuetify.icons.delete
                     </v-icon>
                   </v-btn>
                 </template>
@@ -32,105 +32,95 @@
           </div>
           <v-divider></v-divider>
           <div class="profil-middle mt-3 ">
-            <v-card-title     
-            v-if="showPseudo"       
+            <v-card-title
+              v-if="showPseudo"
               dark
-              class=" profil-middle__left d-flex justify-space-between">            
-              <span > Salut {{ user.pseudo }} ! </span>
-              <v-btn @click="togglePseudo"  x-small >
+              class=" profil-middle__left d-flex justify-space-between"
+            >
+              <span> Salut {{ user.pseudo }} ! </span>
+              <v-btn @click="togglePseudo" x-small>
                 Modifier
-              </v-btn>            
+              </v-btn>
             </v-card-title>
-              <v-text-field
-                    v-if="updatePseudo"
-                    label="Nouveau pseudo"
-                    v-model="newPseudo"
-                    :rules="pseudoRules"
-                    required
-                    counter="30"
-                    hint="Le pseudo doit avoir 3 caractères min et 30 max"
-                    class="input-group--focused"
-                  ></v-text-field>
-          
+            <v-text-field
+              v-if="updatePseudo"
+              label="Nouveau pseudo"
+              v-model="newPseudo"
+              :rules="pseudoRules"
+              required
+              counter="30"
+              hint="Le pseudo doit avoir 3 caractères min et 30 max"
+              class="input-group--focused"
+            ></v-text-field>
+
             <v-divider></v-divider>
             <v-card-title
-            v-if="showPhoto"
+              v-if="showPhoto"
               class="profil-middle__right d-flex  flex-column"
             >
               <v-avatar size="96px" class="mt-2">
                 <img
-                rounded
+                  rounded
                   v-if="user.photo"
                   :src="user.photo"
                   alt="Photo de profil"
-                  
                 />
                 <v-icon v-else>$vuetify.icons.account</v-icon>
               </v-avatar>
-              <v-btn
-                @click="togglePhoto"
-                class="mx-2"               
-                x-small                
-              >
+              <v-btn @click="togglePhoto" class="mx-2" x-small>
                 Changer
               </v-btn>
             </v-card-title>
-           
-              <div v-if="updatePhoto" class="d-flex justify-center">
-                  <label for="image" class="mr-3">Photo</label>
-                  <input
-                    @change="uploadImage"
-                    type="file"
-                    accept="image/png, image/jpeg,
+
+            <div v-if="updatePhoto" class="d-flex justify-center">
+              <label for="image" class="mr-3">Photo</label>
+              <input
+                @change="uploadImage"
+                type="file"
+                accept="image/png, image/jpeg,
                     image/bmp, image/gif"
-                    ref="file"
-                    name="image"
-                  />
-                </div>
+                ref="file"
+                name="image"
+              />
+            </div>
           </div>
-   <v-divider></v-divider>
+          <v-divider></v-divider>
           <v-card-text v-if="showBio" class=" bio">
-            <div class="d-flex flex-column justify-space-between" max-width="70%">
+            <div
+              class="d-flex flex-column justify-space-between"
+              max-width="70%"
+            >
               <strong>Ta bio: </strong>
               <div>
                 <span v-if="!user.bio"> Parle nous de toi 😊</span>
                 <span class="bio-field">{{ user.bio }}</span>
               </div>
             </div>
-              <v-btn
-                @click="toggleBio"
-                class="mx-2 mt-2 mr-n6"                
-                x-small              
-              >
-                Modifier
-              </v-btn>
+            <v-btn @click="toggleBio" class="mx-2 mt-2 mr-n6" x-small>
+              Modifier
+            </v-btn>
           </v-card-text>
-           <v-textarea
-              v-if="updateBio"
-              label="Bio"
-              v-model="newBio"
-              :rules="pseudoRules"              
-              solo                    
-              name="input-7-4"
-              class="bio">
-            </v-textarea>
-        <div>
-            <v-card-text v-if="options" class="font-weight-light">     
+          <v-textarea
+            v-if="updateBio"
+            label="Bio"
+            v-model="newBio"
+            :rules="bioRules"
+            solo
+            name="input-7-4"
+            class="bio"
+          >
+          </v-textarea>
+          <div>
+            <v-card-text v-if="options" class="font-weight-light">
+              <br />
+              <div class="danger-alert" v-html="errorMessage" />
+              <div class="danger-alert" v-html="messageRetour" />
 
-              
-                <br />
-                <div class="danger-alert" v-html="errorMessage" />
-                <div class="danger-alert" v-html="messageRetour" />
-               
-                <div class="d-flex justify-center">
-                  <v-btn
-                  
-                    @click="onSubmit(user.id)"
-                    :disabled="!isValid"
-                    >Envoyer</v-btn
-                  >
-                </div>
-             
+              <div class="d-flex justify-center">
+                <v-btn @click="onSubmit(user.id)" :disabled="!isValid"
+                  >Envoyer</v-btn
+                >
+              </div>
             </v-card-text>
           </div>
         </v-card>
@@ -152,34 +142,35 @@
 </template>
 
 <script>
-
 export default {
   name: "Account",
   data() {
-    return {      
+    return {
       updateBio: false,
       updatePseudo: false,
       updatePhoto: false,
       showPseudo: true,
       showPhoto: true,
-      showBio: true,   
+      showBio: true,
       isValid: true,
       options: false,
-      newPseudo: this.$store.state.user.pseudo,
-      newBio: this.$store.state.user.bio ,
-      pseudoRules: [v  => v.length <= 30 || "Max 30 caractères",
-      v => !!v || "Le pseudo est obligatoire",],
-      bioRules: [v  => v.length <= 400 || "Max 400 caractères"],
+      newPseudo:'',
+      newBio: '',
+      pseudoRules: [
+        (v) => v.length <= 30 || "Max 30 caractères",
+        (v) => !!v || "Le pseudo est obligatoire",
+      ],
+      bioRules: [(v) => v.length <= 400 || "Max 400 caractères"],
       file: "",
       messageRetour: null,
-      errorMessage: null
+      errorMessage: null,
     };
   },
- 
+
   computed: {
     user() {
       return this.$store.getters.user;
-    }
+    },
   },
   beforeMount() {
     this.$store.dispatch("getUserById");
@@ -189,19 +180,19 @@ export default {
       this.$router.push("/");
     },
     togglePseudo() {
-      this.updatePseudo = true;   
-      this.showPseudo = false;   
+      this.updatePseudo = true;
+      this.showPseudo = false;
       this.options = true;
     },
     togglePhoto() {
       this.updatePhoto = true;
-      this.showImage = false;      
+      this.showImage = false;
       this.options = true;
       this.showPhoto = false;
     },
     toggleBio() {
-      this.updateBio = true;    
-      this.showBio = false;    
+      this.updateBio = true;
+      this.showBio = false;
       this.options = true;
     },
     uploadImage() {
@@ -211,18 +202,22 @@ export default {
     },
     onSubmit() {
       const formData = new FormData();
+      
       formData.append("pseudo", this.newPseudo);
       formData.append("bio", this.newBio);
-      formData.append("image", this.file);
+      if (this.file !== null) {
+        formData.append("image", this.file);
+      }
       this.$store.dispatch("updateAccount", formData);
       this.updateBio = false;
       this.updatePhoto = false;
-      this.updatePseudo = false;     
+      this.updatePseudo = false;
       this.options = false;
-      this.showPseudo = true;
       this.showBio = true;
       this.showPhoto = true;
-    
+      this.showPseudo = true;
+      this.$store.dispatch("getUserById");
+     
     },
     deleteAccount(id) {
       this.$store.dispatch("deleteAccount", id);
@@ -232,8 +227,8 @@ export default {
         this.$store.dispatch("setToken", null);
         this.getBackHome();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -263,6 +258,4 @@ export default {
 .profil-title {
   padding: 0;
 }
-
-
 </style>

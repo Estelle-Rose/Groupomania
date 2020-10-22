@@ -94,7 +94,7 @@ exports.updateAccount = async (req, res) => { // modifier le profil
   try {    
     const userId = token.getUserId(req);  
     let newPhoto;         
-    let user = await db.User.findOne({ where: { id:id } }); // on trouve le user
+    let user = await db.User.findOne({ where: { id: id } }); // on trouve le user
       if (userId === user.id) {
       if (req.file && user.photo) {
         newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
@@ -108,8 +108,7 @@ exports.updateAccount = async (req, res) => { // modifier le profil
         }))
       } else if (req.file) {
         newPhoto = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-      }
-     
+      }     
       if(newPhoto ) {
         user.photo = newPhoto  ;        
       }
@@ -139,8 +138,7 @@ exports.deleteAccount = async (req, res) => {
     const user = await db.User.findOne({ where: { id: id } });
     if ((userId === id) || (checkAdmin.admin === true)) {     // on vérifie que le user trouvé est bien le user connecté ou l'admin du site  
       if (user.photo) {
-        const filename = user.photo.split('/upload')[1];
-        console.log(user.photo);
+        const filename = user.photo.split('/upload')[1];        
         fs.unlink(`upload/${filename}`, () => { // sil' y a une photo on la supprime et on supprime le compte
           db.User.destroy({ where: { id: id } });
           res.status(200).json({ messageRetour: 'utilisateur supprimé' })

@@ -23,7 +23,7 @@
         >Inscription</v-btn
       >
       <v-btn  v-if="$store.state.isLoggedIn"  small icon @click="getProfile(user.id)"  ><v-avatar >
-                 <img v-if="user.photo" alt="Avatar" :src="user.photo" width="30px" height="30px"/>  
+                 <img v-if="user.photo" alt="Avatar" :src="user.photo" class="photo-header"/>  
                 <v-icon  size="35px" v-else >$vuetify.icons.account</v-icon>
               </v-avatar></v-btn>
       <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon small  class="mr-4"><v-avatar >

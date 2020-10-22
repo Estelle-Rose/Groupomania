@@ -1,59 +1,63 @@
-p, span, strong  {
-    font-size: 16px!important;
+p,
+span,
+strong {
+  font-size: 16px !important;
 }
 .date {
-    font-size: 1.2em!important;
-  }
-  a {
-    
-    text-transform: none!important;
+  font-size: 0.7em !important;
+}
+a {
+  text-transform: none !important;
 }
 
 .v-btn {
-    color: #424242 !important;
-    background-color: white!important;
-    text-transform: none!important;
-    font-size: 12px!important;
-    font-weight: 400!important;
-    &:hover {
-     background-color: #FFCDD2   !important;
-    }
-   
-    
+  color: #424242 !important;
+  background-color: white !important;
+  text-transform: none !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  &:hover {
+    background-color: #ffcdd2 !important;
   }
-  //footer
-  .footer { 
-    display: flex; 
-    justify-content: space-between;
-    align-content: space-between;
-    padding: 0!important;
-    height: 50px!important;  
-    width: 100%;
-  }
-  //container 
+}
+
+//header
+.photo-header {
+  width: 32px!important;
+  height: 32px!important;
+}
+//footer
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between;
+  padding: 0 !important;
+  height: 50px !important;
+  width: 100%;
+}
+//container
 .signup-container {
-    background-image: url("../src/assets/stars.svg");
-    background-repeat: repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90vh;
+  background-image: url("../src/assets/stars.svg");
+  background-repeat: repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+.signup-box {
+  position: relative;
+  justify-content: center;
+}
+.signup-card {
+  border: 3px solid #676c75 !important;
+  &__submit {
+    margin: auto;
+    padding-bottom: 20px;
   }
+}
+
+@media (max-width: 640px) {
   .signup-box {
-    position: relative;
-    justify-content: center;
+    margin-left: 0 !important;
   }
-  .signup-card {
-    border: 3px solid #676c75 !important;
-    &__submit {
-      margin: auto;
-      padding-bottom: 20px;
-    }
-  }
-  
-  @media (max-width: 640px) {
-    .signup-box {
-      margin-left: 0 !important;
-    }
-  }
-  
+}

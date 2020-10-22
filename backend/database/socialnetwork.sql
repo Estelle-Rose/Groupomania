@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
--- Host: localhost    Database: groupomania
+-- Host: localhost    Database: socialnetwork
 -- ------------------------------------------------------
 -- Server version	8.0.22
 
@@ -35,7 +35,7 @@ CREATE TABLE `comments` (
   KEY `PostId` (`PostId`),
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `comments` (
 
 LOCK TABLES `comments` WRITE;
 /*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (1,'C\'est beau !','Caroline','2020-10-22 12:21:20','2020-10-22 12:21:20',4,1),(2,'C\'est où ?','Caroline','2020-10-22 12:21:28','2020-10-22 12:21:28',4,1),(3,'Moi aussi 😉','Estelle','2020-10-22 12:22:30','2020-10-22 12:22:30',2,3);
+INSERT INTO `comments` VALUES (1,'ok chef','Caroline','2020-10-22 17:10:00','2020-10-22 17:10:00',4,1),(2,'ouais ouais','Estelle','2020-10-22 17:10:26','2020-10-22 17:10:26',2,1),(3,'Alors ?','Marc','2020-10-22 17:10:51','2020-10-22 17:10:51',3,3),(4,'C\'est chouette 😉','Marc','2020-10-22 17:11:07','2020-10-22 17:11:07',3,2);
 /*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -66,7 +66,7 @@ CREATE TABLE `likes` (
   KEY `PostId` (`PostId`),
   CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -75,7 +75,7 @@ CREATE TABLE `likes` (
 
 LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
-INSERT INTO `likes` VALUES (1,'2020-10-22 12:20:00','2020-10-22 12:20:00',3,1),(2,'2020-10-22 12:21:10','2020-10-22 12:21:10',4,1),(3,'2020-10-22 12:22:02','2020-10-22 12:22:02',4,3),(4,'2020-10-22 12:22:13','2020-10-22 12:22:13',2,1),(5,'2020-10-22 12:22:16','2020-10-22 12:22:16',2,2),(6,'2020-10-22 12:22:20','2020-10-22 12:22:20',2,3);
+INSERT INTO `likes` VALUES (1,'2020-10-22 17:09:48','2020-10-22 17:09:48',4,3),(2,'2020-10-22 17:09:51','2020-10-22 17:09:51',4,2),(3,'2020-10-22 17:10:12','2020-10-22 17:10:12',2,4),(4,'2020-10-22 17:10:14','2020-10-22 17:10:14',2,3),(5,'2020-10-22 17:10:42','2020-10-22 17:10:42',3,3);
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +97,7 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`id`),
   KEY `UserId` (`UserId`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,'😍',NULL,'http://localhost:3000/upload/montagne.jpg1603369186055.jpg','2020-10-22 12:19:46','2020-10-22 12:19:46',3),(2,'apéro vendredi !',NULL,NULL,'2020-10-22 12:20:12','2020-10-22 12:20:12',3),(3,'J\'adore les sushis ! 😁','https://media0.giphy.com/media/X2QBmjCQAHtle/200.webp?cid=ecf05e470qc3o06yl0zttt38sn8tnlsf0ca5hay2hpyyh8v4&rid=200.webp',NULL,'2020-10-22 12:21:00','2020-10-22 12:21:00',4);
+INSERT INTO `posts` VALUES (1,'Bienvenue à tous sur le social network de Groupomania, bienveillance et respect, sinon, je supprime ! ',NULL,NULL,'2020-10-22 17:07:05','2020-10-22 17:07:05',1),(2,'Vivement les vacances ! 😁',NULL,'http://localhost:3000/upload/playa.jpg1603386460608.jpg','2020-10-22 17:07:40','2020-10-22 17:07:40',2),(3,'Apéro vendredi ! vous êtes chaud ?',NULL,NULL,'2020-10-22 17:08:22','2020-10-22 17:08:22',3),(4,'J\'adore le sushis ! 😜','https://media1.giphy.com/media/Ru6AkphoLHiXm/200.webp?cid=ecf05e473o398ho5u6s88x0390jehx7wxeh30tum7g92mt34&rid=200.webp',NULL,'2020-10-22 17:09:22','2020-10-22 17:09:22',4);
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,7 +139,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin@mail.com','$2b$10$sz.zJTYRWbqyBaOngw1oZO4b98P5HR4hAAJOGgWR6lc0mpN1my2Su',NULL,NULL,1,'2020-10-22 12:04:17','2020-10-22 12:04:17'),(2,'Estelle','estelle@mail.com','$2b$10$PZvJszQh1c5Vn/qio3QXR.flrnBKLaktXHs5ONtIW4u1rE.HtR5HC','http://localhost:3000/upload/profil_femme3.png1603369088878.png','Je suis la dev du projet',0,'2020-10-22 12:17:45','2020-10-22 12:18:08'),(3,'Marco','marc@mail.com','$2b$10$Ffh5yr9WWPTRAnSfR1nMk.I8C0f16sJaqrea2V.imyTd4kDOYOOby','http://localhost:3000/upload/profil_homme5.png1603369112756.png','undefined',0,'2020-10-22 12:18:23','2020-10-22 12:18:32'),(4,'Caroline','caroline@mail.com','$2b$10$l6LFzEwlMbiilcGl8kW8IeP6dOGgLq6Gbme.Jbh7GssZ111MbPUky','http://localhost:3000/upload/profil_femme4.png1603369304163.png','undefined',0,'2020-10-22 12:20:31','2020-10-22 12:21:44');
+INSERT INTO `users` VALUES (1,'admin','admin@mail.com','$2b$10$JH00ZoB3wfDmiiDgu4ad4.ZORbg2ZtiidTeYTjAVkaBpI.pAwJ9wu','http://localhost:3000/upload/profil_admin.png1603386372511.png',NULL,1,'2020-10-22 17:05:30','2020-10-22 17:06:12'),(2,'Estelle','estelle@mail.com','$2b$10$KNECiSSE5GKoCWSLVE54Mu0Rd6MAlsOLiYnfx/t6dOOkvxgCEkJBm','http://localhost:3000/upload/profil_femme3.png1603386472021.png',NULL,0,'2020-10-22 17:07:18','2020-10-22 17:07:52'),(3,'Marc','marc@mail.com','$2b$10$KO87drYQ0gasc1kG83/Nwuwtjl08ZjswzUhdMZX.VTQ7m2Ks7UDl.','http://localhost:3000/upload/profil_homme3.png1603386512027.png',NULL,0,'2020-10-22 17:08:05','2020-10-22 17:08:32'),(4,'Caroline','caroline4@mail.com','$2b$10$rQX0XJXQGFzWSNz6yd0te.GADAKeuh/cWQ5oW3zeXnLkDDuFoyQN.','http://localhost:3000/upload/profil_femme_5.png1603386573656.png',NULL,0,'2020-10-22 17:08:45','2020-10-22 17:09:33');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -152,4 +152,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-22 14:24:17
+-- Dump completed on 2020-10-22 19:11:38
