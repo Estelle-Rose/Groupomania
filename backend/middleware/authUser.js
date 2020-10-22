@@ -7,7 +7,7 @@ exports.signup = (req, res, next) => {
     .is()
     .min(8) // Minimum length 8
     .is()
-    .max(50) // Maximum length 50
+    .max(20) // Maximum length 20
     .has()
     .uppercase() // Must have uppercase letters
     .has()
@@ -34,7 +34,7 @@ exports.signup = (req, res, next) => {
   }
 };
 exports.checkPseudo = (req, res, next) => {
-  const regex = /^[a-zA-Z0-9_]{2,30}$/; // Lettres, espaces et doit être entre 4 et 30 caractères
+  const regex = /^[a-zA-Z0-9_]{3,30}$/; // Lettres, espaces et doit être entre 4 et 30 caractères
   const pseudo = req.body.pseudo;
   if (regex.test(pseudo) === true) {
     next();
