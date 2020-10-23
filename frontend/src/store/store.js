@@ -169,13 +169,13 @@ export default new Vuex.Store({
           commit('UPDATE_ACCOUNT', id, user)
     
         })
-        .then(() => {
+        /* .then(() => {
           Auth.getUserById(id)
             .then(response => {
               const user = response.data;              
               commit('GET_USER_BY_ID', user)
             })
-        })
+        }) */
     },
    
     getUsers({ commit }) {

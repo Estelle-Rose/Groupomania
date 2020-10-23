@@ -207,11 +207,9 @@ exports.updatePost = async (req, res) => {
 
 exports.likePost = async (req, res, next) => {
   try {
-    const userId = token.getUserId(req)      
-
+    const userId = token.getUserId(req)   
     const postId = req.params.id; 
-    const user = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });
-    
+    const user = await db.Like.findOne({ where: { UserId: userId, PostId: postId } });    
     if (user) {        
       await db.Like.destroy({ where: { UserId: userId, PostId: postId } }, { truncate: true, restartIdentity: true });
       console.log('le like est annulé')
@@ -232,14 +230,10 @@ exports.likePost = async (req, res, next) => {
 }
 exports.addComment = async (req, res) => {
   try {
-    const userId = token.getUserId(req)
-    console.log(userId)
-    const comment = req.body.commentMessage;
-    console.log(comment);
-    const pseudo = req.body.commentPseudo;
-    console.log(pseudo);
-    const postId = parseInt(req.params.id);
-    console.log(postId);
+    const userId = token.getUserId(req)    
+    const comment = req.body.commentMessage;    
+    const pseudo = req.body.commentPseudo;    
+    const postId = parseInt(req.params.id);   
     const newComment = await db.Comment.create({
       message: comment,
       pseudo: pseudo,
