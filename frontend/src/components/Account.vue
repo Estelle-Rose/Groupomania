@@ -80,7 +80,9 @@
                 accept="image/png, image/jpeg,
                     image/bmp, image/gif"
                 ref="file"
+               
                 name="image"
+                 class="input-group--focused"
               />
             </div>
           </div>
@@ -107,7 +109,7 @@
             :rules="bioRules"
             solo
             name="input-7-4"
-            class="bio"
+             class="input-group--focused bio"
           >
           </v-textarea>
           <div>

@@ -17,16 +17,16 @@
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>                
-       <v-btn v-if="$store.state.isLoggedIn"  x-small link to="/posts">Fil d'actu</v-btn>   
-      <v-btn v-if="!$store.state.isLoggedIn" x-small to="/login">Connexion</v-btn>
-      <v-btn v-if="!$store.state.isLoggedIn" x-small to="/signup"
+       <v-btn v-if="$store.state.isLoggedIn"  x-small link class="input-group--focused" to="/posts">Fil d'actu</v-btn>   
+      <v-btn v-if="!$store.state.isLoggedIn" x-small  class="input-group--focused" to="/login">Connexion</v-btn>
+      <v-btn v-if="!$store.state.isLoggedIn" x-small class="input-group--focused"  to="/signup"
         >Inscription</v-btn
       >
-      <v-btn  v-if="$store.state.isLoggedIn"  small icon @click="getProfile(user.id)"  ><v-avatar >
+      <v-btn  v-if="$store.state.isLoggedIn"  small icon @click="getProfile(user.id)"  class="input-group--focused" ><v-avatar >
                  <img v-if="user.photo" alt="Avatar" :src="user.photo" class="photo-header"/>  
                 <v-icon  size="35px" v-else >$vuetify.icons.account</v-icon>
               </v-avatar></v-btn>
-      <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon small  class="mr-4"><v-avatar >
+      <v-btn v-if="$store.state.isLoggedIn" to="/accounts" icon small  class="input-group--focused mr-4"><v-avatar >
                 
                 <v-icon size="35px" >$vuetify.icons.friends</v-icon>
               </v-avatar></v-btn>

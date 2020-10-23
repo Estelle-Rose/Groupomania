@@ -127,7 +127,7 @@
                     label="ton commentaire"
                     v-model="data.commentMessage"
                     auto-grow
-                    class="comment-form__message"
+                    class="comment-form__message input-group--focused"
                   >
                   </v-text-field>
                   <v-btn
@@ -159,8 +159,7 @@
 
                   <v-list-item-content class="comment_body d-flex ">                  
                           <strong
-                            v-html="comment.pseudo"
-                            
+                            v-html="comment.pseudo"                            
                             class="pr-5 text-left  pseudo comment__pseudo"
                           ></strong>                                                    
                             <span

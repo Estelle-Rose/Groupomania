@@ -34,16 +34,12 @@
                 class="input-group--focused"
               ></v-text-field>
 
-              <br />
-              <input />
-              <br />
-              <input />
-              <br />
-              <div class="danger-alert" v-html="errorMessage" />
-              <div class="danger-alert" v-html="message"></div>
-              <br />
+             
             </v-form>
           </v-card-text>
+              <div class="danger-alert" v-html="errorMessage" />
+              <div class="danger-alert" v-html="message"></div>
+              
           <v-card-actions class=" d-flex justify-center">
             <v-btn
               elevation="2"

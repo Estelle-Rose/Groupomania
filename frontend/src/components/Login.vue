@@ -25,16 +25,12 @@
               >
               </v-text-field>
 
-              <br />
-              <input />
-              <br />
-              <input />
-              <br />
-              <div class="danger-alert" v-html="errorMessage" />
-              <div class="danger-alert" v-html="message" />
-              <br />
+             
             </v-form>
           </v-card-text>
+            
+              <div class="danger-alert" v-html="errorMessage" />
+              <div class="danger-alert" v-html="message" />
           <v-card-actions>
             <v-btn
               class="dark signup-card__submit"

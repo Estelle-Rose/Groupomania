@@ -20,11 +20,12 @@
         <div class="bloc-statut py-5 px-5 mr-5">
           <v-textarea
             name="input-1-3"
-            filled
+           
             label="Message"
             v-model="message"
             :rules="[rules.required]"
             auto-grow
+             class="input-group--focused"
           ></v-textarea>
         </div>
         <v-card-text
@@ -58,7 +59,8 @@
                 accept="image/png, image/jpeg,
                 image/bmp, image/gif"
                 ref="file"
-                name="image"
+                name=" charger une image"
+                 class="input-group--focused"
               />
             </div>
           </div>
@@ -69,6 +71,7 @@
               label="lien du gif"
               v-model="link"
               auto-grow
+               class="input-group--focused"
             >
             </v-text-field>
           </div>
