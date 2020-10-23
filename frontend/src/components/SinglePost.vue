@@ -4,7 +4,6 @@
       <v-col lg="4" md="6" sm="7" class="mx-auto">
         <v-card class="account-card d-flex flex-column" elevation="4" xs6>
           <v-card-title class="post-title-box">
-           
             <div class="update-title mx-auto">
               <span class="title ml-n7 post-title">Modifier le post</span>
               <v-btn @click="getBackToFeed" class="mx-2 return-btn" small>
@@ -19,10 +18,7 @@
                 <span>Ton message: </span>
                 <span>{{ post.message }}</span>
               </div>
-              <v-btn
-                @click="toggleMessage"               
-                x-small
-              >
+              <v-btn @click="toggleMessage" x-small>
                 modifier
               </v-btn>
             </div>
@@ -54,14 +50,14 @@
               ></v-text-field>
             </div>
             <v-img
-              v-if="showImage"
+              v-if="post.imageUrl"
               :src="post.imageUrl"
               :max-height="250"
               :max-width="150"
               class="mx-auto mb-5"
             ></v-img>
             <v-img
-              v-if="showLink"
+              v-if="post.link"
               :src="post.link"
               :max-height="250"
               :max-width="150"
@@ -80,32 +76,29 @@
             <v-divider></v-divider>
             <v-card-text v-if="options" class="d-flex justify-center my-3">
               <div class="bloc-option">
-                
                 <v-btn
+                  v-if="post.link"
                   @click="toggleLink"
                   class="mx-2 mt-2 "
                   x-small
                   :elevation="2"
                 >
-                  Gif
+                  Changer le Gif
                 </v-btn>
                 <v-btn
+                  v-if="post.imageUrl"
                   @click="toggleImage"
                   class="mx-2 mt-2 "
                   x-small
                   :elevation="2"
                 >
-                  image
+                  Changer l'image
                 </v-btn>
               </div>
             </v-card-text>
             <div class=" d-flex justify-center pt-5 ">
               <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
             </div>
-
-            <br />
-            <div class="danger-alert" v-html="errorMessage" />
-            <div class="danger-alert" v-html="messageRetour" />
           </v-form>
         </v-card>
       </v-col>
@@ -115,10 +108,9 @@
 <script>
 export default {
   name: "SinglePost",
-
   data() {
     return {
-      options: true,  
+      options: true,
       isValid: true,
       withLink: false,
       withImage: false,
@@ -126,13 +118,11 @@ export default {
       showLink: true,
       showImage: true,
       showMessage: true,
-      message: this.$store.state.post.message,
+      message:'',
       link: null,
       file: "",
-      messageRetour: null,
-      errorMessage: null,
-      linkInput: false,
-      textInput: false,
+      /*  messageRetour: null,
+      errorMessage: null, */
     };
   },
   computed: {
@@ -144,11 +134,11 @@ export default {
     let id = this.$route.params.id;
     this.$store.dispatch("getPostById", id);
   },
-
   methods: {
     toggleMessage() {
       this.withMessage = true;
       this.showMessage = false;
+      this.options = false;
     },
     toggleLink() {
       this.withLink = true;
@@ -164,7 +154,11 @@ export default {
       const file = this.$refs.file.files[0];
       this.file = file;
     },
+    getBackToFeed() {
+      this.$router.push("/posts");
+    },
     onSubmit() {
+      let id = this.$route.params.id;
       const formData = new FormData();
       if (this.message !== null) {
         formData.append("message", this.message);
@@ -176,16 +170,22 @@ export default {
       }
       formData.append("image", this.file);
       this.$store.dispatch("updatePost", formData);
-      this.messageRetour = this.post.messageRetour;
-      this.errorMessage = this.post.error;
-      let router = this.$router;
-      setTimeout(function() {
-        router.push("/posts");
-      }, 1000);
+      this.showImage = true;
+      this.options = false;
+      this.showLink = true;
+      this.showMessage = true;
+      this.withImage = false;
+      this.withLink = false;
+      this.withMessage = false;
+      /* this.messageRetour = this.post.messageRetour;
+      this.errorMessage = this.post.error; */
+      this.$store.dispatch("getPostById", id);
+      this.$store.dispatch("getPosts");
+
+        this.getBackToFeed();
+      
     },
-    getBackToFeed() {
-      this.$router.push("/posts");
-    },
+
     newLink() {
       this.linkInput = true;
     },
@@ -207,7 +207,6 @@ export default {
   right: 0;
   top: 10px;
 }
-
 .link-box {
   display: flex;
   align-content: center;

@@ -41,7 +41,7 @@ exports.checkPseudo = (req, res, next) => { // on vérifie le pseudo
   } else {
     return res.status(400).send({
       error:
-        "Votre pseudo doit être de 2 caractères minimum et 30 maximum, sont acceptées les lettres, chiffres et underscore (_)  ",
+        "Votre pseudo doit être de 3 caractères minimum et 30 maximum, sont acceptées les lettres, chiffres et underscore (_)  ",
     });
   }
 };

@@ -101,7 +101,9 @@ export default new Vuex.Store({
     },
     UPDATE_POST(state, id, post) {
       Object.assign(state.posts.find(element => element.id === id), post);
-      state.message = 'post modifié'
+      state.message = 'post modifié',
+      state.post = post;
+      
     },
 
     DELETE_POST(state, id) {
@@ -225,7 +227,6 @@ export default new Vuex.Store({
         .then(response => {
           const post = response.data;
           console.log(post)
-
           commit('GET_POST_BY_ID', post)
         })
     },
@@ -247,8 +248,14 @@ export default new Vuex.Store({
         .then(response => {
           const post = response.data;          
           commit('UPDATE_POST', id, post);
-
-        })
+        })/*  .then(() => {
+          PostService.getPostById(id)     
+                .then(response => {
+                  const post = response.data;
+                  commit('GET_POST_BY_ID', post)
+                })
+            })  */
+        
     },     
     deletePost({ commit }, id) {
       PostService.deletePost(id)

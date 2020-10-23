@@ -100,7 +100,7 @@ exports.updateAccount = async (req, res) => {
           req.file.filename
         }`;
         const filename = user.photo.split("/upload")[1];
-        console.log(user.photo);
+      
         fs.unlink(`upload/${filename}`, (err) => {
           // s'il y avait déjà une photo on la supprime
           if (err) console.log(err);

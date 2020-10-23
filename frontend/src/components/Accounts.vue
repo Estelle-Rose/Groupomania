@@ -102,10 +102,10 @@ export default {
 
     deleteAccount(id) {
       console.log(id);
-      if (this.$store.state.user.email === "admin@mail.com") {
+     /*  if (this.$store.state.user.email === "admin@mail.com") {
         return (this.messageRetour =
           "le compte admin ne peut pas être supprimé");
-      }
+      } */
 
       this.$store.dispatch("deleteAccount", id);
       if (
