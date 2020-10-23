@@ -73,6 +73,9 @@ export default new Vuex.Store({
       Object.assign(state.users.find(element => element.id === id), user); 
       state.message = 'compte modifié'
    },
+   ADMIN_ACCOUNT(state) {
+    state.message = 'le compte admin ne peut pas être supprimé'
+   },
 
    DELETE_ACCOUNT(state, id) {
      state.users = [
@@ -149,12 +152,15 @@ export default new Vuex.Store({
       
       Auth.deleteAccount(id)
         .then(() => {
+         
           if (id === this.state.user.id) {
             commit('DELETE_ACCOUNT', id),
               commit('LOG_OUT')
-          } else if(this.state.user.admin === true)
-          commit('DELETE_ACCOUNT', id)
+          } else if(this.state.user.admin === true) {
+            commit('DELETE_ACCOUNT', id)
+          } 
         })
+        
     },
     updateAccount({ commit }, data) {
       let id = this.state.user.id

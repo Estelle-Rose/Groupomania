@@ -161,7 +161,7 @@
                           <strong
                             v-html="comment.pseudo"
                             
-                            class="pr-5 text-left comment__pseudo"
+                            class="pr-5 text-left  pseudo comment__pseudo"
                           ></strong>                                                    
                             <span
                               v-html="comment.message"

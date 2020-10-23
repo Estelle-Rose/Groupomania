@@ -37,7 +37,7 @@
               dark
               class=" profil-middle__left d-flex justify-space-between"
             >
-              <span> Salut {{ user.pseudo }} ! </span>
+              <span class="pseudo"> Salut {{ user.pseudo }} ! </span>
               <v-btn @click="togglePseudo" x-small>
                 Modifier
               </v-btn>
@@ -132,9 +132,6 @@
           <span class="title font-weight-light post-title pb-5 "
             >Votre compte a été supprimé</span
           >
-          <v-btn @click="getBackHome" class="mx-2 return-btn" small>
-            Retour à l'accueil
-          </v-btn>
         </div>
       </v-card-title>
     </v-card>
@@ -154,8 +151,8 @@ export default {
       showBio: true,
       isValid: true,
       options: false,
-      newPseudo:'',
-      newBio: '',
+      newPseudo: "",
+      newBio: "",
       pseudoRules: [
         (v) => v.length <= 30 || "Max 30 caractères",
         (v) => !!v || "Le pseudo est obligatoire",
@@ -202,7 +199,7 @@ export default {
     },
     onSubmit() {
       const formData = new FormData();
-      
+
       formData.append("pseudo", this.newPseudo);
       formData.append("bio", this.newBio);
       if (this.file !== null) {
@@ -217,7 +214,6 @@ export default {
       this.showPhoto = true;
       this.showPseudo = true;
       this.$store.dispatch("getUserById");
-     
     },
     deleteAccount(id) {
       this.$store.dispatch("deleteAccount", id);
@@ -225,7 +221,9 @@ export default {
       if (id == this.$store.state.user.id) {
         this.$store.dispatch("setUser", null);
         this.$store.dispatch("setToken", null);
-        this.getBackHome();
+        setTimeout(() => {
+          this.getBackHome();
+        }, 2000);
       }
     },
   },
