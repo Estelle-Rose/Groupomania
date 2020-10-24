@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt"); // chiffrement du password
 const db = require("../models"); // mdèles de la bdd
 const token = require("../middleware/token"); // module qui génère le token
 const fs = require("fs");
-const { mainModule } = require("process");
+
 
 exports.signup = async (req, res) => {
   try {

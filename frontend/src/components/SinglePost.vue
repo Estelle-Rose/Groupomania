@@ -49,6 +49,7 @@
                 class="mr-5 ml-3"
               ></v-text-field>
             </div>
+            <div v-if="showImage">
             <v-img
               v-if="post.imageUrl"
               :src="post.imageUrl"
@@ -56,6 +57,9 @@
               :max-width="150"
               class="mx-auto mb-5"
             ></v-img>
+
+            </div>
+             <div v-if="showLink">
             <v-img
               v-if="post.link"
               :src="post.link"
@@ -63,6 +67,7 @@
               :max-width="150"
               class="mx-auto mb-5"
             ></v-img>
+             </div>
             <div v-if="withImage" class="pb-5 pt-5 d-flex justify-center">
               <label for="image" class="pr-3">Image</label>
               <input
@@ -97,7 +102,7 @@
               </div>
             </v-card-text>
             <div class=" d-flex justify-center pt-5 ">
-              <v-btn @click="onSubmit" :disabled="!isValid">Poster</v-btn>
+              <v-btn @click="onSubmit" :disabled="!isValid" class="mb-3">Poster</v-btn>
             </div>
           </v-form>
         </v-card>
@@ -138,17 +143,17 @@ export default {
     toggleMessage() {
       this.withMessage = true;
       this.showMessage = false;
-      this.options = false;
+      
     },
     toggleLink() {
       this.withLink = true;
       this.showLink = false;
-      this.options = false;
+      
     },
     toggleImage() {
       this.withImage = true;
       this.showImage = false;
-      this.options = false;
+    
     },
     uploadImage() {
       const file = this.$refs.file.files[0];

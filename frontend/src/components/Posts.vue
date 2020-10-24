@@ -26,7 +26,7 @@
             </div>
           </v-card-title>
           <div class="post-options">
-            <v-tooltip v-if="$store.state.user.id === post.UserId" bottom>
+            <v-tooltip v-if="$store.state.user.id == post.User.id" bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   class="mx-2"
@@ -46,7 +46,7 @@
             </v-tooltip>
             <v-tooltip
               v-if="
-                $store.state.user.id === post.UserId ||
+                $store.state.user.id === post.User.id ||
                   $store.state.user.admin === true
               "
               bottom
