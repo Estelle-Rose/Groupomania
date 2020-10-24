@@ -167,9 +167,8 @@ export default {
       const formData = new FormData();
       if (this.message !== null) {
         formData.append("message", this.message);
-      } else {
-        formData.append("message", this.post.message);
-      }
+      } 
+    
       if (this.link !== null) {
         formData.append("link", this.link);
       }

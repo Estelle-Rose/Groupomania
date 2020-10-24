@@ -183,23 +183,26 @@ exports.updatePost = async (req, res) => {
   try {
     let newImageUrl;
     const userId = token.getUserId(req);
-    if (req.file) {
-      newImageUrl = `${req.protocol}://${req.get("host")}/upload/${
-        req.file.filename
-      }`;
-    }
+
     let post = await db.Post.findOne({ where: { id: req.params.id } });
     if (userId === post.UserId) {
-      if (post.imageUrl) {
-        const filename = post.imageUrl.split("/upload")[1];
-        fs.unlink(`upload/${filename}`, (err) => {
-          if (err) console.log(err);
-          else {
-            console.log(`Deleted file: upload/${filename}`);
-          }
-        });
+      if (req.file) {
+        newImageUrl = `${req.protocol}://${req.get("host")}/upload/${
+          req.file.filename
+        }`;
+        if (post.imageUrl) {
+          const filename = post.imageUrl.split("/upload")[1];
+          fs.unlink(`upload/${filename}`, (err) => {
+            if (err) console.log(err);
+            else {
+              console.log(`Deleted file: upload/${filename}`);
+            }
+          });
+        }
       }
-      post.message = req.body.message;
+      if (req.body.message) {
+        post.message = req.body.message;
+      }
       post.link = req.body.link;
       post.imageUrl = newImageUrl;
       const newPost = await post.save({
