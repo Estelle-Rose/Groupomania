@@ -5,6 +5,7 @@ const fs = require("fs"); //
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await db.Post.findAll({
+      attributes: ["id", "message", "imageUrl", "link", "createdAt"],
       order: [["createdAt", "DESC"]],
       include: [
         {
@@ -13,7 +14,7 @@ exports.getAllPosts = async (req, res) => {
         },
         {
           model: db.Like,
-          attributes: ["PostId", "UserId"],
+          attributes: ["UserId"],
         },
         {
           model: db.Comment,
@@ -180,44 +181,39 @@ exports.deletePost = async (req, res) => {
 
 exports.updatePost = async (req, res) => {
   try {
-    let link;
     let newImageUrl;
-    const userId = token.getUserId(req);    
-    console.log(userId)
+    const userId = token.getUserId(req);
     if (req.file) {
-      newImageUrl = `${req.protocol}://${req.get('host')}/upload/${req.file.filename}`;
-      link = null;
-    } else {
-      imageUrl = null;
+      newImageUrl = `${req.protocol}://${req.get("host")}/upload/${
+        req.file.filename
+      }`;
     }
     let post = await db.Post.findOne({ where: { id: req.params.id } });
-    console.log(post.UserId)
     if (userId === post.UserId) {
       if (post.imageUrl) {
-        const filename = post.imageUrl.split('/upload')[1];
-        console.log(post.imageUrl);
-        fs.unlink(`upload/${filename}`, (err => {
+        const filename = post.imageUrl.split("/upload")[1];
+        fs.unlink(`upload/${filename}`, (err) => {
           if (err) console.log(err);
           else {
             console.log(`Deleted file: upload/${filename}`);
           }
-        }))
+        });
       }
-      post.message = req.body.message ;
-      post.link = req.body.link || link;
+      post.message = req.body.message;
+      post.link = req.body.link;
       post.imageUrl = newImageUrl;
-      const newPost = await post.save({ fields: ['message', 'link', 'imageUrl'] });
-      console.log(newPost)
-      res.status(200).json({ newPost: newPost, messageRetour: 'post modifié' })
-    } else {
-      res.status(400).json({ message: 'Vous n\'avez pas les droits requis' })
-    }
-  }
-  catch (error) {
-    return res.status(500).send({ error: 'Erreur serveur' });
-  }
+      const newPost = await post.save({
+        fields: ["message", "link", "imageUrl"],
+      });
 
-}
+      res.status(200).json({ newPost: newPost, messageRetour: "post modifié" });
+    } else {
+      res.status(400).json({ message: "Vous n'avez pas les droits requis" });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
+};
 
 exports.likePost = async (req, res, next) => {
   try {

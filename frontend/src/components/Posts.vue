@@ -1,52 +1,71 @@
-<template >
+<template>
   <div>
     <v-card class="posts-card mx-auto mt-4 mb-4 pb-5" round elevation="2">
       <div>
         <div class="d-flex justify-space-between pr-2 ">
           <v-card-title class="post-title">
-            <v-avatar v-if="$store.state.isLoggedIn"  @click="getProfile(user.id)" size="52px">
+            <v-avatar
+              v-if="$store.state.isLoggedIn"
+              @click="getProfile(user.id)"
+              size="52px"
+            >
               <img
-                v-if="post.User.photo !==null"
+                v-if="post.User.photo !== null"
                 :src="post.User.photo"
                 alt="Photo de profil"
               />
-              <v-icon size="52px" v-else>$vuetify.icons.account</v-icon>
+              <v-icon aria-label="icone profil" size="52px" v-else
+                >$vuetify.icons.account</v-icon
+              >
             </v-avatar>
             <div class="nom-date mt-3">
-              <span class="pseudo text-left ml-5" >{{ post.User.pseudo }}</span>
-              <span class="date ml-5 text-left" >{{
+              <span class="pseudo text-left ml-5">{{ post.User.pseudo }}</span>
+              <span class="date ml-5 text-left">{{
                 post.createdAt | moment("calendar")
               }}</span>
             </div>
           </v-card-title>
           <div class="post-options">
-            <v-tooltip  v-if="$store.state.user.id === post.UserId " bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  class="mx-2"
-                  fab
-                  primary
-                  x-small                  
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle">$vuetify.icons.update</v-icon>
-                </v-btn>
-              </template>
-              <span>Modifier</span>
-            </v-tooltip>
-            <v-tooltip v-if="($store.state.user.id === post.UserId || $store.state.user.admin === true) " bottom>
+            <v-tooltip v-if="$store.state.user.id === post.UserId" bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   class="mx-2"
                   fab
                   primary
                   x-small
-                 
+                  v-bind="attrs"
+                  v-on="on"
+                  aria-label="modifier"
+                >
+                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle"
+                    >$vuetify.icons.update</v-icon
+                  >
+                </v-btn>
+              </template>
+              <span>Modifier</span>
+            </v-tooltip>
+            <v-tooltip
+              v-if="
+                $store.state.user.id === post.UserId ||
+                  $store.state.user.admin === true
+              "
+              bottom
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mx-2"
+                  fab
+                  primary
+                  x-small
+                  aria-label="supprimer"
                   v-bind="attrs"
                   v-on="on"
                 >
-                  <v-icon @click="deletePost(post.id)" small class=" rounded-circle">
+                  <v-icon
+                    @click="deletePost(post.id)"
+                    small
+                    class=" rounded-circle"
+                  >
                     $vuetify.icons.delete
                   </v-icon>
                 </v-btn>
@@ -66,6 +85,7 @@
           <v-img
             v-if="post.link"
             :src="post.link"
+            alt="lien posté par l'utilisateur"
             :max-height="300"
             :max-width="400"
             class="mx-auto pb-5"
@@ -74,6 +94,7 @@
           <v-img
             v-if="post.imageUrl"
             :src="post.imageUrl"
+            alt="image postée par l'utilisateur"
             :max-height="600"
             :max-width="400"
             class="mx-auto pb-5"
@@ -98,18 +119,14 @@
             </v-btn>
           </div>
           <div class="d-flex  align-end pr-3">
-            <v-btn @click="show = !show" class="mx-2" x-small>
-              <v-icon >$vuetify.icons.comment</v-icon>
-            </v-btn>
-            <v-btn
-              @click="likePost(post.id)"
-              x-small
-              class="isliked isliked-btn">
-              <v-icon >
-               $vuetify.icons.like
+            <v-btn @click="likePost(post.id)" x-small>
+              <v-icon :color="isLiked">
+                $vuetify.icons.like
               </v-icon>
+             
             </v-btn>
           </div>
+           
         </v-card-actions>
         <v-expand-transition>
           <div v-show="show">
@@ -117,8 +134,8 @@
             <div class="comments-box d-flex flex-column justify-center">
               <v-card-text class="comment-input">
                 <v-form
-                  v-model="isValid"   
-                  @submit.prevent="onSubmitComment(post.id)"              
+                  v-model="isValid"
+                  @submit.prevent="onSubmitComment(post.id)"
                   enctype="multipart/form-data"
                   class="validate comment-form"
                 >
@@ -141,14 +158,18 @@
                   <div class="danger-alert" v-html="errorMessage" />
                   <div class="danger-alert" v-html="messageRetour" />
                 </div>
-              </v-card-text> 
+              </v-card-text>
               <v-list
                 v-for="comment in post.Comments"
                 :key="comment.id"
                 :comment="comment"
               >
                 <v-list-item class="comment">
-                  <v-list-item-avatar  v-if="$store.state.isLoggedIn"  @click="getProfile(user.id)" class="comment_photo">
+                  <v-list-item-avatar
+                    v-if="$store.state.isLoggedIn"
+                    @click="getProfile(user.id)"
+                    class="comment_photo"
+                  >
                     <img
                       v-if="comment.User.photo"
                       :src="comment.User.photo"
@@ -157,37 +178,35 @@
                     <v-icon size="32px" v-else>$vuetify.icons.account</v-icon>
                   </v-list-item-avatar>
 
-                  <v-list-item-content class="comment_body d-flex ">                  
-                          <strong
-                            v-html="comment.pseudo"                            
-                            class="pr-5 text-left  pseudo comment__pseudo"
-                          ></strong>                                                    
-                            <span
-                              v-html="comment.message"
-                              class=" text-left comment__message"
-                            ></span>
+                  <v-list-item-content class="comment_body d-flex ">
+                    <strong
+                      v-html="comment.pseudo"
+                      class="pr-5 text-left  pseudo comment__pseudo"
+                    ></strong>
+                    <span
+                      v-html="comment.message"
+                      class=" text-left comment__message"
+                    ></span>
                   </v-list-item-content>
-                 
-                      <v-tooltip bottom >
-                        <template v-if="($store.state.user.id === comment.UserId || $store.state.user.admin === true) " v-slot:activator="{ on, attrs }">
-                          <v-btn                            
-                            fab
-                            primary
-                            x-small
-                            v-bind="attrs"
-                            v-on="on"
-                          >
-                            <v-icon
-                              @click="deleteComment(comment.id)"
-                              class=" rounded-circle "
-                              >$vuetify.icons.delete
-                            </v-icon>
-                          </v-btn>
-                        </template>
-                        <span>Supprimer</span>
-                      </v-tooltip>                       
-                     
-                 
+
+                  <v-tooltip bottom>
+                    <template
+                      v-if="
+                        $store.state.user.id === comment.UserId ||
+                          $store.state.user.admin === true
+                      "
+                      v-slot:activator="{ on, attrs }"
+                    >
+                      <v-btn fab primary x-small v-bind="attrs" v-on="on">
+                        <v-icon
+                          @click="deleteComment(comment.id)"
+                          class=" rounded-circle "
+                          >$vuetify.icons.delete
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Supprimer</span>
+                  </v-tooltip>
                 </v-list-item>
                 <v-divider></v-divider>
               </v-list>
@@ -200,47 +219,57 @@
 </template>
 
 <script>
-
-import PostService from '../services/PostService';
-
+import PostService from "../services/PostService";
 
 export default {
   name: "Posts",
 
   props: {
     post: {
-      type: Object
+      type: Object,
     },
     postUrl: {
-      type: String
+      type: String,
     },
-    isliked: {
-      type: Boolean
-    }
+    Likes: {
+      type: Array,
+    },
   },
   data: function() {
     return {
-      show: false,    
+      show: false,
       width: 500,
       commentForm: false,
       user: false,
       showFeed: true,
       update: false,
-      isValid: true,     
+      isValid: true,
+
       rules: {
-        required: value => !!value || "Required."
+        required: (value) => !!value || "Required.",
       },
       messageRetour: null,
       errorMessage: null,
-       data: {
+      data: {
         commentMessage: "",
-        commentPseudo: this.$store.state.user.pseudo
-      }
+        commentPseudo: this.$store.state.user.pseudo,
+      },
     };
+  },
+  computed: {
+    isLiked() {
+      const userId = this.$store.state.user.id;
+ let userLike = this.post.Likes.map(a => a.UserId);
+     if(userLike.includes(userId)) {
+       return "pink"
+     } else {
+       return ""
+     }
+    }, 
   },
 
   methods: {
-     async reloadFeed() {
+    async reloadFeed() {
       try {
         const response = await PostService.getPosts();
         console.log(response);
@@ -251,7 +280,6 @@ export default {
     },
     getProfile(id) {
       this.$router.push(`/account/${id}`);
-      
     },
     deletePost() {
       this.$emit("deletePost", this.post.id);
@@ -262,26 +290,24 @@ export default {
     getOnePost() {
       this.$router.push(this.postUrl);
     },
-    onSubmitComment(id) {    
-    console.log(id);
-  
-    this.$store.dispatch('commentPost',  {
-      id: id,
-      data: this.data
+    onSubmitComment(id) {
+      console.log(id);
+
+      this.$store.dispatch("commentPost", {
+        id: id,
+        data: this.data,
       });
-        this.data.commentMessage = '';
-  }, 
-    
+      this.data.commentMessage = "";
+    },
+
     deleteComment(id) {
-      console.log(id)
-     this.$store.dispatch('deleteComment',id),
-     this.reloadFeed();
-   }, 
-  }
+      console.log(id);
+      this.$store.dispatch("deleteComment", id), this.reloadFeed();
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
-
 .post-title {
   font-size: 20px;
   margin-left: 15px;
@@ -304,13 +330,13 @@ export default {
   justify-content: space-between;
 }
 .comment__message {
-  max-width:600px;
-}  
+  max-width: 600px;
+}
 
 @media screen and (max-width: 768px) {
   .comment__message {
-  max-width:350px;
-}
+    max-width: 350px;
+  }
 }
 
 .comment-form {
@@ -324,5 +350,4 @@ export default {
     margin-top: 0.33rem;
   }
 }
-
 </style>

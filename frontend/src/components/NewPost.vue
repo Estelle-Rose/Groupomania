@@ -2,7 +2,7 @@
   <v-container fluid class="post-box">
     <v-card class="mx-auto post-card" max-width="600">
       <v-card-title class="post-title-box">
-        <v-icon large color="white" left>
+        <v-icon aria-label="message" role="img" aria-hidden="true" large color="white" left>
           {{ mdiMessageSettingsOutline }}
         </v-icon>
         <div>
