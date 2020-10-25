@@ -14,7 +14,17 @@
                 :src="post.User.photo"
                 alt="Photo de profil"
               />
-              <v-icon aria-label="icone profil" size="52px" v-else
+              <v-icon
+                role="avatar personnalisé"
+                v-else-if="
+                  post.User.photo === null &&
+                    post.User.id === $store.state.user.id
+                "
+                color="pink"
+                size="52px"
+                >$vuetify.icons.account</v-icon
+              >
+              <v-icon role="avatar" size="52px" v-else
                 >$vuetify.icons.account</v-icon
               >
             </v-avatar>
@@ -173,12 +183,16 @@
                       :src="comment.User.photo"
                       alt="Photo de profil"
                     />
-                    <v-icon v-else-if="comment.User.photo === null && (comment.UserId === $store.state.user.id)" color="pink" size="32px" 
+                    <v-icon
+                      v-else-if="
+                        comment.User.photo === null &&
+                          comment.UserId === $store.state.user.id
+                      "
+                      color="pink"
+                      size="32px"
                       >$vuetify.icons.account</v-icon
                     >
-                    <v-icon  v-else size="32px" 
-                      >$vuetify.icons.account</v-icon
-                    >
+                    <v-icon v-else size="32px">$vuetify.icons.account</v-icon>
                   </v-list-item-avatar>
 
                   <v-list-item-content class="comment_body d-flex ">
@@ -269,7 +283,6 @@ export default {
         return "";
       }
     },
-   
   },
 
   methods: {

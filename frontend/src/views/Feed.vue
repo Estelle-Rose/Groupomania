@@ -9,7 +9,11 @@
         alt="logo groupomania"
       />
       <v-col sm="12" md="6">
-        <v-card class="posts-card mx-auto" elevation="2">
+        <v-card
+          v-if="$store.state.posts.length !== 0"
+          class="posts-card mx-auto"
+          elevation="2"
+        >
           <v-card-title class="d-flex justify-space-between" flat dense dark>
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
@@ -67,6 +71,22 @@
             >
             </posts>
           </v-card-text>
+        </v-card>
+        <v-card v-else class="posts-card mx-auto" elevation="2">
+          <v-card-title class="d-flex justify-space-between" flat dense dark>
+            <span>Sois le premier à publier un post !</span>
+
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn small to="/add" v-bind="attrs" v-on="on">
+                  <v-icon aria-label="publier" role="img" aria-hidden="false">{{
+                    mdiPencilOutline
+                  }}</v-icon>
+                </v-btn>
+              </template>
+              <span>Publier</span>
+            </v-tooltip>
+          </v-card-title>
         </v-card>
       </v-col>
     </v-row>

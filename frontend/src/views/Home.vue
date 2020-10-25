@@ -5,38 +5,43 @@
         <v-col cols="12">
           <v-img
             :src="require('../assets/logo_transparent.png')"
-            class="my-2"
+            class="my-2 "
             contain
             height="100"
+            alt="logo"
           />
         </v-col>
 
-        <v-col class="mb-4">
+        <v-col class="mb-4 px-5">
           <h1 class="display-1 font-weight-bold mb-3">
             Bienvenue sur le social network de Groupomania !
           </h1>
 
           <p class="subheading font-weight-regular">
-            For help and collaboration with other Vuetify developers,
-            <br />please join our online
-            <a href="https://community.vuetifyjs.com" target="_blank"
-              >Discord Community</a
-            >
+            Vous pouvez publier des messages seuls ou accompagné au choix d'un gif ou d'une image.
+            <br>
+            Vous pouvez ajouter une photo de profil et renseigner votre bio pour vous décrire en cliquant sur l'avatar coloré d'accès au compte une fois connecté.
+            <br>
+            Merci de rester bienveillant et tolérant avec les autres
+            utilisateurs. Tout manquement au respect du règlement pourra entraîner
+            la suppression, d'un commentaire, d'un post, et même d'un compte
+            utilisateur.
+            <br>
+            L'Admin veille pour maintenir la bonne humeur ! Have fun ! 😊
+            <br>
+        
           </p>
         </v-col>
 
-        <v-col class="mb-5" cols="12">
-          <h2 class="headline font-weight-bold mb-3">What's next?</h2>
-        </v-col>
+       
       </v-row>
     </v-card>
   </v-container>
 </template>
 
 <script>
-
 export default {
-  name: "Home"
+  name: "Home",
 };
 </script>
 <style lang="scss" scoped>
