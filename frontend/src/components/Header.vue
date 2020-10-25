@@ -41,25 +41,7 @@
         to="/signup"
         >Inscription</v-btn
       >
-      <v-btn
-        v-if="$store.state.isLoggedIn"
-        aria-label="Profil"
-        small
-        icon
-        @click="getProfile(user.id)"
-        class="input-group--focused"
-        ><v-avatar>
-          <img
-            v-if="user.photo"
-            alt="Avatar"
-            :src="user.photo"
-            class="photo-header"
-          />
-          <v-icon :color="isLoggedIn" size="35px" v-else
-            >$vuetify.icons.account</v-icon
-          >
-        </v-avatar></v-btn
-      >
+     
       <v-btn
         v-if="$store.state.isLoggedIn"
         aria-label="tous les profils"
@@ -70,6 +52,22 @@
         ><v-avatar>
           <v-icon size="35px">$vuetify.icons.friends</v-icon>
         </v-avatar></v-btn
+      >
+      <v-btn
+        v-if="$store.state.isLoggedIn"
+        aria-label="profil"
+        :to="`/account/${user.id}`"
+        icon
+        small
+        class="input-group--focused mr-4"
+        ><v-avatar>
+          <img  v-if="user.photo"
+            alt="Avatar"
+            :src="user.photo"
+            class="photo-header">
+          <v-icon v-if="user.photo === null"  :color="isLoggedIn" size="35px">$vuetify.icons.account</v-icon>
+        </v-avatar>
+       </v-btn
       >
     </v-app-bar>
   </nav>
@@ -95,6 +93,7 @@ export default {
         return "";
       }
     },
+   
   },
 
   methods: {
