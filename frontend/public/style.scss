@@ -39,7 +39,31 @@ a {
   height: 50px !important;
   width: 100%;
 }
-//container
+/////////containers
+//feed
+.feed-container {
+  margin-bottom: 50px;
+  margin-left: 0 !important;
+  position: relative;
+}
+.bloc {
+  background-color: white;
+  position: fixed;
+  
+  padding-top: 15px;
+  margin :auto!important;
+  top: 55px;
+  left:0;
+  right: 0;
+  z-index:1;
+}
+.bloc2 {
+position: relative;
+margin-top: 180px;
+
+ 
+}
+//others
 .signup-container {
   background-image: url("../src/assets/stars.svg");
   background-repeat: repeat;

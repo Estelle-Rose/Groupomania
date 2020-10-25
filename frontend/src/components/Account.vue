@@ -50,7 +50,7 @@
               required
               counter="30"
               hint="Le pseudo doit avoir 3 caractères min et 30 max"
-              class="input-group--focused"
+              class="input-group--focused  mx-3"
             ></v-text-field>
 
             <v-divider></v-divider>

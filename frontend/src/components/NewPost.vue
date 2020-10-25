@@ -168,9 +168,7 @@ export default {
 }
 // lien ou image
 
-
 .post-card {
   margin-top: 3em;
 }
-
 </style>
