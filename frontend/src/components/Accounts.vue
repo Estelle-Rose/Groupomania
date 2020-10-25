@@ -26,7 +26,8 @@
                   :src="user.photo"
                   alt="Photo de profil"
                 />
-                <v-icon size="42" v-else>$vuetify.icons.account</v-icon>
+                <v-icon role="avatar" v-else-if="user.photo === null & ($store.state.user.id === user.id)" color="pink" size="42">$vuetify.icons.account</v-icon>
+                <v-icon role="avatar" v-else  size="42">$vuetify.icons.account</v-icon>
               </v-avatar>
               <div class="d-flex flex-column">
                 <div>
@@ -87,6 +88,7 @@ export default {
     users() {
       return this.$store.getters.users;
     },
+    
   },
   beforeMount() {
     this.$store.dispatch("getUsers");

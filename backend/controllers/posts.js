@@ -86,9 +86,9 @@ exports.getHotPosts = async (req, res) => {
 };
 exports.getOnePost = async (req, res) => {
   try {
-    const id = req.params.id;
     const post = await db.Post.findOne({
-      where: { id: id },
+      // on récupère le post avec l'id fourni en incluant les tables et attributs nécessaires
+      where: { id: req.params.id },
       include: [
         {
           model: db.User,
@@ -112,7 +112,6 @@ exports.getOnePost = async (req, res) => {
 };
 exports.createPost = (req, res) => {
   const userId = token.getUserId(req);
-  console.log(userId);
 
   let imageUrl;
   db.User.findOne({
@@ -130,13 +129,18 @@ exports.createPost = (req, res) => {
       }
 
       db.Post.create({
+        include: [
+          {
+            model: db.User,
+            attributes: ["pseudo", "photo", "id"],
+          },
+        ],
         message: req.body.message,
         link: req.body.link,
         imageUrl: imageUrl,
         UserId: user.id,
       })
         .then((newPost) => {
-          console.log(newPost);
           res
             .status(201)
             .json({ post: newPost, messageRetour: "Votre post est ajouté" });
@@ -152,17 +156,11 @@ exports.createPost = (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const userId = token.getUserId(req);
-    console.log(userId);
-    const postId = parseInt(req.params.id);
-    console.log(postId);
     const checkAdmin = await db.User.findOne({ where: { id: userId } });
-
     const post = await db.Post.findOne({ where: { id: req.params.id } });
-    console.log(post.userId);
     if (userId === post.UserId || checkAdmin.admin === true) {
       if (post.imageUrl) {
         const filename = post.imageUrl.split("/upload")[1];
-        console.log(post.imageUrl);
         fs.unlink(`upload/${filename}`, () => {
           db.Post.destroy({ where: { id: post.id } });
           res.status(200).json({ message: "Post supprimé" });
@@ -183,7 +181,6 @@ exports.updatePost = async (req, res) => {
   try {
     let newImageUrl;
     const userId = token.getUserId(req);
-
     let post = await db.Post.findOne({ where: { id: req.params.id } });
     if (userId === post.UserId) {
       if (req.file) {
@@ -208,7 +205,6 @@ exports.updatePost = async (req, res) => {
       const newPost = await post.save({
         fields: ["message", "link", "imageUrl"],
       });
-
       res.status(200).json({ newPost: newPost, messageRetour: "post modifié" });
     } else {
       res.status(400).json({ message: "Vous n'avez pas les droits requis" });
@@ -230,18 +226,13 @@ exports.likePost = async (req, res, next) => {
         { where: { UserId: userId, PostId: postId } },
         { truncate: true, restartIdentity: true }
       );
-      console.log("le like est annulé");
-      res
-        .status(200)
-        .send({ messageRetour: "vou n'aimez plus ce post", isLiked: false });
+      res.status(200).send({ messageRetour: "vou n'aimez plus ce post" });
     } else {
-      const newLike = await db.Like.create({
+      await db.Like.create({
         UserId: userId,
         PostId: postId,
       });
-      res
-        .status(201)
-        .json({ messageRetour: "vous aimez ce post", isLiked: true });
+      res.status(201).json({ messageRetour: "vous aimez ce post" });
     }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
@@ -249,15 +240,13 @@ exports.likePost = async (req, res, next) => {
 };
 exports.addComment = async (req, res) => {
   try {
-    const userId = token.getUserId(req);
     const comment = req.body.commentMessage;
     const pseudo = req.body.commentPseudo;
-    const postId = parseInt(req.params.id);
     const newComment = await db.Comment.create({
       message: comment,
       pseudo: pseudo,
-      UserId: userId,
-      PostId: postId,
+      UserId: token.getUserId(req),
+      PostId: req.params.id,
     });
 
     res
@@ -270,10 +259,9 @@ exports.addComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   try {
     const userId = token.getUserId(req);
-    console.log(userId);
     const checkAdmin = await db.User.findOne({ where: { id: userId } });
     const comment = await db.Comment.findOne({ where: { id: req.params.id } });
-    console.log(req.params.id);
+
     if (userId === comment.UserId || checkAdmin.admin === true) {
       db.Comment.destroy({ where: { id: req.params.id } }, { truncate: true });
       res.status(200).json({ message: "commentaire supprimé" });

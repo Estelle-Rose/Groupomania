@@ -123,10 +123,8 @@
               <v-icon :color="isLiked">
                 $vuetify.icons.like
               </v-icon>
-             
             </v-btn>
           </div>
-           
         </v-card-actions>
         <v-expand-transition>
           <div v-show="show">
@@ -175,7 +173,12 @@
                       :src="comment.User.photo"
                       alt="Photo de profil"
                     />
-                    <v-icon size="32px" v-else>$vuetify.icons.account</v-icon>
+                    <v-icon v-else-if="comment.User.photo === null && (comment.UserId === $store.state.user.id)" color="pink" size="32px" 
+                      >$vuetify.icons.account</v-icon
+                    >
+                    <v-icon  v-else size="32px" 
+                      >$vuetify.icons.account</v-icon
+                    >
                   </v-list-item-avatar>
 
                   <v-list-item-content class="comment_body d-flex ">
@@ -259,20 +262,20 @@ export default {
   computed: {
     isLiked() {
       const userId = this.$store.state.user.id;
- let userLike = this.post.Likes.map(a => a.UserId);
-     if(userLike.includes(userId)) {
-       return "pink"
-     } else {
-       return ""
-     }
-    }, 
+      let userLike = this.post.Likes.map((a) => a.UserId);
+      if (userLike.includes(userId)) {
+        return "pink";
+      } else {
+        return "";
+      }
+    },
+   
   },
 
   methods: {
     async reloadFeed() {
       try {
         const response = await PostService.getPosts();
-        console.log(response);
         this.posts = response.data;
       } catch (error) {
         this.errorMessage = error.response.data.error;
@@ -291,8 +294,6 @@ export default {
       this.$router.push(this.postUrl);
     },
     onSubmitComment(id) {
-      console.log(id);
-
       this.$store.dispatch("commentPost", {
         id: id,
         data: this.data,
@@ -301,7 +302,6 @@ export default {
     },
 
     deleteComment(id) {
-      console.log(id);
       this.$store.dispatch("deleteComment", id), this.reloadFeed();
     },
   },

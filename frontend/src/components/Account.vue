@@ -65,7 +65,7 @@
                   :src="user.photo"
                   alt="Photo de profil"
                 />
-                <v-icon v-else>$vuetify.icons.account</v-icon>
+                <v-icon :color="isLoggedIn" size="96px" aria-label="avatar"  v-else>$vuetify.icons.account</v-icon>
               </v-avatar>
               <v-btn @click="togglePhoto" class="mx-2" x-small>
                 Changer
@@ -170,6 +170,14 @@ export default {
     user() {
       return this.$store.getters.user;
     },
+    isLoggedIn() {
+      if(this.$store.state.isLoggedIn) {
+       return "pink"
+     } else {
+       return ""
+     }
+    },
+    
   },
   beforeMount() {
     this.$store.dispatch("getUserById");

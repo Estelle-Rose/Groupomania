@@ -3,28 +3,23 @@ const db = require("../models"); // mdèles de la bdd
 const token = require("../middleware/token"); // module qui génère le token
 const fs = require("fs");
 
-
 exports.signup = async (req, res) => {
   try {
     const user = await db.User.findOne({
       where: { email: req.body.email } && { pseudo: req.body.pseudo },
     });
     if (user !== null) {
-      res
-        .status(400)
-        .json({
-          message: "Cette adresse mail ou ce pseudo sont déjà utilisés !",
-        });
+      res.status(400).json({
+        message: "Cette adresse mail ou ce pseudo sont déjà utilisés !",
+      });
     } else {
       const hash = await bcrypt.hash(req.body.password, 10);
-      console.log(hash);
       const newUser = await db.User.create({
         pseudo: req.body.pseudo,
         email: req.body.email,
         password: hash,
         admin: false,
       });
-      console.log(newUser);
 
       const tokenObject = await token.issueJWT(newUser);
       res.status(200).send({
@@ -80,9 +75,8 @@ exports.getAccount = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   // on envoie tous les users
   try {
-    const user = await db.User.findAll();
-    console.log(user);
-    res.status(200).json(user);
+    const users = await db.User.findAll();
+    res.status(200).json(users);
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
@@ -100,7 +94,6 @@ exports.updateAccount = async (req, res) => {
           req.file.filename
         }`;
         const filename = user.photo.split("/upload")[1];
-      
         fs.unlink(`upload/${filename}`, (err) => {
           // s'il y avait déjà une photo on la supprime
           if (err) console.log(err);
@@ -124,12 +117,10 @@ exports.updateAccount = async (req, res) => {
       }
       const newUser = await user.save({ fields: ["pseudo", "bio", "photo"] }); // on sauvegarde les changements dans la bdd
       console.log(newUser);
-      res
-        .status(200)
-        .json({
-          user: newUser,
-          messageRetour: "Votre profil a bien été modifié",
-        });
+      res.status(200).json({
+        user: newUser,
+        messageRetour: "Votre profil a bien été modifié",
+      });
     } else {
       res
         .status(400)
@@ -142,11 +133,13 @@ exports.updateAccount = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     const userId = token.getUserId(req);
-    const id = parseInt(req.params.id);
-
+    const id = req.params.id;
     const admin = await db.User.findOne({ where: { id: userId } });
     const user = await db.User.findOne({ where: { id: id } });
-    if ((userId === id || admin.admin === true) && (user.email !== 'admin@mail.com')) {
+    if (
+      (userId === id || admin.admin === true) &&
+      user.email !== "admin@mail.com"
+    ) {
       // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
       if (user.photo) {
         const filename = user.photo.split("/upload")[1];
@@ -159,9 +152,7 @@ exports.deleteAccount = async (req, res) => {
         db.User.destroy({ where: { id: id } }); // on supprime le compte
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
       }
-    }
-   
-     else {
+    } else {
       res.status(400).json({ errorMessage: "requête non autorisée" });
     }
   } catch (error) {
