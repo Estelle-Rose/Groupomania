@@ -1,7 +1,10 @@
 <template>
   <v-container fluid class="signup-container">
     <div class="account">
-      <v-card v-if="messageRetour !== null && dialog === true" class=" pt-3  d-flex justify-space-between dialog">
+      <v-card
+        v-if="messageRetour !== null && dialog === true"
+        class=" pt-3  d-flex justify-space-between dialog"
+      >
         <span>
           {{ messageRetour }}
         </span>
@@ -16,7 +19,7 @@
           :key="user.id"
           :user="user"
           class="users"
-          elevation="4"
+          elevation="3"
         >
           <div class="d-flex justify-space-between">
             <v-card-title flat dense dark>
@@ -26,8 +29,18 @@
                   :src="user.photo"
                   alt="Photo de profil"
                 />
-                <v-icon role="avatar" v-else-if="user.photo === null & ($store.state.user.id === user.id)" color="pink" size="42">$vuetify.icons.account</v-icon>
-                <v-icon role="avatar" v-else  size="42">$vuetify.icons.account</v-icon>
+                <v-icon
+                  role="avatar"
+                  v-else-if="
+                    (user.photo === null) & ($store.state.user.id === user.id)
+                  "
+                  color="pink"
+                  size="42"
+                  >$vuetify.icons.account</v-icon
+                >
+                <v-icon role="avatar" v-else size="42"
+                  >$vuetify.icons.account</v-icon
+                >
               </v-avatar>
               <div class="d-flex flex-column">
                 <div>
@@ -56,6 +69,7 @@
                     x-small
                     v-bind="attrs"
                     v-on="on"
+                    aria-label="supprimer le compte"
                   >
                     <v-icon small class=" rounded-circle ">
                       $vuetify.icons.delete
@@ -88,7 +102,6 @@ export default {
     users() {
       return this.$store.getters.users;
     },
-    
   },
   beforeMount() {
     this.$store.dispatch("getUsers");
@@ -104,7 +117,7 @@ export default {
 
     deleteAccount(id) {
       console.log(id);
-     /*  if (this.$store.state.user.email === "admin@mail.com") {
+      /*  if (this.$store.state.user.email === "admin@mail.com") {
         return (this.messageRetour =
           "le compte admin ne peut pas être supprimé");
       } */
@@ -136,7 +149,7 @@ export default {
   top: 10px;
 }
 .dialog {
-  margin-top: 60px!important;
+  margin-top: 60px !important;
   padding-left: 30px;
 }
 .account-box {

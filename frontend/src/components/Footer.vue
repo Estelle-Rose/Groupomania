@@ -2,7 +2,7 @@
   <v-footer fixed  dark class="footer" >
        
    
-       <v-btn x-small to="/about" class="ml-5 mt-2">About</v-btn>
+       <v-btn x-small to="/about" class="ml-5 mt-2">Règlement</v-btn>
         <div v-if="!$store.state.isLoggedIn" class="mt-2 mr-5">
          {{ new Date().getFullYear() }} — <strong>Groupomania</strong>
 

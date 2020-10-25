@@ -8,6 +8,7 @@
         height="50"
         alt="logo groupomania"
       />
+      <h1 class="font-weight-regular">Le fil d'actu !</h1>
       <v-col sm="12" md="6">
         <v-card
           v-if="$store.state.posts.length !== 0"

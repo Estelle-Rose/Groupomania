@@ -9,10 +9,7 @@ strong {
 a {
   text-transform: none !important;
 }
-.vicon_svg
-.danger-alert {
-  padding-left: 20px;
-}
+
 .pseudo {
   text-transform: capitalize;
 }
@@ -23,15 +20,15 @@ a {
   font-size: 12px !important;
   font-weight: 400 !important;
   &:hover {
-    background-color: #E91E63 !important;
-    color: white!important;;
+    background-color: #e91e63 !important;
+    color: white !important;
   }
 }
 
 //header
 .photo-header {
-  width: 32px!important;
-  height: 32px!important;
+  width: 32px !important;
+  height: 32px !important;
 }
 //footer
 .footer {
@@ -56,15 +53,36 @@ a {
   justify-content: center;
 }
 .signup-card {
-  border: 3px solid #676c75 !important;
   &__submit {
     margin: auto;
     padding-bottom: 20px;
   }
 }
-
+.titre {
+  font-size: 1.4em !important;
+  &_new {
+    font-size: 1.2em!important;
+    color: white !important;
+  }
+}
+.message {
+  margin-left: 1.2em !important;
+}
 @media (max-width: 640px) {
   .signup-box {
     margin-left: 0 !important;
+  }
+}
+.post-box {
+  background-image: url("../src/assets/stars.svg");
+  background-repeat: repeat;
+  height: 100%;
+  padding-bottom: 5em;
+}
+.post-title-box {
+  background-color: #424242 !important;
+  .post-title {
+    color: white;
+    font-weight: 600 !important;
   }
 }

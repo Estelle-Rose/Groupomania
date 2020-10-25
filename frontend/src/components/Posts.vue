@@ -45,11 +45,10 @@
                   x-small
                   v-bind="attrs"
                   v-on="on"
-                  aria-label="modifier"
+                  aria-label="modifier le post"
+                  @click="getOnePost(post.id)"
                 >
-                  <v-icon @click="getOnePost(post.id)" class=" rounded-circle"
-                    >$vuetify.icons.update</v-icon
-                  >
+                  <v-icon class=" rounded-circle">$vuetify.icons.update</v-icon>
                 </v-btn>
               </template>
               <span>Modifier</span>
@@ -67,15 +66,12 @@
                   fab
                   primary
                   x-small
-                  aria-label="supprimer"
                   v-bind="attrs"
                   v-on="on"
+                  aria-label="supprimer le post"
+                  @click="deletePost(post.id)"
                 >
-                  <v-icon
-                    @click="deletePost(post.id)"
-                    small
-                    class=" rounded-circle"
-                  >
+                  <v-icon small class=" rounded-circle">
                     $vuetify.icons.delete
                   </v-icon>
                 </v-btn>
@@ -119,17 +115,17 @@
         <v-divider></v-divider>
         <v-card-actions class="pt-5  pr-4 d-flex justify-space-between">
           <div class=" d-flex justify-md-space-between">
-            <v-btn @click="show = !show" text>
+            <v-btn @click="show = !show" text aria-label="accès commentaires">
               Commentaires
             </v-btn>
-            <v-btn icon @click="show = !show">
+            <v-btn icon @click="show = !show" aria-label="accès commentaires">
               <v-icon>{{
                 show ? "mdi-chevron-up" : "mdi-chevron-down"
               }}</v-icon>
             </v-btn>
           </div>
           <div class="d-flex  align-end pr-3">
-            <v-btn @click="likePost(post.id)" x-small>
+            <v-btn @click="likePost(post.id)" x-small aria-label="liker">
               <v-icon :color="isLiked">
                 $vuetify.icons.like
               </v-icon>
@@ -159,6 +155,7 @@
                     @click="onSubmitComment(post.id)"
                     :disabled="!isValid"
                     class="comment-form__btn"
+                    aria-label="publier commentaire"
                     >Poster</v-btn
                   >
                 </v-form>
@@ -190,9 +187,12 @@
                       "
                       color="pink"
                       size="32px"
+                      role="avatar"
                       >$vuetify.icons.account</v-icon
                     >
-                    <v-icon v-else size="32px">$vuetify.icons.account</v-icon>
+                    <v-icon v-else size="32px" role="avatar"
+                      >$vuetify.icons.account</v-icon
+                    >
                   </v-list-item-avatar>
 
                   <v-list-item-content class="comment_body d-flex ">
@@ -218,6 +218,7 @@
                         <v-icon
                           @click="deleteComment(comment.id)"
                           class=" rounded-circle "
+                          aria-label="supprimer commentaire"
                           >$vuetify.icons.delete
                         </v-icon>
                       </v-btn>

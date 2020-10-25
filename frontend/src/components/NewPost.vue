@@ -2,13 +2,20 @@
   <v-container fluid class="post-box">
     <v-card class="mx-auto post-card" max-width="600">
       <v-card-title class="post-title-box">
-        <v-icon aria-label="message" role="img" aria-hidden="true" large color="white" left>
+        <v-icon
+          aria-label="message"
+          role="img"
+          aria-hidden="true"
+          large
+          color="white"
+          left
+        >
           {{ mdiMessageSettingsOutline }}
         </v-icon>
         <div>
-          <span class="title font-weight-light post-title"
-            >Que partages-tu aujourd'hui ?</span
-          >
+          <h1 class="font-weight-regular titre titre_new">
+            Que partages-tu aujourd'hui ?
+          </h1>
         </div>
       </v-card-title>
       <v-form
@@ -20,12 +27,11 @@
         <div class="bloc-statut py-5 px-5 mr-5">
           <v-textarea
             name="input-1-3"
-           
             label="Message"
             v-model="message"
             :rules="[rules.required]"
             auto-grow
-             class="input-group--focused"
+            class="input-group--focused"
           ></v-textarea>
         </div>
         <v-card-text
@@ -60,7 +66,7 @@
                 image/bmp, image/gif"
                 ref="file"
                 name=" charger une image"
-                 class="input-group--focused"
+                class="input-group--focused"
               />
             </div>
           </div>
@@ -71,7 +77,7 @@
               label="lien du gif"
               v-model="link"
               auto-grow
-               class="input-group--focused"
+              class="input-group--focused"
             >
             </v-text-field>
           </div>
@@ -162,18 +168,9 @@ export default {
 }
 // lien ou image
 
-.post-title-box {
-  background-color: gray;
-  .post-title {
-    color: white;
-    font-weight: 600 !important;
-  }
-}
+
 .post-card {
-  margin-top: 8rem;
+  margin-top: 3em;
 }
-.post-box {
-  height: 100%;
-  padding-bottom: 10rem;
-}
+
 </style>
