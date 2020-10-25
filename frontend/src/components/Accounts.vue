@@ -54,9 +54,33 @@
             </v-card-title>
             <div>
               <v-tooltip
-                v-if="
-                  $store.state.user.id === user.id ||
+                v-if="                  
                     $store.state.user.admin === true
+                "
+                bottom
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    class="delete-btn"
+                    @click="adminDeleteAccount(user.id)"
+                    fab
+                    primary
+                    x-small
+                    v-bind="attrs"
+                    v-on="on"
+                    aria-label="supprimer le compte"
+                  >
+                    <v-icon small class=" rounded-circle ">
+                      $vuetify.icons.delete
+                    </v-icon>
+                  </v-btn>
+                </template>
+                <span>Supprimer le compte</span>
+              </v-tooltip>
+              <v-tooltip
+                v-if="
+                  $store.state.user.id === user.id &&
+                    $store.state.user.admin === false
                 "
                 bottom
               >
@@ -116,19 +140,16 @@ export default {
     },
 
     deleteAccount(id) {
-      console.log(id);
-      /*  if (this.$store.state.user.email === "admin@mail.com") {
-        return (this.messageRetour =
-          "le compte admin ne peut pas être supprimé");
-      } */
-
-      this.$store.dispatch("deleteAccount", id);
-      if (
-        id == this.$store.state.user.id &&
-        this.$store.state.user.email !== "admin@mail.com"
-      ) {
-        this.logOut();
+     
+        this.$store.dispatch("deleteAccount", id);
+        this.$store.dispatch("logOut");
         this.getBackHome();
+      
+    },
+    adminDeleteAccount(id) {
+      this.$store.dispatch("adminDeleteAccount", id);
+      if (this.$store.state.user.email !== "admin@mail.com") {
+        this.$store.dispatch("adminDeleteAccount", id);
       }
     },
   },

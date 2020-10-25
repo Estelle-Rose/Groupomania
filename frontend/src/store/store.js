@@ -81,6 +81,11 @@ export default new Vuex.Store({
       state.users = [...state.users.filter((element) => element.id !== id)];
       state.message = "compte supprimé";
     },
+    ADMIN_DELETE_ACCOUNT(state, id) {
+      state.users = [...state.users.filter((element) => element.id !== id)];
+      state.message = "compte supprimé";
+    },
+    
     GET_POSTS(state, posts) {
       (state.posts = posts), (state.isLoading = false);
     },
@@ -141,11 +146,26 @@ export default new Vuex.Store({
 
     deleteAccount({ commit }, id) {
       Auth.deleteAccount(id).then(() => {
-        if (id === this.state.user.id) {
-          commit("DELETE_ACCOUNT", id), commit("LOG_OUT");
-        } else if (this.state.user.admin === true) {
+         if (this.state.user.admin === true) {
           commit("DELETE_ACCOUNT", id);
         }
+        else  {
+          commit("DELETE_ACCOUNT", id)
+          .then(() => {
+           
+              commit("LOG_OUT");
+            
+          });
+          
+        }
+      });
+    },
+    adminDeleteAccount({ commit }, id) {
+      Auth.adminDeleteAccount(id).then(() => {
+         if (this.state.user.admin === true) {
+          commit("ADMIN_DELETE_ACCOUNT", id);
+        }
+        
       });
     },
     updateAccount({ commit }, data) {

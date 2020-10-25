@@ -226,16 +226,17 @@ export default {
       this.$store.dispatch("getUserById");
     },
     deleteAccount(id) {
-      this.$store.dispatch("deleteAccount", id);
-      console.log(id);
-      if (id == this.$store.state.user.id) {
-        this.$store.dispatch("setUser", null);
-        this.$store.dispatch("setToken", null);
-        setTimeout(() => {
+     
+      this.$store.dispatch("deleteAccount", id);       
+       this.$store.dispatch("logOut");
+         setTimeout(() => {
           this.getBackHome();
         }, 2000);
-      }
+
+      
     },
+      
+    
   },
 };
 </script>

@@ -10,6 +10,9 @@ export default {
   deleteAccount(id) {
     return Api().delete('users/accounts/'+ id);
   },
+  adminDeleteAccount(id) {
+    return Api().delete('users/accounts/admin/'+ id);
+  },
   updateAccount(id,data) {
     return Api.put('users/accounts/'+ id, data);
   },
