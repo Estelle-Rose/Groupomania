@@ -41,6 +41,9 @@ export default new Vuex.Store({
     errorMessage(state) {
       return state.error;
     },
+    isLogged(state) {
+      return state.isLoggedIn;
+    }
   },
 
   mutations: {
@@ -175,16 +178,17 @@ export default new Vuex.Store({
           headers: { Authorization: this.state.token },
         })
         .then((response) => {
-          const user = response.data;
-          console.log(user);
-          commit("UPDATE_ACCOUNT", id, user);
+          const newUser = response.data;
+          console.log(newUser);
+          commit("UPDATE_ACCOUNT", id, newUser);
         })
-        .then(() => {
-          Auth.getUserById(id).then((response) => {
+        /* .then((newUser) => {
+          console.log(newUser.id)
+          Auth.getUserById(newUser.id).then((response) => {
             const user = response.data;
             commit("SET_USER", user);
           });
-        });
+        }); */
     },
 
     getUsers({ commit }) {

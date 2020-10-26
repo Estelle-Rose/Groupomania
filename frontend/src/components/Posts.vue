@@ -10,7 +10,7 @@
               size="52px"
             >
               <img
-                v-if="post.User.photo !== null"
+                v-if="post.User.photo"
                 :src="post.User.photo"
                 alt="Photo de profil"
               />
@@ -176,7 +176,7 @@
                     class="comment_photo"
                   >
                     <img
-                      v-if="comment.User.photo"
+                      v-if="comment.User.photo !== null"
                       :src="comment.User.photo"
                       alt="Photo de profil"
                     />
@@ -262,7 +262,6 @@ export default {
       showFeed: true,
       update: false,
       isValid: true,
-
       rules: {
         required: (value) => !!value || "Required.",
       },

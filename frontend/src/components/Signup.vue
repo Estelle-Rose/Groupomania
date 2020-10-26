@@ -91,9 +91,9 @@ export default {
           password: this.password,
         });
         this.message = response.data.message;
-
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);
+        this.$store.dispatch("getUserById", response.data.user.id);
         let router = this.$router;
         setTimeout(function() {
           router.push("/posts");

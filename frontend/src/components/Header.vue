@@ -17,7 +17,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-        v-if="$store.state.isLoggedIn"
+        v-if="isLogged === true"
         x-small
         link
         aria-label="fil d'actualité"
@@ -26,7 +26,7 @@
         >Fil d'actu</v-btn
       >
       <v-btn
-        v-if="!$store.state.isLoggedIn"
+        v-if="isLogged === false"
         x-small
         aria-label="Connexion"
         class="input-group--focused"
@@ -34,7 +34,7 @@
         >Connexion</v-btn
       >
       <v-btn
-        v-if="!$store.state.isLoggedIn"
+        v-if="isLogged === false"
         x-small
         aria-label="Inscription"
         class="input-group--focused"
@@ -42,19 +42,9 @@
         >Inscription</v-btn
       >
      
+     
       <v-btn
-        v-if="$store.state.isLoggedIn"
-        aria-label="tous les profils"
-        to="/accounts"
-        icon
-        small
-        class="input-group--focused mr-4"
-        ><v-avatar>
-          <v-icon size="35px">$vuetify.icons.friends</v-icon>
-        </v-avatar></v-btn
-      >
-      <v-btn
-        v-if="$store.state.isLoggedIn"
+        v-if="isLogged ===true"
         aria-label="profil"
         :to="`/account/${user.id}`"
         icon
@@ -68,6 +58,17 @@
           <v-icon v-if="user.photo === null"  :color="isLoggedIn" size="35px">$vuetify.icons.account</v-icon>
         </v-avatar>
        </v-btn
+      >
+       <v-btn
+        v-if="isLogged == true"
+        aria-label="tous les profils"
+        to="/accounts"
+        icon
+        small
+        class="input-group--focused mr-4"
+        ><v-avatar>
+          <v-icon size="35px">$vuetify.icons.friends</v-icon>
+        </v-avatar></v-btn
       >
     </v-app-bar>
   </nav>
@@ -86,6 +87,9 @@ export default {
     return {};
   },
   computed: {
+    isLogged() {
+      return this.$store.getters.isLogged
+    },
     isLoggedIn() {
       if (this.$store.state.isLoggedIn) {
         return "pink";

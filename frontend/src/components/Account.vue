@@ -215,15 +215,16 @@ export default {
       if (this.file !== null) {
         formData.append("image", this.file);
       }
+      this.$store.dispatch("getUsers");
       this.$store.dispatch("updateAccount", formData);
+        this.$store.dispatch("getUserById",this.user.id);
       this.updateBio = false;
       this.updatePhoto = false;
       this.updatePseudo = false;
       this.options = false;
       this.showBio = true;
       this.showPhoto = true;
-      this.showPseudo = true;
-      this.$store.dispatch("getUserById");
+      this.showPseudo = true;    
     },
     deleteAccount(id) {
      
