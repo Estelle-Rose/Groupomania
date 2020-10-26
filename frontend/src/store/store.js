@@ -76,9 +76,7 @@ export default new Vuex.Store({
       );
       state.message = "compte modifié";
     },
-    ADMIN_ACCOUNT(state) {
-      state.message = "le compte admin ne peut pas être supprimé";
-    },
+    
     NEW_POST(state) {
       state.message = "Votre post est bien crée";
     },
@@ -87,10 +85,6 @@ export default new Vuex.Store({
     },
 
     DELETE_ACCOUNT(state, id) {
-      state.users = [...state.users.filter((element) => element.id !== id)];
-      state.message = "compte supprimé";
-    },
-    ADMIN_DELETE_ACCOUNT(state, id) {
       state.users = [...state.users.filter((element) => element.id !== id)];
       state.message = "compte supprimé";
     },
@@ -152,9 +146,7 @@ export default new Vuex.Store({
     setUser({ commit }, user) {
       commit("SET_USER", user);
     },
-    adminAccount({ commit }) {
-      commit("ADMIN_ACCOUNT");
-    },
+   
     
 
     deleteAccount({ commit }, id) {
@@ -170,17 +162,7 @@ export default new Vuex.Store({
         }
       });
     },
-    adminDeleteAccount({ commit }, id) {
-      Auth.adminDeleteAccount(id).then(() => {
-         if (this.state.user.admin === true && this.state.user.email !== "admin@mail.com") {
-          commit("ADMIN_DELETE_ACCOUNT", id);
-        }
-        else {
-          commit("ADMIN_ACCOUNT")
-        }
-        
-      });
-    },
+    
     updateAccount({ commit }, data) {
       let id = this.state.user.id;
       axios
@@ -192,13 +174,7 @@ export default new Vuex.Store({
           console.log(newUser);
           commit("UPDATE_ACCOUNT", id, newUser);
         })
-        /* .then((newUser) => {
-          console.log(newUser.id)
-          Auth.getUserById(newUser.id).then((response) => {
-            const user = response.data;
-            commit("SET_USER", user);
-          });
-        }); */
+       
     },
 
     getUsers({ commit }) {
@@ -256,13 +232,7 @@ export default new Vuex.Store({
         .then((response) => {
           const post = response.data;
           commit("UPDATE_POST", id, post);
-        }) /* .then(() => {
-          PostService.getPostById(id)     
-                .then(response => {
-                  const post = response.data;
-                  commit('GET_POST_BY_ID', post)
-                })
-            })    */
+        })
     },
     deletePost({ commit }, id) {
       PostService.deletePost(id)

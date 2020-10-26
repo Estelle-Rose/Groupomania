@@ -110,16 +110,15 @@ exports.getOnePost = async (req, res) => {
     return res.status(500).send({ error: "Erreur serveur" });
   }
 };
-exports.createPost = (req, res) => {
+exports.createPost = async (req, res) => {
   const userId = token.getUserId(req);
-
   let imageUrl;
-  db.User.findOne({
-    attributes: ["pseudo", "id", "photo"],
-    where: { id: userId },
-  })
-    .then((user) => {
-      console.log(user);
+  try {
+    const user = await db.User.findOne({
+      attributes: ["pseudo", "id", "photo"],
+      where: { id: userId },
+    });
+    if (user !== null) {
       if (req.file) {
         imageUrl = `${req.protocol}://${req.get("host")}/upload/${
           req.file.filename
@@ -127,8 +126,7 @@ exports.createPost = (req, res) => {
       } else {
         imageUrl = null;
       }
-
-      db.Post.create({
+      const post = await db.Post.create({
         include: [
           {
             model: db.User,
@@ -139,19 +137,17 @@ exports.createPost = (req, res) => {
         link: req.body.link,
         imageUrl: imageUrl,
         UserId: user.id,
-      })
-        .then((newPost) => {
-          res
-            .status(201)
-            .json({ post: newPost, messageRetour: "Votre post est ajouté" });
-        })
-        .catch((err) => {
-          res.status(400).send({ error: "Erreur " });
-        });
-    })
-    .catch((err) => {
-      res.status(500).send({ error: "Erreur serveur" });
-    });
+      });
+
+      res
+        .status(201)
+        .json({ post: post, messageRetour: "Votre post est ajouté" });
+    } else {
+      res.status(400).send({ error: "Erreur " });
+    }
+  } catch (error) {
+    return res.status(500).send({ error: "Erreur serveur" });
+  }
 };
 exports.deletePost = async (req, res) => {
   try {

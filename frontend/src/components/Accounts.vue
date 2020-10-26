@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="signup-container">
     <div class="account">
-      <v-card
+     <!--  <v-card
         v-if="messageRetour !== null && dialog === true"
         class=" pt-3  d-flex justify-space-between dialog"
       >
@@ -11,7 +11,7 @@
         <v-btn color="primary" class="mb-3 mr-2" text @click="dialog = false">
           Close
         </v-btn>
-      </v-card>
+      </v-card> -->
 
       <v-layout v-if="$store.state.users" row class="account-box">
         <v-card
@@ -53,34 +53,11 @@
               </div>
             </v-card-title>
             <div>
-              <v-tooltip
-                v-if="                  
-                    $store.state.user.admin === true
-                "
-                bottom
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    class="delete-btn"
-                    @click="adminDeleteAccount(user.id)"
-                    fab
-                    primary
-                    x-small
-                    v-bind="attrs"
-                    v-on="on"
-                    aria-label="supprimer le compte"
-                  >
-                    <v-icon small class=" rounded-circle ">
-                      $vuetify.icons.delete
-                    </v-icon>
-                  </v-btn>
-                </template>
-                <span>Supprimer le compte</span>
-              </v-tooltip>
+            
               <v-tooltip
                 v-if="
-                  $store.state.user.id === user.id &&
-                    $store.state.user.admin === false
+                  ($store.state.user.id === user.id) ||
+                    ($store.state.user.admin === true)
                 "
                 bottom
               >
@@ -142,24 +119,21 @@ export default {
       this.$store.dispatch("setUser", null);
     },
 
-    deleteAccount(id) {
-     
+    deleteAccount(id) {     
+      if(this.$store.state.user.admin === true) {
+
+        this.$store.dispatch("deleteAccount", id);
+      }
+      else {
         this.$store.dispatch("deleteAccount", id);
         this.$store.dispatch("logOut");
         this.getBackHome();
+      }
+    
+   
       
     },
-    adminDeleteAccount(id) {
-      this.$store.dispatch("adminDeleteAccount", id);
-      if (this.$store.state.user.email !== "admin@mail.com") {
-        this.$store.dispatch("adminDeleteAccount", id);
-        this.dialog = false;
-      }
-      else {
-        this.$store.dispatch("adminAccount")
-        this.dialog = true
-      }
-    },
+   
   },
 };
 </script>

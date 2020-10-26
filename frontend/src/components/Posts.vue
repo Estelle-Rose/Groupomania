@@ -302,16 +302,20 @@ export default {
     },
     likePost() {
       this.$emit("likePost", this.post.id);
+  
     },
     getOnePost() {
       this.$router.push(this.postUrl);
     },
     onSubmitComment(id) {
+          this.$store.dispatch("getPosts");
       this.$store.dispatch("commentPost", {
         id: id,
         data: this.data,
       });
       this.data.commentMessage = "";
+      this.$store.dispatch('getPosts');
+         this.$store.dispatch("getPostById", this.post.id);
     },
 
     deleteComment(id) {
@@ -355,9 +359,7 @@ export default {
 .comment-form {
   display: flex;
   justify-content: space-between;
-
   padding: 10px;
-
   &__btn {
     margin-left: 1rem;
     margin-top: 0.33rem;

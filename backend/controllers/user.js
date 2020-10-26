@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt"); // chiffrement du password
 const db = require("../models"); // mdèles de la bdd
 const token = require("../middleware/token"); // module qui génère le token
 const fs = require("fs");
+const { Op } = require("sequelize");
 
 exports.signup = async (req, res) => {
   try {
@@ -22,7 +23,7 @@ exports.signup = async (req, res) => {
       });
 
       const tokenObject = await token.issueJWT(newUser);
-      res.status(200).send({
+      res.status(201).send({
         user: newUser,
         token: tokenObject.token,
         expires: tokenObject.expiresIn,
@@ -75,7 +76,13 @@ exports.getAccount = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   // on envoie tous les users
   try {
-    const users = await db.User.findAll();
+    const users = await db.User.findAll({
+      where: {
+        id: {
+          [Op.ne]: 1,
+        },
+      },
+    });
     res.status(200).json(users);
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
@@ -134,27 +141,26 @@ exports.deleteAccount = async (req, res) => {
   try {
     const userId = token.getUserId(req);
     const id = req.params.id;
-    
+
     const user = await db.User.findOne({ where: { id: id } });
-    
-      // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
-      if (user.photo !==null) {
-        const filename = user.photo.split("/upload")[1];
-        fs.unlink(`upload/${filename}`, () => {
-          // sil' y a une photo on la supprime et on supprime le compte
-          db.User.destroy({ where: { id: id } });
-          res.status(200).json({ messageRetour: "utilisateur supprimé" });
-        });
-      } else {
-        db.User.destroy({ where: { id: id } }); // on supprime le compte
+
+    // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
+    if (user.photo !== null) {
+      const filename = user.photo.split("/upload")[1];
+      fs.unlink(`upload/${filename}`, () => {
+        // sil' y a une photo on la supprime et on supprime le compte
+        db.User.destroy({ where: { id: id } });
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
-      }
-    } 
-   catch (error) {
+      });
+    } else {
+      db.User.destroy({ where: { id: id } }); // on supprime le compte
+      res.status(200).json({ messageRetour: "utilisateur supprimé" });
+    }
+  } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
 };
-exports.adminDeleteAccount = async (req,res) =>{
+exports.adminDeleteAccount = async (req, res) => {
   try {
     const userId = token.getUserId(req);
     const id = req.params.id;
@@ -177,7 +183,9 @@ exports.adminDeleteAccount = async (req,res) =>{
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
       }
     } else {
-      res.status(400).json({ errorMessage: "Le compte Admin ne peut être supprimé" });
+      res
+        .status(400)
+        .json({ errorMessage: "Le compte Admin ne peut être supprimé" });
     }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });

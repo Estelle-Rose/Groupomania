@@ -129,10 +129,12 @@ export default {
   methods: {
     deletePost(id) {
       this.$store.dispatch("deletePost", id);
+     
     },
     deleteComment(id) {
       console.log;
       this.$store.dispatch("deleteComment", id);
+      
     },
 
     likePost(id) {
@@ -142,7 +144,9 @@ export default {
         id: id,
         data: data,
       });
+      this.$store.dispatch("getPosts");
     },
+    
   },
 };
 </script>
