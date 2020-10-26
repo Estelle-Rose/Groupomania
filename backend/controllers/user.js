@@ -177,7 +177,7 @@ exports.adminDeleteAccount = async (req,res) =>{
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
       }
     } else {
-      res.status(400).json({ errorMessage: "requête non autorisée" });
+      res.status(400).json({ errorMessage: "Le compte Admin ne peut être supprimé" });
     }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });

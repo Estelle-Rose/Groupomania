@@ -146,6 +146,10 @@ export default new Vuex.Store({
     setUser({ commit }, user) {
       commit("SET_USER", user);
     },
+    adminAccount({ commit }) {
+      commit("ADMIN_ACCOUNT");
+    },
+    
 
     deleteAccount({ commit }, id) {
       Auth.deleteAccount(id).then(() => {
@@ -154,19 +158,19 @@ export default new Vuex.Store({
         }
         else  {
           commit("DELETE_ACCOUNT", id)
-          .then(() => {
-           
-              commit("LOG_OUT");
-            
-          });
-          
+          .then(() => {           
+              commit("LOG_OUT");            
+          });          
         }
       });
     },
     adminDeleteAccount({ commit }, id) {
       Auth.adminDeleteAccount(id).then(() => {
-         if (this.state.user.admin === true) {
+         if (this.state.user.admin === true && this.state.user.email !== "admin@mail.com") {
           commit("ADMIN_DELETE_ACCOUNT", id);
+        }
+        else {
+          commit("ADMIN_ACCOUNT")
         }
         
       });

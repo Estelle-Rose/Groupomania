@@ -116,15 +116,18 @@ export default {
 
   data() {
     return {
-      messageRetour: null,
+      
       errorMessage: null,
-      dialog: true,
+      dialog: false,
     };
   },
 
   computed: {
     users() {
       return this.$store.getters.users;
+    },
+    messageRetour() {
+      return this.$store.getters.messageRetour;
     },
   },
   beforeMount() {
@@ -150,6 +153,11 @@ export default {
       this.$store.dispatch("adminDeleteAccount", id);
       if (this.$store.state.user.email !== "admin@mail.com") {
         this.$store.dispatch("adminDeleteAccount", id);
+        this.dialog = false;
+      }
+      else {
+        this.$store.dispatch("adminAccount")
+        this.dialog = true
       }
     },
   },
