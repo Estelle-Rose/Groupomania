@@ -88,8 +88,11 @@
       </v-form>
       <br />
       <br />
+      <div>
+
       <div class="danger-alert" v-html="errorMessage" />
       <div class="danger-alert" v-html="messageRetour" />
+      </div>
     </v-card>
   </v-container>
 </template>
@@ -152,7 +155,10 @@ export default {
         formData.append("image", this.file);
       }
       this.$store.dispatch("createPost", formData);
-      this.$router.push("/posts");
+      setTimeout(() => {
+        this.$router.push("/posts");
+        
+      }, 1500);
     },
   },
 };

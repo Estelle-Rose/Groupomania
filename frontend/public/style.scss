@@ -92,7 +92,9 @@ margin-top: 180px;
 }
 .message {
   margin-left: 1.2em !important;
+  border: none!important;
 }
+
 @media (max-width: 640px) {
   .signup-box {
     margin-left: 0 !important;

@@ -17,7 +17,7 @@
           <div class="d-flex flex-column mx-auto">
             <span>Ton message: </span>
             <div
-              class="message
+              class="message ml-n4
                 "
             >
               <span>{{ post.message }}</span>
@@ -112,7 +112,9 @@
             >Poster</v-btn
           >
         </div>
+
       </v-form>
+      
     </v-card>
   </v-container>
 </template>
@@ -132,14 +134,14 @@ export default {
       message: "",
       link: null,
       file: "",
-      /*  messageRetour: null,
-      errorMessage: null, */
+     
     };
   },
   computed: {
     post() {
       return this.$store.getters.post;
     },
+   
   },
   beforeMount() {
     let id = this.$route.params.id;
@@ -178,6 +180,7 @@ export default {
       formData.append("image", this.file);
           this.$store.dispatch("getPosts");
       this.$store.dispatch("updatePost", formData);
+      this.$store.dispatch("getPostById", id);
       this.showImage = true;
       this.options = false;
       this.showLink = true;
@@ -185,9 +188,8 @@ export default {
       this.withImage = false;
       this.withLink = false;
       this.withMessage = false;
-      /* this.messageRetour = this.post.messageRetour;
-      this.errorMessage = this.post.error; */
-      this.$store.dispatch("getPostById", id);
+    
+      
   
 
       this.getBackToFeed();

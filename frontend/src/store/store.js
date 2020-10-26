@@ -79,6 +79,12 @@ export default new Vuex.Store({
     ADMIN_ACCOUNT(state) {
       state.message = "le compte admin ne peut pas être supprimé";
     },
+    NEW_POST(state) {
+      state.message = "Votre post est bien crée";
+    },
+    POST_MESSAGE(state) {
+      state.message = "Votre post est bien";
+    },
 
     DELETE_ACCOUNT(state, id) {
       state.users = [...state.users.filter((element) => element.id !== id)];
@@ -108,7 +114,7 @@ export default new Vuex.Store({
         state.posts.find((element) => element.id === id),
         post
       );
-      state.message = "post modifié";
+      state.message = "Votre post est bien modifié";
     },
 
     DELETE_POST(state, id) {
@@ -250,13 +256,13 @@ export default new Vuex.Store({
         .then((response) => {
           const post = response.data;
           commit("UPDATE_POST", id, post);
-        }); /* .then(() => {
+        }) /* .then(() => {
           PostService.getPostById(id)     
                 .then(response => {
                   const post = response.data;
                   commit('GET_POST_BY_ID', post)
                 })
-            })   */
+            })    */
     },
     deletePost({ commit }, id) {
       PostService.deletePost(id)
