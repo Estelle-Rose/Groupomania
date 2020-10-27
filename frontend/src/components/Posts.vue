@@ -4,7 +4,7 @@
       <div>
         <div class="d-flex justify-space-between pr-2 ">
           <v-card-title class="post-title">
-            <v-avatar size="52px">
+            <v-avatar class="profil-post" size="52px">
               <img
                 v-if="post.User.photo"
                 :src="post.User.photo"

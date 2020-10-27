@@ -139,7 +139,13 @@ background-color: white!important;
 .posts-row {
   justify-content: center;
 }
-
+@media screen and (max-width: 768px) {
+ 
+.post-title {
+ margin-left: -0.5em;
+}
+  
+}
 .post-options {
   margin-top: 1rem;
   display: flex;
