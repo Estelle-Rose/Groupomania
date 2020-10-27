@@ -16,7 +16,7 @@ Ouvrir le dossier Frontend dans le terminal de votre éditeur puis exécuter la 
 
 puis
 
-    npm run serve
+    npm start
 
 si le navigateur ne s'ouvre pas automatiquement allez à :
 
@@ -30,7 +30,7 @@ Ouvrir le dossier Backend dans le terminal de votre éditeur puis exécuter la c
 
 puis
 
-    nodemon serve
+    npm start
 
 ## Base de données
 
@@ -64,3 +64,4 @@ Une fois connecté vous pouvez voir les publications des utilisateurs et publier
 - un statut + un lien (gifs ok, pas de vidéos youtube)
 - un statut + une image
   Ces publications peuvent être likées, commentées, modifiées, supprimées. Le modérateur peut les supprimer.
+

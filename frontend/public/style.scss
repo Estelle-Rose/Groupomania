@@ -102,6 +102,9 @@ margin-top: 180px;
     margin-left: 0 !important;
   }
 }
+
+//posts
+
 .post-box {
   background-image: url("../src/assets/stars.svg");
   background-repeat: repeat;
@@ -110,8 +113,66 @@ margin-top: 180px;
 }
 .post-title-box {
   background-color: #424242 !important;
-  .post-title {
-    color: white;
-    font-weight: 600 !important;
+ 
+}
+.post-title {
+  color: white;
+  font-weight: 600 !important;
+  font-size: 20px;
+  margin-left: 15px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.like-btn:hover {
+background-color: white!important;
+}
+.nom-date {
+  display: flex;
+  flex-direction: column;
+}
+
+.posts-row {
+  justify-content: center;
+}
+
+.post-options {
+  margin-top: 1rem;
+  display: flex;
+}
+.update-title {
+  display: flex;
+  justify-content: space-between;
+}
+.comment__message {
+  max-width: 600px;
+}
+
+@media screen and (max-width: 768px) {
+  .comment__message {
+    max-width: 350px;
   }
+}
+
+.comment-form {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  &__btn {
+    margin-left: 1rem;
+    margin-top: 0.33rem;
+  }
+}
+//new post
+.title-input {
+  width: 500px !important;
+}
+//statut
+.bloc-statut {
+  display: flex;
+  align-items: center;
+}
+.post-card {
+  margin-top: 3em;
 }

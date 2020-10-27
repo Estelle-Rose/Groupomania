@@ -47,8 +47,6 @@
 </template>
 
 <script>
-// import axios from 'axios';
-
 import Auth from "../services/Auth.js";
 export default {
   name: "Login",
@@ -84,5 +82,4 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss"></style>

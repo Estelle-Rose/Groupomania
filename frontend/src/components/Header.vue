@@ -74,7 +74,6 @@
   </nav>
 </template>
 <script>
-//import AccountPreview from "../components/AccountPreview";
 
 export default {
   name: "PageHeader",
@@ -100,12 +99,7 @@ export default {
    
   },
 
-  methods: {
-    /* logOut: function() {
-      this.$store.dispatch("logOut");
-     /*  this.$store.dispatch("setToken", null);
-      this.$store.dispatch("setUser", null); */
-
+  methods: {    
     getProfile(id) {
       this.$router.push(`/account/${id}`);
     },
@@ -114,8 +108,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .v-btn {
-  margin-left: 20px;
-  color: text2 !important;
-  background-color: accent !important;
-}
+  margin-left: 20px;  
+} 
 </style>

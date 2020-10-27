@@ -22,10 +22,8 @@ export default {
     PageHeader,
     PageFooter
   },
-
   data: () => {
-    return {
-      
+    return {      
     };
   },
    computed:{

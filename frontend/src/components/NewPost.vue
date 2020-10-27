@@ -89,9 +89,8 @@
       <br />
       <br />
       <div>
-
-      <div class="danger-alert" v-html="errorMessage" />
-      <div class="danger-alert" v-html="messageRetour" />
+        <div class="danger-alert" v-html="errorMessage" />
+        <div class="danger-alert" v-html="messageRetour" />
       </div>
     </v-card>
   </v-container>
@@ -99,8 +98,6 @@
 <script>
 import { mdiMessageSettingsOutline } from "@mdi/js";
 import { mdiHospitalBox } from "@mdi/js";
-//import PostService from "../services/PostService";
-//import axios from "axios";
 
 export default {
   name: "NewPost",
@@ -142,11 +139,9 @@ export default {
     uploadImage() {
       const file = this.$refs.file.files[0];
       this.file = file;
-      console.log(this.file);
     },
     onSubmit() {
       const formData = new FormData();
-      console.log(typeof this.message);
       formData.append("message", this.message);
       if (this.link !== null) {
         formData.append("link", this.link);
@@ -155,26 +150,12 @@ export default {
         formData.append("image", this.file);
       }
       this.$store.dispatch("createPost", formData);
-      setTimeout(() => {
-        this.$router.push("/posts");
-        
-      }, 1500);
+      this.$router.push("/posts");
+      
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.title-input {
-  width: 500px !important;
-}
-//statut
-.bloc-statut {
-  display: flex;
-  align-items: center;
-}
-// lien ou image
 
-.post-card {
-  margin-top: 3em;
-}
 </style>

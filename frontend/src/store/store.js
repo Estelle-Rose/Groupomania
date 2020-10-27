@@ -14,7 +14,7 @@ export default new Vuex.Store({
     user: {},
     isLoggedIn: false,
     isLoading: false,
-    
+
     posts: [],
     users: [],
     post: {},
@@ -43,10 +43,11 @@ export default new Vuex.Store({
     },
     isLogged(state) {
       return state.isLoggedIn;
-    }
+    },
   },
 
   mutations: {
+    // users
     SET_TOKEN(state, token) {
       state.token = token;
       if (token) {
@@ -76,19 +77,19 @@ export default new Vuex.Store({
       );
       state.message = "compte modifié";
     },
-    
-    NEW_POST(state) {
-      state.message = "Votre post est bien crée";
-    },
-    POST_MESSAGE(state) {
-      state.message = "Votre post est bien";
-    },
-
     DELETE_ACCOUNT(state, id) {
       state.users = [...state.users.filter((element) => element.id !== id)];
       state.message = "compte supprimé";
     },
-    
+    LOG_OUT(state) {
+      state.token = null;
+      state.user = null;
+      state.isLoggedIn = false;
+    },
+    // end users
+
+    // posts
+
     GET_POSTS(state, posts) {
       (state.posts = posts), (state.isLoading = false);
     },
@@ -115,25 +116,28 @@ export default new Vuex.Store({
       state.posts = [...state.posts.filter((element) => element.id !== id)];
       state.message = "post supprimé";
     },
+    // end posts
 
-    DELETE_COMMENT(state, id) {
-      state.posts = [...state.posts.filter((element) => element.id !== id)];
-      state.message = "commentaire supprimé";
-    },
-    LIKE_POST(state, like) {
-      state.posts = [like, ...state.posts];
-    },
+    // comments
     COMMENT_POST(state, comment) {
       state.posts = [comment, ...state.posts];
       state.message = "post commenté";
     },
-    LOG_OUT(state) {
-      state.token = null;
-      state.user = null;
-      state.isLoggedIn = false;
+    DELETE_COMMENT(state, id) {
+      state.posts = [...state.posts.filter((element) => element.id !== id)];
+      state.message = "commentaire supprimé";
     },
+    // end comments
+
+    // like
+
+    LIKE_POST(state, like) {
+      state.posts = [like, ...state.posts];
+    },
+    // end like
   },
   actions: {
+    //users
     setToken({ commit }, token) {
       commit("SET_TOKEN", token);
     },
@@ -146,37 +150,6 @@ export default new Vuex.Store({
     setUser({ commit }, user) {
       commit("SET_USER", user);
     },
-   
-    
-
-    deleteAccount({ commit }, id) {
-      Auth.deleteAccount(id).then(() => {
-         if (this.state.user.admin === true) {
-          commit("DELETE_ACCOUNT", id);
-        }
-        else  {
-          commit("DELETE_ACCOUNT", id)
-          .then(() => {           
-              commit("LOG_OUT");            
-          });          
-        }
-      });
-    },
-    
-    updateAccount({ commit }, data) {
-      let id = this.state.user.id;
-      axios
-        .put(`http://localhost:3000/api/users/accounts/${id}`, data, {
-          headers: { Authorization: this.state.token },
-        })
-        .then((response) => {
-          const newUser = response.data;
-          console.log(newUser);
-          commit("UPDATE_ACCOUNT", id, newUser);
-        })
-       
-    },
-
     getUsers({ commit }) {
       Auth.getUsers().then((response) => {
         const users = response.data;
@@ -190,6 +163,32 @@ export default new Vuex.Store({
         commit("GET_USER_BY_ID", user);
       });
     },
+    deleteAccount({ commit }, id) {
+      Auth.deleteAccount(id).then(() => {
+        if (this.state.user.admin === true) {
+          commit("DELETE_ACCOUNT", id);
+        } else {
+          commit("DELETE_ACCOUNT", id).then(() => {
+            commit("LOG_OUT");
+          });
+        }
+      });
+    },
+    updateAccount({ commit }, data) {
+      let id = this.state.user.id;
+      axios
+        .put(`http://localhost:3000/api/users/accounts/${id}`, data, {
+          headers: { Authorization: this.state.token },
+        })
+        .then((response) => {
+          const newUser = response.data;
+          commit("UPDATE_ACCOUNT", id, newUser);
+        });
+    },
+    // end users
+
+    // posts
+
     getPosts({ commit }) {
       PostService.getPosts().then((response) => {
         const posts = response.data;
@@ -206,7 +205,6 @@ export default new Vuex.Store({
     getPostById({ commit }, id) {
       PostService.getPostById(id).then((response) => {
         const post = response.data;
-        console.log(post);
         commit("GET_POST_BY_ID", post);
       });
     },
@@ -232,7 +230,7 @@ export default new Vuex.Store({
         .then((response) => {
           const post = response.data;
           commit("UPDATE_POST", id, post);
-        })
+        });
     },
     deletePost({ commit }, id) {
       PostService.deletePost(id)
@@ -246,6 +244,10 @@ export default new Vuex.Store({
           });
         });
     },
+
+    // end posts
+
+    //like
     likePost({ commit }, payload) {
       axios
         .post(
@@ -264,6 +266,10 @@ export default new Vuex.Store({
           });
         });
     },
+
+    // end like
+
+    // comment
     commentPost({ commit }, payload) {
       axios
         .post(
@@ -273,7 +279,6 @@ export default new Vuex.Store({
         )
         .then((response) => {
           const comment = response.data;
-          console.log(comment);
           commit("COMMENT_POST", comment);
         })
         .then(() => {

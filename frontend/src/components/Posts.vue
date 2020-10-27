@@ -4,11 +4,7 @@
       <div>
         <div class="d-flex justify-space-between pr-2 ">
           <v-card-title class="post-title">
-            <v-avatar
-              v-if="$store.state.isLoggedIn"
-              @click="getProfile(user.id)"
-              size="52px"
-            >
+            <v-avatar size="52px">
               <img
                 v-if="post.User.photo"
                 :src="post.User.photo"
@@ -125,7 +121,12 @@
             </v-btn>
           </div>
           <div class="d-flex  align-end pr-3">
-            <v-btn @click="likePost(post.id)" x-small aria-label="liker">
+            <v-btn
+              @click="likePost(post.id)"
+              x-small
+              aria-label="liker"
+              class="like-btn"
+            >
               <v-icon :color="isLiked">
                 $vuetify.icons.like
               </v-icon>
@@ -170,11 +171,7 @@
                 :comment="comment"
               >
                 <v-list-item class="comment">
-                  <v-list-item-avatar
-                    v-if="$store.state.isLoggedIn"
-                    @click="getProfile(user.id)"
-                    class="comment_photo"
-                  >
+                  <v-list-item-avatar class="comment_photo">
                     <img
                       v-if="comment.User.photo !== null"
                       :src="comment.User.photo"
@@ -246,12 +243,6 @@ export default {
     post: {
       type: Object,
     },
-    postUrl: {
-      type: String,
-    },
-    Likes: {
-      type: Array,
-    },
   },
   data: function() {
     return {
@@ -302,20 +293,19 @@ export default {
     },
     likePost() {
       this.$emit("likePost", this.post.id);
-  
     },
-    getOnePost() {
-      this.$router.push(this.postUrl);
+    getOnePost(id) {
+      this.$router.push(`posts/${id}`);
     },
     onSubmitComment(id) {
-          this.$store.dispatch("getPosts");
+      this.$store.dispatch("getPosts");
       this.$store.dispatch("commentPost", {
         id: id,
         data: this.data,
       });
       this.data.commentMessage = "";
-      this.$store.dispatch('getPosts');
-         this.$store.dispatch("getPostById", this.post.id);
+      this.$store.dispatch("getPosts");
+      this.$store.dispatch("getPostById", this.post.id);
     },
 
     deleteComment(id) {
@@ -324,45 +314,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-.post-title {
-  font-size: 20px;
-  margin-left: 15px;
-}
-.nom-date {
-  display: flex;
-  flex-direction: column;
-}
-
-.posts-row {
-  justify-content: center;
-}
-
-.post-options {
-  margin-top: 1rem;
-  display: flex;
-}
-.update-title {
-  display: flex;
-  justify-content: space-between;
-}
-.comment__message {
-  max-width: 600px;
-}
-
-@media screen and (max-width: 768px) {
-  .comment__message {
-    max-width: 350px;
-  }
-}
-
-.comment-form {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  &__btn {
-    margin-left: 1rem;
-    margin-top: 0.33rem;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

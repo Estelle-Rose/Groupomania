@@ -188,10 +188,6 @@ export default {
       this.withImage = false;
       this.withLink = false;
       this.withMessage = false;
-    
-      
-  
-
       this.getBackToFeed();
     },
 
@@ -205,12 +201,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.post-title {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 .return-btn {
   position: absolute;
   right: 0;
@@ -223,8 +214,6 @@ export default {
 .message {
   width: 500px;
   margin: 1.2em !important;
-
-  border: 1px grey solid;
   padding: 15px;
 }
 </style>

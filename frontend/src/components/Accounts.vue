@@ -1,17 +1,6 @@
 <template>
   <v-container fluid class="signup-container">
-    <div class="account">
-     <!--  <v-card
-        v-if="messageRetour !== null && dialog === true"
-        class=" pt-3  d-flex justify-space-between dialog"
-      >
-        <span>
-          {{ messageRetour }}
-        </span>
-        <v-btn color="primary" class="mb-3 mr-2" text @click="dialog = false">
-          Close
-        </v-btn>
-      </v-card> -->
+    <div class="account"> 
 
       <v-layout v-if="$store.state.users" row class="account-box">
         <v-card
@@ -92,20 +81,13 @@ export default {
   name: "Account",
 
   data() {
-    return {
-      
-      errorMessage: null,
-      dialog: false,
+    return {      
     };
   },
-
   computed: {
     users() {
       return this.$store.getters.users;
-    },
-    messageRetour() {
-      return this.$store.getters.messageRetour;
-    },
+    }    
   },
   beforeMount() {
     this.$store.dispatch("getUsers");
@@ -121,7 +103,6 @@ export default {
 
     deleteAccount(id) {     
       if(this.$store.state.user.admin === true) {
-
         this.$store.dispatch("deleteAccount", id);
       }
       else {
@@ -129,9 +110,6 @@ export default {
         this.$store.dispatch("logOut");
         this.getBackHome();
       }
-    
-   
-      
     },
    
   },

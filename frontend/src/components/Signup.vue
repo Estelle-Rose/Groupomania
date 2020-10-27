@@ -53,7 +53,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+
 import Auth from "../services/Auth.js";
 export default {
   name: "Signup",

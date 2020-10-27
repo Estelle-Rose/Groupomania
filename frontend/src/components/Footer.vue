@@ -1,6 +1,5 @@
 <template>
-  <v-footer fixed  dark class="footer" >
-       
+  <v-footer fixed  dark class="footer" >       
    
        <v-btn x-small to="/about" class="ml-5 mt-2">Règlement</v-btn>
         <div v-if="!$store.state.isLoggedIn" class="mt-2 mr-5">
@@ -23,10 +22,8 @@
  
   export default {
     name: 'PageFooter',
-    data: () => ({
-   
-    }),  
-    
+    data: () => ({   
+    }),      
     methods: {
     logOut: function() {
       this.$store.dispatch("logOut");

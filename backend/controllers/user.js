@@ -122,8 +122,7 @@ exports.updateAccount = async (req, res) => {
       if (req.body.pseudo) {
         user.pseudo = req.body.pseudo;
       }
-      const newUser = await user.save({ fields: ["pseudo", "bio", "photo"] }); // on sauvegarde les changements dans la bdd
-      console.log(newUser);
+      const newUser = await user.save({ fields: ["pseudo", "bio", "photo"] }); // on sauvegarde les changements dans la bdd      
       res.status(200).json({
         user: newUser,
         messageRetour: "Votre profil a bien été modifié",
@@ -141,37 +140,11 @@ exports.deleteAccount = async (req, res) => {
   try {
     const userId = token.getUserId(req);
     const id = req.params.id;
-
     const user = await db.User.findOne({ where: { id: id } });
 
     // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
-    if (user.photo !== null) {
-      const filename = user.photo.split("/upload")[1];
-      fs.unlink(`upload/${filename}`, () => {
-        // sil' y a une photo on la supprime et on supprime le compte
-        db.User.destroy({ where: { id: id } });
-        res.status(200).json({ messageRetour: "utilisateur supprimé" });
-      });
-    } else {
-      db.User.destroy({ where: { id: id } }); // on supprime le compte
-      res.status(200).json({ messageRetour: "utilisateur supprimé" });
-    }
-  } catch (error) {
-    return res.status(500).send({ error: "Erreur serveur" });
-  }
-};
-exports.adminDeleteAccount = async (req, res) => {
-  try {
-    const userId = token.getUserId(req);
-    const id = req.params.id;
-    const admin = await db.User.findOne({ where: { id: userId } });
-    const user = await db.User.findOne({ where: { id: id } });
-    if (
-      (userId === id || admin.admin === true) &&
-      user.email !== "admin@mail.com"
-    ) {
-      // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
-      if (user.photo) {
+    if (user.id === userId || user.admin === true) {
+      if (user.photo !== null) {
         const filename = user.photo.split("/upload")[1];
         fs.unlink(`upload/${filename}`, () => {
           // sil' y a une photo on la supprime et on supprime le compte
@@ -183,9 +156,7 @@ exports.adminDeleteAccount = async (req, res) => {
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
       }
     } else {
-      res
-        .status(400)
-        .json({ errorMessage: "Le compte Admin ne peut être supprimé" });
+      res.status(400).send({ error: "Non autorisé" });
     }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
