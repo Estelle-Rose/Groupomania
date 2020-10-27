@@ -41,7 +41,7 @@ Vérifiez les identifiants dans le fichier config.json du dossier Backend puis i
     mysql -u root -p socialnetwork < socialnetwork.sql
 
 Il faut remplacer `socialnetwork.sql` par le chemin du fichier dans votre machine.
-Vous pouvez lancer le projet sans importer le fichier.sql, au lancement de l'application un compte administrateur est automatiquement créé (mail: admin@mail.com, pwd: Moderator).
+Vous pouvez lancer le projet sans importer le fichier.sql, au lancement de l'application un compte administrateur est automatiquement créé (les identifiants vous on été fourni dans un fichier Id_Admin).
 
 ## Guidelines API
 
@@ -64,4 +64,3 @@ Une fois connecté vous pouvez voir les publications des utilisateurs et publier
 - un statut + un lien (gifs ok, pas de vidéos youtube)
 - un statut + une image
   Ces publications peuvent être likées, commentées, modifiées, supprimées. Le modérateur peut les supprimer.
-
