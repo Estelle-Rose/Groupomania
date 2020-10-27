@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.21, for osx10.15 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: socialnetwork
 -- ------------------------------------------------------
--- Server version	8.0.21
+-- Server version	8.0.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,13 +16,13 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Comments`
+-- Table structure for table `comments`
 --
 
-DROP TABLE IF EXISTS `Comments`;
+DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Comments` (
+CREATE TABLE `comments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `message` text NOT NULL,
   `pseudo` varchar(255) NOT NULL,
@@ -33,29 +33,29 @@ CREATE TABLE `Comments` (
   PRIMARY KEY (`id`),
   KEY `UserId` (`UserId`),
   KEY `PostId` (`PostId`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `Posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Comments`
+-- Dumping data for table `comments`
 --
 
-LOCK TABLES `Comments` WRITE;
-/*!40000 ALTER TABLE `Comments` DISABLE KEYS */;
-INSERT INTO `Comments` VALUES (1,'Ok chef  😅','Cyril','2020-10-26 08:44:28','2020-10-26 08:44:28',4,1),(2,'Moi oui !','Marc','2020-10-26 08:44:57','2020-10-26 08:44:57',3,2),(3,'ouais tkt','Marc','2020-10-26 08:45:16','2020-10-26 08:45:16',3,1),(4,'Mouahahahah 🤣','Estelle','2020-10-26 08:47:20','2020-10-26 08:47:20',2,3),(5,'je peux pas j\'ai poney','Estelle','2020-10-26 08:47:32','2020-10-26 08:47:32',2,2),(6,'yes !','Estelle','2020-10-26 08:47:53','2020-10-26 08:47:53',2,1);
-/*!40000 ALTER TABLE `Comments` ENABLE KEYS */;
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+INSERT INTO `comments` VALUES (3,'Ok chef !','Cyril','2020-10-27 14:26:37','2020-10-27 14:26:37',10,1),(4,'yes','Marco','2020-10-27 14:27:39','2020-10-27 14:27:39',11,1),(5,'trop chou !','Estelle','2020-10-27 14:29:08','2020-10-27 14:29:08',12,6),(6,'Toujours 😃','Estelle','2020-10-27 14:29:28','2020-10-27 14:29:28',12,1),(7,'je préfère ça ahah','admin','2020-10-27 14:30:56','2020-10-27 14:30:56',1,1);
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Likes`
+-- Table structure for table `likes`
 --
 
-DROP TABLE IF EXISTS `Likes`;
+DROP TABLE IF EXISTS `likes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Likes` (
+CREATE TABLE `likes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -64,29 +64,29 @@ CREATE TABLE `Likes` (
   PRIMARY KEY (`id`),
   KEY `UserId` (`UserId`),
   KEY `PostId` (`PostId`),
-  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `Posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `likes_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `likes_ibfk_2` FOREIGN KEY (`PostId`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Likes`
+-- Dumping data for table `likes`
 --
 
-LOCK TABLES `Likes` WRITE;
-/*!40000 ALTER TABLE `Likes` DISABLE KEYS */;
-INSERT INTO `Likes` VALUES (1,'2020-10-26 08:43:53','2020-10-26 08:43:53',4,1),(3,'2020-10-26 08:46:33','2020-10-26 08:46:33',3,3),(4,'2020-10-26 08:46:40','2020-10-26 08:46:40',3,2),(5,'2020-10-26 08:47:01','2020-10-26 08:47:01',2,2);
-/*!40000 ALTER TABLE `Likes` ENABLE KEYS */;
+LOCK TABLES `likes` WRITE;
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+INSERT INTO `likes` VALUES (4,'2020-10-27 14:26:32','2020-10-27 14:26:32',10,1),(5,'2020-10-27 14:27:32','2020-10-27 14:27:32',11,1),(6,'2020-10-27 14:27:42','2020-10-27 14:27:42',11,5),(7,'2020-10-27 14:28:57','2020-10-27 14:28:57',12,6),(8,'2020-10-27 14:29:13','2020-10-27 14:29:13',12,1),(9,'2020-10-27 14:31:04','2020-10-27 14:31:04',1,6);
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Posts`
+-- Table structure for table `posts`
 --
 
-DROP TABLE IF EXISTS `Posts`;
+DROP TABLE IF EXISTS `posts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Posts` (
+CREATE TABLE `posts` (
   `id` int NOT NULL AUTO_INCREMENT,
   `message` text NOT NULL,
   `link` varchar(255) DEFAULT NULL,
@@ -96,28 +96,28 @@ CREATE TABLE `Posts` (
   `UserId` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `UserId` (`UserId`),
-  CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Posts`
+-- Dumping data for table `posts`
 --
 
-LOCK TABLES `Posts` WRITE;
-/*!40000 ALTER TABLE `Posts` DISABLE KEYS */;
-INSERT INTO `Posts` VALUES (1,'Soyez bienveillants et respectueux, je vous surveille !','https://media1.giphy.com/media/fGFpff9dvV9LO/giphy.webp?cid=ecf05e47x9onxizzv2t4vdlzt26y8g22mqb50hf3tqkpuj0h&rid=giphy.webp',NULL,'2020-10-26 08:42:25','2020-10-26 08:42:25',1),(2,'Apéro vendredi, vous êtes chauds ?',NULL,NULL,'2020-10-26 08:43:48','2020-10-26 08:43:48',4),(3,'Il va pleuvoir ce weekend...','https://media4.giphy.com/media/chtDB7EpaR0f6/giphy.webp?cid=ecf05e47tmgixnytadujimq3oiqf9jkb2blqn6vi44yj7joq&rid=giphy.webp',NULL,'2020-10-26 08:46:18','2020-10-26 08:46:18',3),(4,'J\'adore les sushis','https://media1.giphy.com/media/QEwbIdEpSvoVa/200.webp?cid=ecf05e474rsvpe9mz8wzk4p4i7rat92rwzxyyxyl3ezkba43&rid=200.webp',NULL,'2020-10-26 08:48:33','2020-10-26 08:48:33',2);
-/*!40000 ALTER TABLE `Posts` ENABLE KEYS */;
+LOCK TABLES `posts` WRITE;
+/*!40000 ALTER TABLE `posts` DISABLE KEYS */;
+INSERT INTO `posts` VALUES (1,'Bienveillance et respect svp 😊',NULL,NULL,'2020-10-27 13:56:34','2020-10-27 14:26:14',1),(5,'😁','https://media.giphy.com/media/3xz2BtNxiBNTisHygM/giphy.gif',NULL,'2020-10-27 14:27:00','2020-10-27 14:27:09',10),(6,'Hello','https://media1.giphy.com/media/m8SQE8720OkEg/giphy.webp?cid=ecf05e47v2zsgqoae9u5sphgxnvuqbkc4344wbowrl56mijn&rid=giphy.webp',NULL,'2020-10-27 14:27:56','2020-10-27 14:28:29',11),(7,'Je vous surveille 😉','https://media2.giphy.com/media/fGFpff9dvV9LO/giphy.webp?cid=ecf05e47d401mllsp4rzpmqpxmxr3i16noq119jemrp0j7ng&rid=giphy.webp',NULL,'2020-10-27 14:30:33','2020-10-27 14:30:33',1);
+/*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Users`
+-- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `Users`;
+DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Users` (
+CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -128,19 +128,18 @@ CREATE TABLE `Users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `pseudo` (`pseudo`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Users`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `Users` WRITE;
-/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'Adminator','admin@mail.com','$2b$10$DiFfwFLmN/soKE1NTZDVVOmuMropfq1FJj3lji1sZh58HehZq.QQe','http://localhost:3000/upload/profil_admin1603701639606.png',NULL,1,'2020-10-26 08:36:54','2020-10-26 08:40:39'),(2,'Estelle','estelle@mail.com','$2b$10$.uebIS0kAiMm7.GoNVQsHOp/S5VlijwDDSvYrsrlCaKjpKo2MnScu',NULL,NULL,0,'2020-10-26 08:42:54','2020-10-26 08:42:54'),(3,'Marc','marc@mail.com','$2b$10$ANuoUDcRREUjC5zbQvMjhOPi0sHVYoi.SuTTMLKRaMmW4hABkGSAy',NULL,NULL,0,'2020-10-26 08:43:10','2020-10-26 08:43:10'),(4,'Cyril','cyril@mail.com','$2b$10$kqv3NpSOkDV13pfFjHJgyO48wtF0Nle02rEgtwgiVULjpUnZ6jA82',NULL,NULL,0,'2020-10-26 08:43:25','2020-10-26 08:43:25');
-/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','admin@mail.com','$2b$10$ullNHu9dYYSjH0ioi7SpyemMNhW7vdIZ6aGBw.D7.bxArp58J8Vdq','http://localhost:3000/upload/profil_admin1603808637091.png',NULL,1,'2020-10-27 13:56:03','2020-10-27 14:23:57'),(10,'Cyril','cyril@mail.com','$2b$10$KvD1o7KWzv5hksCQV5VqveWgZuxh5rZOAQ5YCdBN90hxZDq9PEUBm',NULL,NULL,0,'2020-10-27 14:26:25','2020-10-27 14:26:25'),(11,'Marco','marc@mail.com','$2b$10$Fu.apmLEqIm5uvMHe12adO595rnlnojNWk38W3VSMazlF8EIyVoRW',NULL,NULL,0,'2020-10-27 14:27:25','2020-10-27 14:27:25'),(12,'Estelle','estelle@mail.com','$2b$10$Vbkq3b4j97sbGuBj0ayS2.vDwFM9VgA6nzOMdI4pnQnzqpOurgkMe',NULL,NULL,0,'2020-10-27 14:28:53','2020-10-27 14:28:53');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -152,4 +151,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-26  9:49:33
+-- Dump completed on 2020-10-27 15:31:56

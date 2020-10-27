@@ -96,7 +96,7 @@ export default {
     getBackHome() {
       this.$router.push("/");
     },
-    logOut: function() {
+    logOut() {
       this.$store.dispatch("setToken", null);
       this.$store.dispatch("setUser", null);
     },

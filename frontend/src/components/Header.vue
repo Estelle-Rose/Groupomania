@@ -74,7 +74,6 @@
   </nav>
 </template>
 <script>
-
 export default {
   name: "PageHeader",
   props: {
@@ -98,7 +97,6 @@ export default {
     },
    
   },
-
   methods: {    
     getProfile(id) {
       this.$router.push(`/account/${id}`);

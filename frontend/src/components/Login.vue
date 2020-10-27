@@ -67,6 +67,7 @@ export default {
           password: this.password,
         });
         this.message = response.data.message;
+  
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);
         this.$store.dispatch("getUserById", response.data.user.id);
@@ -76,6 +77,11 @@ export default {
         }, 1500);
       } catch (error) {
         this.errorMessage = error.response.data.error;
+        setTimeout(() => {
+          this.email= "";
+        this.password= "";
+          this.errorMessage = "";
+        }, 500);
       }
     },
   },

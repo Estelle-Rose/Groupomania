@@ -31,6 +31,11 @@ export default {
        return this.$store.getters.user
      }
    },
+   mounted() {
+     this.$store.dispatch("getUsers");
+     this.$store.dispatch("getUserById", this.user.id);
+   }
+  
 };
 </script>
 <style lang="scss">

@@ -7,12 +7,12 @@ const { Op } = require("sequelize");
 exports.signup = async (req, res) => {
   try {
     const user = await db.User.findOne({
-      where: { email: req.body.email } && { pseudo: req.body.pseudo },
+      where: { email: req.body.email },
     });
     if (user !== null) {
-      res.status(400).json({
-        message: "Cette adresse mail ou ce pseudo sont déjà utilisés !",
-      });
+      if (user.pseudo === req.body.pseudo) {
+        return res.status(400).json({ error: "ce pseudo est déjà utilisé" });
+      }
     } else {
       const hash = await bcrypt.hash(req.body.password, 10);
       const newUser = await db.User.create({
@@ -31,7 +31,7 @@ exports.signup = async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(500).send({ error: "Erreur serveur" });
+    return res.status(400).send({ error: "email déjà utilisé" });
   }
 };
 
@@ -74,7 +74,7 @@ exports.getAccount = async (req, res) => {
   }
 };
 exports.getAllUsers = async (req, res) => {
-  // on envoie tous les users
+  // on envoie tous les users sauf admin
   try {
     const users = await db.User.findAll({
       where: {
@@ -122,7 +122,7 @@ exports.updateAccount = async (req, res) => {
       if (req.body.pseudo) {
         user.pseudo = req.body.pseudo;
       }
-      const newUser = await user.save({ fields: ["pseudo", "bio", "photo"] }); // on sauvegarde les changements dans la bdd      
+      const newUser = await user.save({ fields: ["pseudo", "bio", "photo"] }); // on sauvegarde les changements dans la bdd
       res.status(200).json({
         user: newUser,
         messageRetour: "Votre profil a bien été modifié",
@@ -138,12 +138,9 @@ exports.updateAccount = async (req, res) => {
 };
 exports.deleteAccount = async (req, res) => {
   try {
-    const userId = token.getUserId(req);
+  
     const id = req.params.id;
     const user = await db.User.findOne({ where: { id: id } });
-
-    // on vérifie que le user trouvé est bien le user connecté ou l'admin du site
-    if (user.id === userId || user.admin === true) {
       if (user.photo !== null) {
         const filename = user.photo.split("/upload")[1];
         fs.unlink(`upload/${filename}`, () => {
@@ -155,9 +152,7 @@ exports.deleteAccount = async (req, res) => {
         db.User.destroy({ where: { id: id } }); // on supprime le compte
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
       }
-    } else {
-      res.status(400).send({ error: "Non autorisé" });
-    }
+    
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }

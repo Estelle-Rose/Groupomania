@@ -85,6 +85,8 @@ export default new Vuex.Store({
       state.token = null;
       state.user = null;
       state.isLoggedIn = false;
+      state.message = "";
+      state.error = "";
     },
     // end users
 
@@ -165,14 +167,11 @@ export default new Vuex.Store({
     },
     deleteAccount({ commit }, id) {
       Auth.deleteAccount(id).then(() => {
-        if (this.state.user.admin === true) {
+       
           commit("DELETE_ACCOUNT", id);
-        } else {
-          commit("DELETE_ACCOUNT", id).then(() => {
-            commit("LOG_OUT");
-          });
-        }
-      });
+      })
+       
+      
     },
     updateAccount({ commit }, data) {
       let id = this.state.user.id;
@@ -182,6 +181,7 @@ export default new Vuex.Store({
         })
         .then((response) => {
           const newUser = response.data;
+
           commit("UPDATE_ACCOUNT", id, newUser);
         });
     },

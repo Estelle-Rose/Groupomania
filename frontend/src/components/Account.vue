@@ -170,7 +170,6 @@ export default {
       errorMessage: null,
     };
   },
-
   computed: {
     user() {
       return this.$store.getters.user;
@@ -213,7 +212,6 @@ export default {
     },
     onSubmit() {
       const formData = new FormData();
-
       formData.append("pseudo", this.newPseudo);
       formData.append("bio", this.newBio);
       if (this.file !== null) {
@@ -223,7 +221,6 @@ export default {
       this.$store.dispatch("getUserById", this.user.id);
       this.$store.dispatch("updateAccount", formData);
       this.$store.dispatch("getUserById", this.user.id);
-
       this.updateBio = false;
       this.updatePhoto = false;
       this.updatePseudo = false;
@@ -249,7 +246,6 @@ export default {
   margin-top: -30px;
   margin-right: 1em;
 }
-
 .account-card {
   display: flex;
   justify-content: space-around;
@@ -265,7 +261,6 @@ export default {
   width: 100%;
   margin: auto !important;
 }
-
 .profil-title {
   padding: 0;
 }

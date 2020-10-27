@@ -53,7 +53,6 @@
 </template>
 
 <script>
-
 import Auth from "../services/Auth.js";
 export default {
   name: "Signup",
@@ -94,12 +93,16 @@ export default {
         this.$store.dispatch("setToken", response.data.token);
         this.$store.dispatch("setUser", response.data.user);
         this.$store.dispatch("getUserById", response.data.user.id);
+
         let router = this.$router;
         setTimeout(function() {
           router.push("/posts");
         }, 1500);
       } catch (error) {
         this.errorMessage = error.response.data.error;
+        setTimeout(() => {
+          this.errorMessage = "";
+        }, 1500);
       }
     },
   },
