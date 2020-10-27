@@ -55,7 +55,7 @@
             alt="Avatar"
             :src="user.photo"
             class="photo-header">
-          <v-icon v-if="user.photo === null"  :color="isLoggedIn" size="35px">$vuetify.icons.account</v-icon>
+          <v-icon v-if="user.photo === null"  :color="isLoggedIn" size="35px" class="like-btn">$vuetify.icons.account</v-icon>
         </v-avatar>
        </v-btn
       >

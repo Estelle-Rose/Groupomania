@@ -65,7 +65,13 @@
                   :src="user.photo"
                   alt="Photo de profil"
                 />
-                <v-icon :color="isLoggedIn" size="96px" aria-label="avatar"  v-else>$vuetify.icons.account</v-icon>
+                <v-icon
+                  :color="isLoggedIn"
+                  size="96px"
+                  aria-label="avatar"
+                  v-else
+                  >$vuetify.icons.account</v-icon
+                >
               </v-avatar>
               <v-btn @click="togglePhoto" class="mx-2" x-small>
                 Changer
@@ -80,9 +86,8 @@
                 accept="image/png, image/jpeg,
                     image/bmp, image/gif"
                 ref="file"
-               
                 name="image"
-                 class="input-group--focused"
+                class="input-group--focused"
               />
             </div>
           </div>
@@ -109,7 +114,7 @@
             :rules="bioRules"
             solo
             name="input-7-4"
-             class="input-group--focused bio"
+            class="input-group--focused bio"
           >
           </v-textarea>
           <div>
@@ -171,13 +176,12 @@ export default {
       return this.$store.getters.user;
     },
     isLoggedIn() {
-      if(this.$store.state.isLoggedIn) {
-       return "pink"
-     } else {
-       return ""
-     }
+      if (this.$store.state.isLoggedIn) {
+        return "pink";
+      } else {
+        return "";
+      }
     },
-    
   },
   beforeMount() {
     this.$store.dispatch("getUserById");
@@ -216,28 +220,25 @@ export default {
         formData.append("image", this.file);
       }
       this.$store.dispatch("getUsers");
+      this.$store.dispatch("getUserById", this.user.id);
       this.$store.dispatch("updateAccount", formData);
-        this.$store.dispatch("getUserById",this.user.id);
+      this.$store.dispatch("getUserById", this.user.id);
+
       this.updateBio = false;
       this.updatePhoto = false;
       this.updatePseudo = false;
       this.options = false;
       this.showBio = true;
       this.showPhoto = true;
-      this.showPseudo = true;    
+      this.showPseudo = true;
     },
     deleteAccount(id) {
-     
-      this.$store.dispatch("deleteAccount", id);       
-       this.$store.dispatch("logOut");
-         setTimeout(() => {
-          this.getBackHome();
-        }, 2000);
-
-      
+      this.$store.dispatch("deleteAccount", id);
+      this.$store.dispatch("logOut");
+      setTimeout(() => {
+        this.getBackHome();
+      }, 2000);
     },
-      
-    
   },
 };
 </script>
