@@ -23,7 +23,7 @@ exports.getAllPosts = async (req, res) => {
           include: [
             {
               model: db.User,
-              attributes: ["photo"],
+              attributes: ["photo", "pseudo"],
             },
           ],
         },
@@ -71,7 +71,7 @@ exports.getHotPosts = async (req, res) => {
           include: [
             {
               model: db.User,
-              attributes: ["photo"],
+              attributes: ["photo", "pseudo"],
             },
           ],
         },
@@ -100,8 +100,14 @@ exports.getOnePost = async (req, res) => {
         },
         {
           model: db.Comment,
-          attributes: ["message", "pseudo", "UserId"],
           order: [["createdAt", "DESC"]],
+          attributes: ["message", "pseudo", "UserId"],
+          include: [
+            {
+              model: db.User,
+              attributes: ["photo", "pseudo"],
+            },
+          ],
         },
       ],
     });

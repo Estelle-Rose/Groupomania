@@ -21,7 +21,9 @@ export default new Vuex.Store({
     message: "",
     error: "",
   },
-  plugins: [createPersistedState()],
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+  })],
   getters: {
     posts(state) {
       return state.posts;
@@ -82,6 +84,7 @@ export default new Vuex.Store({
       state.message = "compte supprimé";
     },
     LOG_OUT(state) {
+      sessionStorage.clear();
       state.token = null;
       state.user = null;
       state.isLoggedIn = false;
@@ -111,6 +114,7 @@ export default new Vuex.Store({
         state.posts.find((element) => element.id === id),
         post
       );
+     
       state.message = "Votre post est bien modifié";
     },
 
@@ -166,8 +170,7 @@ export default new Vuex.Store({
       });
     },
     deleteAccount({ commit }, id) {
-      Auth.deleteAccount(id).then(() => {
-       
+      Auth.deleteAccount(id).then(() => {       
           commit("DELETE_ACCOUNT", id);
       })
        
@@ -181,9 +184,14 @@ export default new Vuex.Store({
         })
         .then((response) => {
           const newUser = response.data;
-
           commit("UPDATE_ACCOUNT", id, newUser);
-        });
+        })
+        .then (() => {
+          PostService.getPosts().then((response) => {
+          const posts = response.data;
+          commit("GET_POSTS", posts);
+        })
+      })
     },
     // end users
 
