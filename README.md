@@ -30,7 +30,7 @@ Ouvrir le dossier Backend dans le terminal de votre éditeur puis exécuter la c
 
 puis
 
-    npm start
+    npm start ou nodemon serve
 
 ## Base de données
 
