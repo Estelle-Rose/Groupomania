@@ -77,14 +77,14 @@ exports.getAllUsers = async (req, res) => {
   // on envoie tous les users sauf admin
   try {
     const users = await db.User.findAll({
-      attributes: ["pseudo", "id", "photo","bio",],
+      attributes: ["pseudo", "id", "photo", "bio", "email"],
       where: {
         id: {
           [Op.ne]: 1,
         },
       },
-    })
-     res.status(200).send(users);
+    });
+    res.status(200).send(users);
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
