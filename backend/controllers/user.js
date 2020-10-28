@@ -77,13 +77,14 @@ exports.getAllUsers = async (req, res) => {
   // on envoie tous les users sauf admin
   try {
     const users = await db.User.findAll({
+      attributes: ["pseudo", "id", "photo","bio",],
       where: {
         id: {
           [Op.ne]: 1,
         },
       },
-    });
-    res.status(200).json(users);
+    })
+     res.status(200).send(users);
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
@@ -138,21 +139,19 @@ exports.updateAccount = async (req, res) => {
 };
 exports.deleteAccount = async (req, res) => {
   try {
-  
     const id = req.params.id;
     const user = await db.User.findOne({ where: { id: id } });
-      if (user.photo !== null) {
-        const filename = user.photo.split("/upload")[1];
-        fs.unlink(`upload/${filename}`, () => {
-          // sil' y a une photo on la supprime et on supprime le compte
-          db.User.destroy({ where: { id: id } });
-          res.status(200).json({ messageRetour: "utilisateur supprimé" });
-        });
-      } else {
-        db.User.destroy({ where: { id: id } }); // on supprime le compte
+    if (user.photo !== null) {
+      const filename = user.photo.split("/upload")[1];
+      fs.unlink(`upload/${filename}`, () => {
+        // sil' y a une photo on la supprime et on supprime le compte
+        db.User.destroy({ where: { id: id } });
         res.status(200).json({ messageRetour: "utilisateur supprimé" });
-      }
-    
+      });
+    } else {
+      db.User.destroy({ where: { id: id } }); // on supprime le compte
+      res.status(200).json({ messageRetour: "utilisateur supprimé" });
+    }
   } catch (error) {
     return res.status(500).send({ error: "Erreur serveur" });
   }
